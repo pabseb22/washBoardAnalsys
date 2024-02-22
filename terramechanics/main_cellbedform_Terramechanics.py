@@ -1,8 +1,8 @@
 from cellbedform_Terramechanics import CellBedform
 
 test_cases = [
-    {'name':'C_1','Q': 0.6, 'L0': 7.3, 'b': 2, 'D': 0.8, 'dx': 100, 'dy': 110, 'y_cut': 50, 'steps':1000,'save_steps':[1, 100, 500, 1000]},
-    {'name':'C_2','Q': 0.6, 'L0': 7.3, 'b': 2, 'D': 0.8, 'dx': 100, 'dy': 110, 'y_cut': 50, 'steps':1000,'save_steps':[1, 100, 500, 1000]},
+    {'name':'C_1','Q': 0.6, 'L0': 7.3, 'b': 2, 'D': 0.8, 'dx': 150, 'dy': 40, 'y_cut': 20, 'steps':10000,'save_steps':[1, 100, 500, 1000]},
+    {'name':'C_2','Q': 0.6, 'L0': 7.3, 'b': 2, 'D': 0.8, 'dx': 150, 'dy': 40, 'y_cut': 20, 'steps':10000,'save_steps':[1, 100, 500, 1000]},
 ]
 
 for idx, test_case in enumerate(test_cases, start=1):

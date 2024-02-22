@@ -78,7 +78,6 @@ class CellBedform():
 
             if save_steps is not None and i not in save_steps:
                     continue
-            print("Passed")
             # store animation frames
             self._plot()
             self.ims.append([self.surf])
