@@ -6,8 +6,8 @@ Created on Tue Dec 12 19:13:46 2023
 
 from cellbedformLaura import CellBedform
 
-Q_try=[0.5]
-Lo_try=[13]
+Q_try=[0.8]
+Lo_try=[1]
 for q_value in Q_try:
     for L_value in Lo_try:
         cb = CellBedform(grid=(100, 25), D=0.62, Q=q_value, L0=L_value, b=1.7, y_cut=10)

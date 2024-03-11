@@ -1,0 +1,233 @@
+
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from scipy.signal import find_peaks
+import os
+
+
+class CellBedform():
+
+    def __init__(self, grid=(100, 50), D=0.8, Q=0.6, L0=7.3, b=2.0, y_cut=10):
+
+        # Copy input parameters
+        self._xgrid = grid[0]
+        self._ygrid = grid[1]
+        self.D = D
+        self.Q = Q
+        self.L0 = L0
+        self.b = b
+
+        # Make initial topography
+        self.h = np.random.rand(self._xgrid, self._ygrid)
+        self.L = np.empty(self.h.shape)
+        self.dest = np.empty(self.h.shape)
+
+        # Make arrays for indeces showing grid of interest and neighbor grids
+        self.y, self.x = np.meshgrid(np.arange(self._ygrid), np.arange(self._xgrid))
+        self.xminus = self.x - 1
+        self.xplus = self.x + 1
+        self.yminus = self.y - 1
+        self.yplus = self.y + 1
+
+        # Periodic boundary condition
+        self.xminus[0, :] = self._xgrid - 1
+        self.xplus[-1, :] = 0
+        self.yminus[:, 0] = self._ygrid - 1
+        self.yplus[:, -1] = 0
+
+        # Variables for visualization
+        self.f = plt.figure(figsize=(8, 8))
+        self.ax = self.f.add_subplot(111, projection='3d', azim=120)
+        self.surf = None
+        self.ims = []
+        self.y_cuts = []
+        self.y_cut = y_cut
+        self.amplitudes = []
+        self.wavelengths = []
+
+    def run(self, steps=100, save_steps=None, folder='test'):
+        for i in range(steps):
+            self.run_one_step()
+            # show progress
+            print('', end='\r')
+            print('{:.1f} % finished'.format(i / steps * 100), end='\r')
+
+            if save_steps is not None and i not in save_steps:
+                    continue
+            self._plot()
+            self.ims.append([self.surf])
+            self.y_cuts.append([np.arange(self._xgrid), self.h[:, self.y_cut]])
+            profile = [np.arange(self._xgrid), self.h[:, self.y_cut]]
+            # Compute FFT for the Y-cut profiles
+            time_values = profile[0]
+            signal_values = profile[1]
+            dt = np.mean(np.diff(time_values))  # Compute the average time step
+            profile_fft = np.fft.fftshift(np.fft.fft(signal_values))
+            frequencies = np.fft.fftshift(np.fft.fftfreq(len(signal_values), dt))
+
+            # Find peaks
+            peaks, _ = find_peaks(np.abs(profile_fft), height=0)  # Adjust the height parameter based on your data
+
+            # Calculate amplitude and wavelength from the FFT result
+            if len(peaks) > 0:
+                amplitude = np.abs(profile_fft[peaks[0]])
+                wavelength = 1 / frequencies[peaks[0]]
+            else:
+                amplitude = 0
+                wavelength = 0
+
+            # Save amplitude and wavelength for each step
+            self.amplitudes.append(amplitude)
+            self.wavelengths.append(wavelength)
+
+        plt.figure(figsize=(12, 6))
+        plt.subplot(2, 1, 1)
+        plt.plot(save_steps, self.amplitudes)
+        plt.title('Amplitude vs Steps')
+        plt.xlabel('Steps')
+        plt.ylabel('Amplitude')
+
+        plt.subplot(2, 1, 2)
+        plt.plot(save_steps, self.wavelengths)
+        plt.title('Wavelength vs Steps')
+        plt.xlabel('Steps')
+        plt.ylabel('Wavelength')
+
+        plt.tight_layout()
+        plt.show()
+
+        # Save step, amplitude, and wavelength data to a text file
+        data = np.column_stack((save_steps, self.amplitudes, self.wavelengths))
+
+        # Create the main folder if it doesn't exist
+        os.makedirs("Results", exist_ok=True)
+        folder = os.path.join('Results', folder)
+
+        # Create a subfolder for Steps
+        ampl_folder = os.path.join(folder,'step_amplitud_wavelength')
+        os.makedirs(ampl_folder, exist_ok=True)
+
+        ampl_filename = os.path.join(ampl_folder, 'step_amplitude_wavelength.txt')
+
+        np.savetxt(ampl_filename, data, fmt="%d", comments="", delimiter=" ")
+        # show progress
+        print('', end='\r')
+        print('100.0 % finished')
+
+    def run_one_step(self):
+        x = self.x
+        y = self.y
+        xplus = self.xplus
+        yplus = self.yplus
+        xminus = self.xminus
+        yminus = self.yminus
+        D = self.D
+        Q = self.Q
+        L0 = self.L0
+        b = self.b
+        L = self.L
+        dest = self.dest
+        self.h = self.h + D * (-self.h + 1. / 6. *
+                               (self.h[xplus, y] + self.h[xminus, y] + self.
+                                h[x, yplus] + self.h[x, yminus]) + 1. / 12. *
+                               (self.h[xplus, yplus] + self.h[xplus, yminus] +
+                                self.h[xminus, yplus] + self.h[xminus, yplus]))
+
+        L = L0 + b * self.h  # Length of saltation
+        L[np.where(L < 0)] = 0  # Avoid backward saltation
+        np.round(L + x, out=dest)  # Grid number must be integer
+        np.mod(dest, self._xgrid, out=dest)  # periodic boundary condition
+        self.h = self.h - Q  # Entrainment
+        for j in range(self.h.shape[0]):  # Settling
+            self.h[dest[j, :].astype(np.int32),
+                   y[j, :]] = self.h[dest[j, :].astype(np.int32), y[j, :]] + Q
+
+    def _plot(self):
+        self.ax.set_zlim3d(-20, 150)
+        self.ax.set_xlabel('Distance (X)')
+        self.ax.set_ylabel('Distance (Y)')
+        self.ax.set_zlabel('Elevation')
+        self.surf = self.ax.plot_surface(
+            self.x,
+            self.y,
+            self.h,
+            cmap='jet',
+            vmax=5.0,
+            vmin=-5.0,
+            antialiased=True)
+
+
+    def save_images(self, folder='test', filename='bed', save_steps=None):
+        try:
+            if len(self.ims) == 0:
+                raise Exception('Run the model before saving images.')
+
+            # Create the main folder if it doesn't exist
+            os.makedirs("Results", exist_ok=True)
+            folder = os.path.join("Results", folder)
+
+            # Create the main folder if it doesn't exist
+            os.makedirs(folder, exist_ok=True)
+
+            # Create a subfolder for Steps
+            steps_folder = os.path.join(folder, f'steps_{filename}')
+            os.makedirs(steps_folder, exist_ok=True)
+
+            # Create a subfolder for Steps Images
+            steps_images_folder = os.path.join(folder, f'steps_{filename}_images')
+            os.makedirs(steps_images_folder, exist_ok=True)
+
+            # Create a subfolder for Y-cut profiles
+            y_cut_folder = os.path.join(folder, f'{filename}_y={self.y_cut}')
+            os.makedirs(y_cut_folder, exist_ok=True) if self.y_cut is not None else None
+
+            # Create a subfolder for Y-cut profile images
+            y_cut_images_folder = os.path.join(folder, f'{filename}_y={self.y_cut}_images')
+            os.makedirs(y_cut_images_folder, exist_ok=True) if self.y_cut is not None else None
+
+            for i in range(len(save_steps)):
+                # show progress
+                print('', end='\r')
+                print('Saving images... {:.1f}%'.format(i / len(self.ims) * 100), end='\r')
+
+                # Save images to the specified folder
+                plt.cla()  # Clear axes
+                self.ax.add_collection3d(self.ims[i][0])  # Load surface plot
+                self.ax.autoscale_view()
+                self.ax.set_zlim3d(-20, 150)
+                self.ax.set_xlabel('Distance (X)')
+                self.ax.set_ylabel('Distance (Y)')
+                self.ax.set_zlabel('Elevation')
+                plt.savefig(os.path.join(steps_images_folder, f'{filename}_{i:04d}.png'))
+                steps_filename = os.path.join(steps_folder, f'step_{i:04d}.txt')
+                elevation_data = self.ims[i][0].get_array()
+                np.savetxt(steps_filename, elevation_data)
+
+                # Save Y-cut profiles
+                profile = self.y_cuts[i]
+                profile_filename = os.path.join(y_cut_folder, f'step_{i:04d}.txt')
+                np.savetxt(profile_filename, np.column_stack(profile), comments="", delimiter=" ")
+
+                # Save Y-cut profile images
+                plt.figure()
+                plt.plot(profile[0], profile[1])
+                plt.title(f'Y-cut Profile at Y={self.y_cut} (Step {i})')
+                plt.xlabel('Distance (X)')
+                plt.ylabel('Elevation')
+                plt.savefig(os.path.join(y_cut_images_folder, f'profile_step_{i:04d}.png'))
+                plt.close()
+
+            self.ims = []
+            self.y_cuts = []
+            print('Done. All data were saved and cleared.')
+
+        except Exception as error:
+            print('Unexpected error occurred.')
+            print(error)
+
+
+if __name__ == "__main__":
+
+    cb = CellBedform(grid=(100, 100))
+    cb.run(steps=10)
