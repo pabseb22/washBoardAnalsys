@@ -77,9 +77,46 @@ class CellBedform():
                 amplitude = 0
                 wavelength = 0
 
+            # Perform FFT
+            fft_result = np.fft.fft(signal_values)
+            fft_freq = np.fft.fftfreq(len(signal_values), dt)
+
+            # Calculate amplitude spectrum
+            amplitude_spectrum = np.abs(fft_result) / len(signal_values)
+
+            # Remove DC component (frequency at index 0)
+            amplitude_spectrum = amplitude_spectrum[1:]
+            fft_freq = fft_freq[1:]
+
+            # Find the index of the maximum amplitude
+            max_amplitude_index = np.argmax(amplitude_spectrum)
+
+            # Extract dominant frequency and amplitude
+            dominant_frequency = fft_freq[max_amplitude_index]
+            dominant_amplitude = amplitude_spectrum[max_amplitude_index]
+
+            # Calculate wavelength of the dominant frequency
+            dominant_wavelength = 1 / dominant_frequency
             # Save amplitude and wavelength for each step
-            self.amplitudes.append(amplitude)
-            self.wavelengths.append(wavelength)
+            self.amplitudes.append(dominant_amplitude)
+            self.wavelengths.append(dominant_wavelength)
+
+            plt.subplot(2, 1, 1)
+            plt.plot(time_values, signal_values)
+            plt.title('Original Signal')
+            plt.xlabel('Time (s)')
+            plt.ylabel('Amplitude')
+
+            plt.subplot(2, 1, 2)
+            plt.plot(fft_freq, amplitude_spectrum)
+            plt.scatter(dominant_frequency, dominant_amplitude, color='red', marker='x', label='Dominant Frequency')
+            plt.title('Amplitude Spectrum')
+            plt.xlabel('Frequency (Hz)')
+            plt.ylabel('Amplitude')
+            plt.legend()
+
+            plt.tight_layout()
+            plt.show()
 
         plt.figure(figsize=(12, 6))
         plt.subplot(2, 1, 1)
@@ -110,7 +147,7 @@ class CellBedform():
 
         ampl_filename = os.path.join(ampl_folder, 'step_amplitude_wavelength.txt')
 
-        np.savetxt(ampl_filename, data, fmt="%d", comments="", delimiter=" ")
+        np.savetxt(ampl_filename, data, fmt='%.5f', comments="", delimiter=" ")
         # show progress
         print('', end='\r')
         print('100.0 % finished')
