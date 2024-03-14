@@ -6,10 +6,20 @@ from scipy.optimize import minimize
 # Problemas: 
 # Contra que comparo
 # Como el optimizer puede encontrar algo si la funcion me devuelve por cada step un corte en x, verifica cada step?
-# Que corte elegimos, analiza todos?
-# En caso de que pueda optimizar algo, como podemos replicar sus resultados si se genera una superficie aleatoria. Debo dejar seteada una misma superficie?
+# Que corte elegimos, analiza todos? - Se analiza solo en uno
 # Que parametros deberia optimizar?
-# Cuantos steps seran suficientes?
+
+#Requisitos:Parte 2:
+# 1. Centrar una ventana de analisis entre experimental centrada para experimental y numerica 
+# 2. ⁠definir que la númerica tenga los mismos datos 
+# 3. ⁠generar funcion objetivo de optimización que compara diferencia de distancia en x e y del pico de la fft al cuadrado
+
+# Para centrar se define una ventana central de la experimental en la que se define una longitud de datos.
+# Identificando su centro, y cogiendo donde corta el eje x, a partir de esto
+
+# Luego se toma eso y se hace lo mismo en experimental.
+
+# A ambas ventas se saca la fft y los valores a comparar
 
 D = 0.8
 Q = 0.6

@@ -101,53 +101,24 @@ class CellBedform():
             self.amplitudes.append(dominant_amplitude)
             self.wavelengths.append(dominant_wavelength)
 
-            plt.subplot(2, 1, 1)
-            plt.plot(time_values, signal_values)
-            plt.title('Original Signal')
-            plt.xlabel('Time (s)')
-            plt.ylabel('Amplitude')
+            # plt.figure()
+            # plt.subplot(2, 1, 1)
+            # plt.plot(time_values, signal_values)
+            # plt.title('Original Signal')
+            # plt.xlabel('Time (s)')
+            # plt.ylabel('Amplitude')
 
-            plt.subplot(2, 1, 2)
-            plt.plot(fft_freq, amplitude_spectrum)
-            plt.scatter(dominant_frequency, dominant_amplitude, color='red', marker='x', label='Dominant Frequency')
-            plt.title('Amplitude Spectrum')
-            plt.xlabel('Frequency (Hz)')
-            plt.ylabel('Amplitude')
-            plt.legend()
+            # plt.subplot(2, 1, 2)
+            # plt.plot(fft_freq, amplitude_spectrum)
+            # plt.scatter(dominant_frequency, dominant_amplitude, color='red', marker='x', label='Dominant Frequency')
+            # plt.title('Amplitude Spectrum')
+            # plt.xlabel('Frequency (Hz)')
+            # plt.ylabel('Amplitude')
+            # plt.legend()
 
-            plt.tight_layout()
-            plt.show()
+            # plt.tight_layout()
+            # plt.show()
 
-        plt.figure(figsize=(12, 6))
-        plt.subplot(2, 1, 1)
-        plt.plot(save_steps, self.amplitudes)
-        plt.title('Amplitude vs Steps')
-        plt.xlabel('Steps')
-        plt.ylabel('Amplitude')
-
-        plt.subplot(2, 1, 2)
-        plt.plot(save_steps, self.wavelengths)
-        plt.title('Wavelength vs Steps')
-        plt.xlabel('Steps')
-        plt.ylabel('Wavelength')
-
-        plt.tight_layout()
-        plt.show()
-
-        # Save step, amplitude, and wavelength data to a text file
-        data = np.column_stack((save_steps, self.amplitudes, self.wavelengths))
-
-        # Create the main folder if it doesn't exist
-        os.makedirs("Results", exist_ok=True)
-        folder = os.path.join('Results', folder)
-
-        # Create a subfolder for Steps
-        ampl_folder = os.path.join(folder,'step_amplitud_wavelength')
-        os.makedirs(ampl_folder, exist_ok=True)
-
-        ampl_filename = os.path.join(ampl_folder, 'step_amplitude_wavelength.txt')
-
-        np.savetxt(ampl_filename, data, fmt='%.5f', comments="", delimiter=" ")
         # show progress
         print('', end='\r')
         print('100.0 % finished')
@@ -262,6 +233,38 @@ class CellBedform():
         except Exception as error:
             print('Unexpected error occurred.')
             print(error)
+
+    def plot_convergence(self, save_steps=None, folder='test'):
+        plt.figure(figsize=(12, 6))
+        plt.subplot(2, 1, 1)
+        plt.plot(save_steps, self.amplitudes)
+        plt.title('Amplitude vs Steps')
+        plt.xlabel('Steps')
+        plt.ylabel('Amplitude')
+
+        plt.subplot(2, 1, 2)
+        plt.plot(save_steps, self.wavelengths)
+        plt.title('Wavelength vs Steps')
+        plt.xlabel('Steps')
+        plt.ylabel('Wavelength')
+
+        plt.tight_layout()
+        plt.show()
+
+        # Save step, amplitude, and wavelength data to a text file
+        data = np.column_stack((save_steps, self.amplitudes, self.wavelengths))
+
+        # Create the main folder if it doesn't exist
+        os.makedirs("Results", exist_ok=True)
+        folder = os.path.join('Results', folder)
+
+        # Create a subfolder for Steps
+        ampl_folder = os.path.join(folder,'step_amplitud_wavelength')
+        os.makedirs(ampl_folder, exist_ok=True)
+
+        ampl_filename = os.path.join(ampl_folder, 'step_amplitude_wavelength.txt')
+
+        np.savetxt(ampl_filename, data, fmt='%.5f', comments="", delimiter=" ")
 
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@
 from convergence_cellbedform import CellBedform
 
 test_cases = [
-    {'name':'C_1','Q': 0.6, 'L0': 7.3, 'b': 2, 'D': 0.8, 'dx': 150, 'dy': 40, 'y_cut': 20, 'steps':10001,'save_steps':[1, 100, 500, 1000, 5000, 10000]},
+    {'name':'C_1','Q': 0.6, 'L0': 7.3, 'b': 2, 'D': 0.8, 'dx': 150, 'dy': 40, 'y_cut': 20, 'steps':20001,'save_steps':[1, 100, 500, 1000, 5000, 10000,15000, 20000]},
     # {'name':'C_2','Q': 0.6, 'L0': 7.3, 'b': 2, 'D': 0.8, 'dx': 150, 'dy': 40, 'y_cut': 20, 'steps':10000,'save_steps':[1, 100, 500, 1000]},
 ]
 
@@ -21,3 +21,4 @@ for idx, test_case in enumerate(test_cases, start=1):
     cb = CellBedform(grid=(dx, dy), D=D, Q=Q, L0=L0, b=b, y_cut=y_cut)
     cb.run(steps, save_steps,folder=folder_name)
     cb.save_images(folder=folder_name, filename=folder_name+f'_case_{idx}', save_steps=save_steps)
+    cb.plot_convergence(save_steps,folder=folder_name)
