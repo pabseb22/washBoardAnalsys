@@ -2,18 +2,22 @@ import gc
 import datetime
 from convergence_cellbedform import CellBedform
 
-steps = 3000
-save_space = 500
+print("Program Initialization")
+program_start_time = datetime.datetime.now()
+
+steps = 30000
+save_space = 600
 save_values = list(range(1, steps + 1, save_space))
+print("Steps to be saved:")
 print(save_values)
 
 test_cases = [
-    {'name': 'C_1', 'Q': 0.01, 'L0': 1, 'b': 0.2, 'D': 0.2, 'dx': 150, 'dy': 40, 'y_cut': 20, 'steps': steps, 'save_steps': save_values},
-    {'name': 'C_2', 'Q': 0.6, 'L0': 7.3, 'b': 2, 'D': 0.8, 'dx': 150, 'dy': 40, 'y_cut': 20, 'steps': steps, 'save_steps': save_values},
+    {'name': 'C_1', 'Q': 0.01, 'L0': 1, 'b': 0.2, 'D': 0.2, 'dx': 1500, 'dy': 400, 'y_cut': 200, 'steps': steps, 'save_steps': save_values},
+    {'name': 'C_2', 'Q': 0.6, 'L0': 7.3, 'b': 2, 'D': 0.8, 'dx': 1500, 'dy': 400, 'y_cut': 200, 'steps': steps, 'save_steps': save_values},
+    {'name': 'C_3', 'Q': 0.1, 'L0': 2, 'b': 2, 'D': 0.8, 'dx': 1500, 'dy': 400, 'y_cut': 200, 'steps': steps, 'save_steps': save_values},
 ]
 
-print("Program Initialization")
-program_start_time = datetime.datetime.now()
+
 
 for idx, test_case in enumerate(test_cases, start=1):
     iteration_start_time = datetime.datetime.now()
