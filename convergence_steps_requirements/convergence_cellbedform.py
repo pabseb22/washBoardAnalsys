@@ -82,7 +82,7 @@ class CellBedform():
             fft_freq = np.fft.fftfreq(len(signal_values), dt)
 
             # Calculate amplitude spectrum
-            amplitude_spectrum = np.abs(fft_result) / len(signal_values)
+            amplitude_spectrum = 2*np.abs(fft_result) / len(signal_values)
 
             # Remove DC component (frequency at index 0)
             amplitude_spectrum = amplitude_spectrum[1:]
@@ -235,21 +235,21 @@ class CellBedform():
             print(error)
 
     def plot_convergence(self, save_steps=None, folder='test'):
-        plt.figure(figsize=(12, 6))
-        plt.subplot(2, 1, 1)
-        plt.plot(save_steps, self.amplitudes)
-        plt.title('Amplitude vs Steps')
-        plt.xlabel('Steps')
-        plt.ylabel('Amplitude')
+        # plt.figure(figsize=(12, 6))
+        # plt.subplot(2, 1, 1)
+        # plt.plot(save_steps, self.amplitudes)
+        # plt.title('Amplitude vs Steps')
+        # plt.xlabel('Steps')
+        # plt.ylabel('Amplitude')
 
-        plt.subplot(2, 1, 2)
-        plt.plot(save_steps, self.wavelengths)
-        plt.title('Wavelength vs Steps')
-        plt.xlabel('Steps')
-        plt.ylabel('Wavelength')
+        # plt.subplot(2, 1, 2)
+        # plt.plot(save_steps, self.wavelengths)
+        # plt.title('Wavelength vs Steps')
+        # plt.xlabel('Steps')
+        # plt.ylabel('Wavelength')
 
-        plt.tight_layout()
-        plt.show()
+        # plt.tight_layout()
+        # plt.show()
 
         # Save step, amplitude, and wavelength data to a text file
         data = np.column_stack((save_steps, self.amplitudes, self.wavelengths))
