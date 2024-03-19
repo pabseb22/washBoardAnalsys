@@ -2,6 +2,7 @@ import numpy as np
 import pyswarms as ps
 from cellbedform_PSO import CellBedform
 from scipy.optimize import minimize
+from scipy.optimize import differential_evolution
 
 # Problemas: 
 # Contra que comparo
@@ -20,6 +21,8 @@ from scipy.optimize import minimize
 # Luego se toma eso y se hace lo mismo en experimental.
 
 # A ambas ventas se saca la fft y los valores a comparar
+
+#https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.differential_evolution.html#scipy.optimize.differential_evolution
 
 D = 0.8
 Q = 0.6
@@ -46,6 +49,15 @@ params_initial = [7.3, 2]
 # Call the optimizer
 result = minimize(objective_function, params_initial, method='Nelder-Mead')
 
+# The optimal parameters are stored in result.x
+print(result)
+print(result.x)
+
+# Define the bounds for each parameter
+bounds = [(0, 10), (0, 10)]  # Example bounds, adjust as needed
+
+# Call the optimizer
+result = differential_evolution(objective_function, bounds)
 # The optimal parameters are stored in result.x
 print(result)
 print(result.x)
