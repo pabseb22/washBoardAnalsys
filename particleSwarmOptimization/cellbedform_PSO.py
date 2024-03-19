@@ -3,7 +3,7 @@ import numpy as np
 
 class CellBedform():
 
-    def __init__(self, grid=(100, 50), D=0.8, Q=0.6, L0=7.3, b=2.0, y_cut=10):
+    def __init__(self, grid=(100, 50), D=0.8, Q=0.6, L0=7.3, b=2.0, y_cut=10, h=np.random.rand(100, 50)):
         # Copy input parameters
         self._xgrid = grid[0]
         self._ygrid = grid[1]
@@ -13,7 +13,7 @@ class CellBedform():
         self.b = b
 
         # Make initial topography
-        self.h = np.random.rand(self._xgrid, self._ygrid)
+        self.h = h
         self.L = np.empty(self.h.shape)
         self.dest = np.empty(self.h.shape)
 

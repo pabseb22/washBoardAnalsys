@@ -8,7 +8,7 @@ import os
 
 class CellBedform():
 
-    def __init__(self, grid=(100, 50), D=0.8, Q=0.6, L0=7.3, b=2.0, y_cut=10):
+    def __init__(self, grid=(100, 50), D=0.8, Q=0.6, L0=7.3, b=2.0, y_cut=10, h=np.random.rand(100, 50)):
 
         # Copy input parameters
         self._xgrid = grid[0]
@@ -17,12 +17,10 @@ class CellBedform():
         self.Q = Q
         self.L0 = L0
         self.b = b
+        self.h = h
 
-        # Make initial topography
-        self.h = np.random.rand(self._xgrid, self._ygrid)
         self.L = np.empty(self.h.shape)
         self.dest = np.empty(self.h.shape)
-
         # Make arrays for indeces showing grid of interest and neighbor grids
         self.y, self.x = np.meshgrid(np.arange(self._ygrid), np.arange(self._xgrid))
         self.xminus = self.x - 1

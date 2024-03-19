@@ -4,6 +4,7 @@ from cellbedform_PSO import CellBedform
 from scipy.optimize import minimize
 from scipy.optimize import differential_evolution
 import os
+import datetime
 
 # Problemas: 
 # Contra que comparo
@@ -25,18 +26,31 @@ import os
 
 #https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.differential_evolution.html#scipy.optimize.differential_evolution
 
+print("Program Initialization")
+program_start_time = datetime.datetime.now()
+
+print(f"Time Initialization at {program_start_time.strftime('%Y-%m-%d %H:%M:%S')}")
+
 file_path = os.path.join("ExperimentalData", "80thPass2ms.txt")
 data_exp = np.loadtxt(file_path)
-dx = len(data_exp)
-print("AMOUNT DATA: ", dx)
+
+file_path_2 = os.path.join("ExperimentalData", "5thPass2ms.txt")
+data_surface = np.loadtxt(file_path_2)
+data_surface = data_surface[:, 1].T
+dx = len(data_surface)
 dy = 40
 y_cut = 20
-steps = 101
+# Define same original surface to get consistent results
+initial_surface = np.tile(data_surface[:, np.newaxis], (1, dy))
+
+steps = 1000
 
 # Objective function to minimize (quadratic function)
 def objective_function(params):
+    iteration_start_time = datetime.datetime.now()
+    print(f"Time Step at {iteration_start_time.strftime('%Y-%m-%d %H:%M:%S')}")
     D_,Q_,L0_, b_ = params
-    cb = CellBedform(grid=(dx, dy), D=D_, Q=Q_, L0=L0_, b=b_, y_cut=y_cut)
+    cb = CellBedform(grid=(dx, dy), D=D_, Q=Q_, L0=L0_, b=b_, y_cut=y_cut, h=initial_surface)
     y_cuts = cb.run(steps)
     print(y_cuts[1])
     diff = y_cuts[1] - data_exp[:, 1] 
@@ -53,6 +67,12 @@ result = minimize(objective_function, params_initial, method='Nelder-Mead')
 # The optimal parameters are stored in result.x
 print(result)
 print(result.x)
+
+program_end_time = datetime.datetime.now()
+total_duration = (program_end_time - program_start_time).total_seconds() / 60
+print("")
+print("")
+print(f"Program Ended in: {total_duration:.2f} minutes")
 
 # Define the bounds for each parameter
 # bounds = [(0, 10), (0, 10)]  # Example bounds, adjust as needed
