@@ -3,6 +3,7 @@ import pyswarms as ps
 from cellbedform_PSO import CellBedform
 from scipy.optimize import minimize
 from scipy.optimize import differential_evolution
+import os
 
 # Problemas: 
 # Contra que comparo
@@ -24,27 +25,27 @@ from scipy.optimize import differential_evolution
 
 #https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.differential_evolution.html#scipy.optimize.differential_evolution
 
-D = 0.8
-Q = 0.6
-
-dx = 150
+file_path = os.path.join("ExperimentalData", "80thPass2ms.txt")
+data_exp = np.loadtxt(file_path)
+dx = len(data_exp)
+print("AMOUNT DATA: ", dx)
 dy = 40
 y_cut = 20
 steps = 101
 
-def wave1(x, a, b, c):
-    return a * np.sin(b * x + c)
-
 # Objective function to minimize (quadratic function)
 def objective_function(params):
-    L0_, b_ = params
-    cb = CellBedform(grid=(dx, dy), D=D, Q=Q, L0=L0_, b=b_, y_cut=y_cut)
-    y_cuts, initial_h = cb.run(steps)
-    diff = y_cuts[100] - wave1(2,1,3,1)
+    D_,Q_,L0_, b_ = params
+    cb = CellBedform(grid=(dx, dy), D=D_, Q=Q_, L0=L0_, b=b_, y_cut=y_cut)
+    y_cuts = cb.run(steps)
+    print(y_cuts[1])
+    diff = y_cuts[1] - data_exp[:, 1] 
+    print(diff)
+    print(np.sum(diff**2))
     return np.sum(diff**2)
 
 # Initial guess for the parameters
-params_initial = [7.3, 2]
+params_initial = [0.1,0.8,2, 2]
 
 # Call the optimizer
 result = minimize(objective_function, params_initial, method='Nelder-Mead')
@@ -54,13 +55,13 @@ print(result)
 print(result.x)
 
 # Define the bounds for each parameter
-bounds = [(0, 10), (0, 10)]  # Example bounds, adjust as needed
+# bounds = [(0, 10), (0, 10)]  # Example bounds, adjust as needed
 
-# Call the optimizer
-result = differential_evolution(objective_function, bounds)
-# The optimal parameters are stored in result.x
-print(result)
-print(result.x)
+# # Call the optimizer
+# result = differential_evolution(objective_function, bounds)
+# # The optimal parameters are stored in result.x
+# print(result)
+# print(result.x)
 
 # Initialize the swarm
 # num_particles = 10

@@ -14,7 +14,6 @@ class CellBedform():
 
         # Make initial topography
         self.h = np.random.rand(self._xgrid, self._ygrid)
-        self.initial_h = self.h
         self.L = np.empty(self.h.shape)
         self.dest = np.empty(self.h.shape)
 
@@ -42,7 +41,7 @@ class CellBedform():
             self.y_cuts.append([np.arange(self._xgrid), self.h[:, self.y_cut]])
 
         #Compare results
-        return self.y_cuts, self.initial_h
+        return self.y_cuts[-1]
 
     def run_one_step(self):
         """Calculate one step of the model
