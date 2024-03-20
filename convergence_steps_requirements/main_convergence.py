@@ -7,8 +7,8 @@ import numpy as np
 print("Program Initialization")
 program_start_time = datetime.datetime.now()
 
-steps = 300
-save_space = 60
+steps = 1000
+save_space = 100
 save_values = list(range(1, steps + 1, save_space))
 print("Steps to be saved:")
 print(save_values)
@@ -22,10 +22,9 @@ y_cut = 20
 # Define same original surface to get consistent results
 initial_surface = np.tile(data_exp[:, np.newaxis], (1, dy))
 
-print(initial_surface)
 test_cases = [
-    {'name': 'C_1', 'Q': 0.1, 'L0': 1, 'b': 0.2, 'D': 0.2},
-    {'name': 'C_2', 'Q': 0.1, 'L0': 2, 'b': 0.2, 'D': 0.2},
+    {'name': 'C_1', 'D': 0.10651991, 'Q': 0.79241831, 'L0': 1.94534776, 'b': 2.0502067, },
+    #{'name': 'C_2', 'Q': 0.1, 'L0': 2, 'b': 0.2, 'D': 0.2},
 ]
 
 
@@ -46,6 +45,4 @@ for idx, test_case in enumerate(test_cases, start=1):
 
 program_end_time = datetime.datetime.now()
 total_duration = (program_end_time - program_start_time).total_seconds() / 60
-print("")
-print("")
 print(f"Program Ended in: {total_duration:.2f} minutes")
