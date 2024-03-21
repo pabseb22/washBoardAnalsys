@@ -1,5 +1,5 @@
 import numpy as np
-import pyswarms as ps
+#import pyswarms as ps
 from cellbedform_PSO import CellBedform
 from scipy.optimize import minimize
 from scipy.optimize import differential_evolution

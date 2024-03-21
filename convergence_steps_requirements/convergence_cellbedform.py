@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from scipy.signal import find_peaks
 import os
+import pandas as pd
 
 
 class CellBedform():
@@ -212,8 +213,16 @@ class CellBedform():
 
                 # Save Y-cut profiles
                 profile = self.y_cuts[i]
-                profile_filename = os.path.join(y_cut_folder, f'step_{i:04d}.txt')
-                np.savetxt(profile_filename, np.column_stack(profile), comments="", delimiter=" ")
+                #profile_filename = os.path.join(y_cut_folder, f'step_{i:04d}.txt')
+                #np.savetxt(profile_filename, np.column_stack(profile), comments="", delimiter="    ",fmt="%d %.9f")
+
+                df = pd.DataFrame(np.column_stack(profile), columns=['Index', 'Value'])
+
+                # Specify the filename for the Excel file. This uses the same naming convention as before.
+                profile_filename = os.path.join(y_cut_folder, f'step_{i:04d}.xlsx')
+
+                # Save the DataFrame to an Excel file. The engine='openpyxl' is specified to ensure compatibility with .xlsx format.
+                df.to_excel(profile_filename, index=False, engine='openpyxl')
 
                 # Save Y-cut profile images
                 plt.figure()
