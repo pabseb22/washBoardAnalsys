@@ -58,47 +58,47 @@ class CellBedform():
             self.ims.append([self.surf])
             self.y_cuts.append([np.arange(self._xgrid), self.h[:, self.y_cut]])
             profile = [np.arange(self._xgrid), self.h[:, self.y_cut]]
-            # Compute FFT for the Y-cut profiles
-            time_values = profile[0]
-            signal_values = profile[1]
-            dt = np.mean(np.diff(time_values))  # Compute the average time step
-            profile_fft = np.fft.fftshift(np.fft.fft(signal_values))
-            frequencies = np.fft.fftshift(np.fft.fftfreq(len(signal_values), dt))
+            # # Compute FFT for the Y-cut profiles
+            # time_values = profile[0]
+            # signal_values = profile[1]
+            # dt = np.mean(np.diff(time_values))  # Compute the average time step
+            # profile_fft = np.fft.fftshift(np.fft.fft(signal_values))
+            # frequencies = np.fft.fftshift(np.fft.fftfreq(len(signal_values), dt))
 
-            # Find peaks
-            peaks, _ = find_peaks(np.abs(profile_fft), height=0)  # Adjust the height parameter based on your data
+            # # Find peaks
+            # peaks, _ = find_peaks(np.abs(profile_fft), height=0)  # Adjust the height parameter based on your data
 
-            # Calculate amplitude and wavelength from the FFT result
-            if len(peaks) > 0:
-                amplitude = np.abs(profile_fft[peaks[0]])
-                wavelength = 1 / frequencies[peaks[0]]
-            else:
-                amplitude = 0
-                wavelength = 0
+            # # Calculate amplitude and wavelength from the FFT result
+            # if len(peaks) > 0:
+            #     amplitude = np.abs(profile_fft[peaks[0]])
+            #     wavelength = 1 / frequencies[peaks[0]]
+            # else:
+            #     amplitude = 0
+            #     wavelength = 0
 
-            # Perform FFT
-            fft_result = np.fft.fft(signal_values)
-            fft_freq = np.fft.fftfreq(len(signal_values), dt)
+            # # Perform FFT
+            # fft_result = np.fft.fft(signal_values)
+            # fft_freq = np.fft.fftfreq(len(signal_values), dt)
 
-            # Calculate amplitude spectrum
-            amplitude_spectrum = 2*np.abs(fft_result) / len(signal_values)
+            # # Calculate amplitude spectrum
+            # amplitude_spectrum = 2*np.abs(fft_result) / len(signal_values)
 
-            # Remove DC component (frequency at index 0)
-            amplitude_spectrum = amplitude_spectrum[1:]
-            fft_freq = fft_freq[1:]
+            # # Remove DC component (frequency at index 0)
+            # amplitude_spectrum = amplitude_spectrum[1:]
+            # fft_freq = fft_freq[1:]
 
-            # Find the index of the maximum amplitude
-            max_amplitude_index = np.argmax(amplitude_spectrum)
+            # # Find the index of the maximum amplitude
+            # max_amplitude_index = np.argmax(amplitude_spectrum)
 
-            # Extract dominant frequency and amplitude
-            dominant_frequency = fft_freq[max_amplitude_index]
-            dominant_amplitude = amplitude_spectrum[max_amplitude_index]
+            # # Extract dominant frequency and amplitude
+            # dominant_frequency = fft_freq[max_amplitude_index]
+            # dominant_amplitude = amplitude_spectrum[max_amplitude_index]
 
-            # Calculate wavelength of the dominant frequency
-            dominant_wavelength = 1 / dominant_frequency
-            # Save amplitude and wavelength for each step
-            self.amplitudes.append(dominant_amplitude)
-            self.wavelengths.append(dominant_wavelength)
+            # # Calculate wavelength of the dominant frequency
+            # dominant_wavelength = 1 / dominant_frequency
+            # # Save amplitude and wavelength for each step
+            # self.amplitudes.append(dominant_amplitude)
+            # self.wavelengths.append(dominant_wavelength)
 
             # plt.figure()
             # plt.subplot(2, 1, 1)
@@ -239,43 +239,13 @@ class CellBedform():
             print('Unexpected error occurred.')
             print(error)
 
-    def plot_convergence(self, save_steps=None, folder='test'):
-        # plt.figure(figsize=(12, 6))
-        # plt.subplot(2, 1, 1)
-        # plt.plot(save_steps, self.amplitudes)
-        # plt.title('Amplitude vs Steps')
-        # plt.xlabel('Steps')
-        # plt.ylabel('Amplitude')
-
-        # plt.subplot(2, 1, 2)
-        # plt.plot(save_steps, self.wavelengths)
-        # plt.title('Wavelength vs Steps')
-        # plt.xlabel('Steps')
-        # plt.ylabel('Wavelength')
-
-        # plt.tight_layout()
-        # plt.show()
-
-        # Save step, amplitude, and wavelength data to a text file
-        data = np.column_stack((save_steps, self.amplitudes, self.wavelengths))
-
-        # Create the main folder if it doesn't exist
-        os.makedirs("Results", exist_ok=True)
-        folder = os.path.join('Results', folder)
-
-        # Create a subfolder for Steps
-        ampl_folder = os.path.join(folder,'step_amplitud_wavelength')
-        os.makedirs(ampl_folder, exist_ok=True)
-
-        ampl_filename = os.path.join(ampl_folder, 'step_amplitude_wavelength.txt')
-
-        np.savetxt(ampl_filename, data, fmt='%.5f', comments="", delimiter=" ")
-
-
+    def compare_fft(self, save_steps=None, folder='test'):
         file_path_exp = os.path.join("ExperimentalData", "80thPass2ms.txt")
         data_exp = np.loadtxt(file_path_exp)
 
         profile = self.y_cuts[-1]
+        print("Holi")
+        print(len(profile[1]))
         # Align the profile data with zero on the y-axis
         profile_offset = np.mean(profile[1])
         profile[1] = profile[1]- profile_offset
@@ -283,14 +253,14 @@ class CellBedform():
         data_exp_offset = np.mean(data_exp[:, 1])
         data_exp[:, 1] = data_exp[:, 1] - data_exp_offset
         plt.figure(figsize=(12, 6))
-        profile[1] = profile[1][800:1101]
-        if len(profile[1]) != len(data_exp[:, 1]):
-            # Interpolate profile[1] to match the length of data_exp[:, 1]
-            interpolated_profile = interp1d(np.linspace(0, 1, len(profile[1])), profile[1])
-            profile[1] = interpolated_profile(np.linspace(0, 1, len(data_exp[:, 1])))
+        # profile[1] = profile[1][800:1101]
+        # if len(profile[1]) != len(data_exp[:, 1]):
+        #     # Interpolate profile[1] to match the length of data_exp[:, 1]
+        #     interpolated_profile = interp1d(np.linspace(0, 1, len(profile[1])), profile[1])
+        #     profile[1] = interpolated_profile(np.linspace(0, 1, len(data_exp[:, 1])))
 
-        plt.plot(data_exp[:, 0], profile[1], label='Numerical Data')
-        plt.plot(data_exp[:, 0], data_exp[:, 1], label='Experimental Data')
+        plt.plot(profile[0], profile[1], label='Numerical Data')
+        plt.plot(data_exp[:, 0]*1000, data_exp[:, 1], label='Experimental Data')
         # Save this data
         # df = pd.DataFrame({'Profile': profile[1], 'Experimental Data': data_exp[:, 1], 'Experimental X': data_exp[:, 0]})
         # df.to_excel('plot_data#2.xlsx', index=False)
@@ -299,7 +269,88 @@ class CellBedform():
         plt.ylabel('Y-axis label')  # Add appropriate labels
         plt.title('Data Comparison')  # Add a title
         plt.grid(True)  # Add grid if needed
+
+
+        # Compute FFT comparison
+        time_values = data_exp[:, 0]
+        dt = np.mean(np.diff(time_values))  # Compute the average time step
+
+        # Perform FFT
+        fft_result = np.fft.fft(profile[1])
+        fft_freq = np.fft.fftfreq(len(profile[1]), dt)
+
+        # Calculate amplitude spectrum
+        amplitude_spectrum = 2*np.abs(fft_result) / len(profile[1])
+
+        # Remove DC component (frequency at index 0)
+        amplitude_spectrum = amplitude_spectrum[1:]
+        fft_freq = fft_freq[1:]
+
+        # Find the index of the maximum amplitude
+        max_amplitude_index = np.argmax(amplitude_spectrum)
+
+        # Extract dominant frequency and amplitude
+        dominant_frequency = fft_freq[max_amplitude_index]
+        dominant_amplitude = amplitude_spectrum[max_amplitude_index]
+
+
+        # Calculate for experimental data
+        # Perform FFT
+        fft_result = np.fft.fft(data_exp[:, 1])
+        fft_exp = np.fft.fftfreq(len(data_exp[:, 1]), dt)
+
+        # Calculate amplitude spectrum
+        exp_amplitude_spectrum = 2*np.abs(fft_result) / len(data_exp[:, 1])
+
+        # Remove DC component (frequency at index 0)
+        exp_amplitude_spectrum = exp_amplitude_spectrum[1:]
+        fft_exp = fft_exp[1:]
+
+        # Find the index of the maximum amplitude
+        max_amplitude_index = np.argmax(exp_amplitude_spectrum)
+
+        # Extract dominant frequency and amplitude
+        dominant_frequency_exp = fft_exp[max_amplitude_index]
+        dominant_amplitude_exp = exp_amplitude_spectrum[max_amplitude_index]
+
+        plt.figure(figsize=(6, 6))
+
+        # Subplot 1: Experimental FFT
+        plt.subplot(3, 1, 1)
+        plt.plot(fft_exp, exp_amplitude_spectrum, color='blue')
+        plt.scatter(dominant_frequency_exp, dominant_amplitude_exp, color='red', marker='x')
+        plt.title('Experimental FFT')
+        plt.xlabel('Frequency (Hz)')
+        plt.ylabel('Amplitude')
+        plt.grid(True)
+        plt.xlim(0, 5)
+
+        # Subplot 2: Comparison FFT
+        plt.subplot(3, 1, 2)
+        plt.plot(fft_freq, amplitude_spectrum, color='green')
+        plt.scatter(dominant_frequency, dominant_amplitude, color='red', marker='x')
+        plt.title('Numerical FFT')
+        plt.xlabel('Frequency (Hz)')
+        plt.ylabel('Amplitude')
+        plt.grid(True)
+        plt.xlim(0, 5)
+
+        # Subplot 3: Combined
+        plt.subplot(3, 1, 3)
+        plt.plot(fft_exp, exp_amplitude_spectrum, label='Experimental FFT', color='blue')
+        plt.plot(fft_freq, amplitude_spectrum, label='Comparison FFT', linestyle='--', color='green')
+        plt.scatter(dominant_frequency_exp, dominant_amplitude_exp, color='red', marker='x', label='Experimental Dominant Frequency')
+        plt.scatter(dominant_frequency, dominant_amplitude, color='red', marker='x', label='Comparison Dominant Frequency')
+        plt.title('Combined FFT Comparison')
+        plt.xlabel('Frequency (Hz)')
+        plt.ylabel('Amplitude')
+        plt.grid(True)
+        plt.xlim(0, 5)
+
+        plt.tight_layout()
         plt.show()
+
+
 
 
 if __name__ == "__main__":
