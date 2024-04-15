@@ -3,26 +3,10 @@ import numpy as np
 from cellbedform_PSO import CellBedform
 from scipy.optimize import minimize
 from scipy.optimize import differential_evolution
+from scipy.interpolate import interp1d
 import os
 import datetime
-
-# Problemas: 
-# Contra que comparo
-# Como el optimizer puede encontrar algo si la funcion me devuelve por cada step un corte en x, verifica cada step?
-# Que corte elegimos, analiza todos? - Se analiza solo en uno
-# Que parametros deberia optimizar?
-
-#Requisitos:Parte 2:
-# 1. Centrar una ventana de analisis entre experimental centrada para experimental y numerica 
-# 2. ⁠definir que la númerica tenga los mismos datos 
-# 3. ⁠generar funcion objetivo de optimización que compara diferencia de distancia en x e y del pico de la fft al cuadrado
-
-# Para centrar se define una ventana central de la experimental en la que se define una longitud de datos.
-# Identificando su centro, y cogiendo donde corta el eje x, a partir de esto
-
-# Luego se toma eso y se hace lo mismo en experimental.
-
-# A ambas ventas se saca la fft y los valores a comparar
+import matplotlib.pyplot as plt
 
 #https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.differential_evolution.html#scipy.optimize.differential_evolution
 
@@ -31,35 +15,56 @@ program_start_time = datetime.datetime.now()
 
 print(f"Time Initialization at {program_start_time.strftime('%Y-%m-%d %H:%M:%S')}")
 
+# Calculate FFT for experimental data
 file_path = os.path.join("ExperimentalData", "80thPass2ms.txt")
 data_exp = np.loadtxt(file_path)
+data_exp_offset = np.mean(data_exp[:, 1])
+data_exp[:, 1] = data_exp[:, 1] - data_exp_offset
+time_values = data_exp[:, 0]
+dt = np.mean(np.diff(time_values))  # Compute the average time step
 
+# Perform FFT on experimental data
+fft_result = np.fft.fft(data_exp[:, 1])
+fft_freq = np.fft.fftfreq(len(data_exp[:, 1]), d=dt)
+
+fft_exp = np.abs(fft_result)
+# plt.figure(figsize=(6, 6))
+# plt.plot(fft_freq, fft_exp , color='red')
+# plt.title('Numerical FFT')
+# plt.xlabel('Frequency (Hz)')
+# plt.ylabel('Amplitude')
+# plt.grid(True)
+
+# Data of 5th Pass to generate same initial surface
 file_path_2 = os.path.join("ExperimentalData", "5thPass2ms.txt")
 data_surface = np.loadtxt(file_path_2)
-data_surface = data_surface[:, 1].T
 dx = len(data_surface)
 dy = 40
 y_cut = 20
+
 # Define same original surface to get consistent results
-initial_surface = np.tile(data_surface[:, np.newaxis], (1, dy))
+interpolated_profile = interp1d(data_surface[:, 0].T*1000, data_surface[:, 1].T)
+data_exp = interpolated_profile(np.arange(1, dx+1, 1))
+initial_surface = np.tile(data_exp[:, np.newaxis], (1, dy))
 
-steps = 1000
+# Steps to be analized
+steps = 80
 
-# Objective function to minimize (quadratic function)
+# Objective function to minimize 
 def objective_function(params):
     iteration_start_time = datetime.datetime.now()
     print(f"Time Step at {iteration_start_time.strftime('%Y-%m-%d %H:%M:%S')}")
-    D_,Q_,L0_, b_ = params
-    cb = CellBedform(grid=(dx, dy), D=D_, Q=Q_, L0=L0_, b=b_, y_cut=y_cut, h=initial_surface)
-    y_cuts = cb.run(steps)
-    print(y_cuts[1])
-    diff = y_cuts[1] - data_exp[:, 1] 
-    print(diff)
-    print(np.sum(diff**2))
-    return np.sum(diff**2)
+    L0_, b_ = params
+    print("Tested Params: ", params)
+    cb = CellBedform(grid=(dx, dy), D=1.2, Q=0.2, L0=L0_, b=b_, y_cut=y_cut, h=initial_surface)
+    fft_num = cb.run(steps)
+    diff = fft_exp - fft_num
+    difference = np.sum(diff**2)
+    print(difference)
+    return difference
 
-# Initial guess for the parameters
-params_initial = [0.1,0.8,2, 2]
+# Initial guess for the parameters of L0 and b
+params_initial = [1000, 38]
 
 # Call the optimizer
 result = minimize(objective_function, params_initial, method='Nelder-Mead')

@@ -3,7 +3,6 @@ from fft_comparison_cellbedform import CellBedform
 import os
 import numpy as np
 from scipy.interpolate import interp1d
-import matplotlib.pyplot as plt
 
 print("Program Initialization")
 program_start_time = datetime.datetime.now()
@@ -16,7 +15,7 @@ print(save_values)
 
 file_path = os.path.join("ExperimentalData", "5thPass2ms.txt") #Esta en mm Los datos de altura y el x esta en metros
 data_5th_pass = np.loadtxt(file_path)
-dx = 4450
+dx = len(data_5th_pass)
 dy = 40
 y_cut = 20
 # Define same original surface to get consistent results
@@ -26,10 +25,12 @@ data_exp = interpolated_profile(np.arange(1, dx+1, 1))
 initial_surface = np.tile(data_exp[:, np.newaxis], (1, dy))
 
 test_cases = [
-    {'name': 'C_1', 'D': 1.2, 'Q': 0.2, 'L0': 1000, 'b': 38, }, #Mismo periodo
+    #{'name': 'C_1', 'D': 1.2, 'Q': 0.2, 'L0': 1000, 'b': 38, }, #Mismo periodo
+    {'name': 'C_1', 'D': 1.2, 'Q': 0.2, 'L0': 912.31250763, 'b':  41.32538414, }, #Test
 ]
 
 #Excelente: {'name': 'C_1', 'D': 1.2, 'Q': 0.2, 'L0': 1000, 'b': 38, }
+#912.31250763  41.32538414]
 
 
 

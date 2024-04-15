@@ -1,5 +1,6 @@
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 class CellBedform():
 
@@ -40,8 +41,25 @@ class CellBedform():
             self.run_one_step()
             self.y_cuts.append([np.arange(self._xgrid), self.h[:, self.y_cut]])
 
+        profile = self.y_cuts[-1]
+        profile_offset = np.mean(profile[1])
+        profile[1] = profile[1]- profile_offset
+
         #Compare results
-        return self.y_cuts[-1]
+        # Compute FFT comparison
+        time_values = profile[0]/1000
+        dt = np.mean(np.diff(time_values))  # Compute the average time step
+        # Perform FFT on experimental data
+        fft_result = np.fft.fft(profile[1])
+        fft_freq = np.fft.fftfreq(len(profile[1]), d=dt)
+        # plt.figure(figsize=(6, 6))
+        # plt.plot(fft_freq, np.abs(fft_result) , color='blue')
+        # plt.title('Experimental FFT')
+        # plt.xlabel('Frequency (Hz)')
+        # plt.ylabel('Amplitude')
+        # plt.grid(True)
+        # plt.show()
+        return np.abs(fft_result)
 
     def run_one_step(self):
         """Calculate one step of the model
