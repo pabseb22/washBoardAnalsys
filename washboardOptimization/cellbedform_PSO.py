@@ -50,15 +50,7 @@ class CellBedform():
         time_values = profile[0]/1000
         dt = np.mean(np.diff(time_values))  # Compute the average time step
         # Perform FFT on experimental data
-        fft_result = np.fft.fft(profile[1])
-        fft_freq = np.fft.fftfreq(len(profile[1]), d=dt)
-        # plt.figure(figsize=(6, 6))
-        # plt.plot(fft_freq, np.abs(fft_result) , color='blue')
-        # plt.title('Experimental FFT')
-        # plt.xlabel('Frequency (Hz)')
-        # plt.ylabel('Amplitude')
-        # plt.grid(True)
-        # plt.show()
+        fft_result = np.fft.fft(profile[1])*dt
         return np.abs(fft_result)
 
     def run_one_step(self):

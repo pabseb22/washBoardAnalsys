@@ -258,8 +258,8 @@ class CellBedform():
         time_values = profile[0]/1000 # Needs to be divided to obtain sabe as test file
         dt = np.mean(np.diff(time_values))  # Compute the average time step
         # Perform FFT on experimental data
-        fft_result_exp = np.fft.fft(profile[1])
-        fft_freq_exp = np.fft.fftfreq(len(profile[1]), d=dt)
+        fft_result_exp = np.fft.fft(profile[1])*dt
+        fft_freq_exp = np.fft.fftfreq(len(profile[1]), d=dt)*dt
 
 
         # Calculate for experimental data
@@ -267,8 +267,8 @@ class CellBedform():
         time_values = data_exp[:, 0]
         dt = np.mean(np.diff(time_values))
         # Perform FFT on experimental data
-        fft_result = np.fft.fft(data_exp[:, 1])
-        fft_freq = np.fft.fftfreq(len(data_exp[:, 1]), d=dt)
+        fft_result = np.fft.fft(data_exp[:, 1])*dt
+        fft_freq = np.fft.fftfreq(len(data_exp[:, 1]), d=dt)*dt
 
 
         plt.figure(figsize=(6, 6))
@@ -293,6 +293,7 @@ class CellBedform():
         plt.subplot(3, 1, 3)
         plt.plot(fft_freq_exp, np.abs(fft_result_exp), label='Experimental FFT', color='blue')
         plt.plot(fft_freq, np.abs(fft_result), label='Comparison FFT', linestyle='--', color='green')
+        plt.xlim(0,0.005)
         plt.title('Combined FFT Comparison')
         plt.xlabel('Frequency (Hz)')
         plt.ylabel('Amplitude')

@@ -11,11 +11,11 @@ distance_values = data_exp[:, 0] #Needs to be transforming its data to mm from m
 dt = np.mean(np.diff(distance_values))  # Compute the average time step
 
 # Perform FFT on experimental data
-fft_result = np.fft.fft(data_exp[:, 1])
-fft_freq = np.fft.fftfreq(len(data_exp[:, 1]), d=dt)
+fft_result = np.fft.fft(data_exp[:, 1])*dt
+fft_freq = np.fft.fftfreq(len(data_exp[:, 1]), d=dt)*dt
 
 # Perform inverse FFT to obtain original data
-original_data = np.fft.ifft(fft_result)
+original_data = np.fft.ifft(fft_result/dt)
 
 # Plot the original data, its FFT, and the reconstructed data
 plt.figure(figsize=(12, 8))
@@ -30,8 +30,9 @@ plt.grid(True)
 
 plt.subplot(3, 1, 2)
 plt.plot(fft_freq, np.abs(fft_result), color='green', label='FFT')
+plt.xlim(0,0.005)
 plt.title('FFT')
-plt.xlabel('Frequency (Hz)')
+plt.xlabel('Frequency')
 plt.ylabel('Amplitude')
 plt.legend()
 plt.grid(True)
