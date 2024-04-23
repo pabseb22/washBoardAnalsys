@@ -47,8 +47,8 @@ class CellBedform():
 
         #Compare results
         # Compute FFT comparison
-        time_values = profile[0]/1000
-        dt = np.mean(np.diff(time_values))  # Compute the average time step
+        position_values = profile[0]/1000
+        dt = np.mean(np.diff(position_values))  # Compute the average time step
         # Perform FFT on experimental data
         fft_result = np.fft.fft(profile[1])*dt
         return np.abs(fft_result)

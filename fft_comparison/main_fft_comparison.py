@@ -7,7 +7,7 @@ from scipy.interpolate import interp1d
 print("Program Initialization")
 program_start_time = datetime.datetime.now()
 
-steps = 80
+steps = 75
 save_space = 20
 save_values = list(range(1, steps + 1, save_space))
 print("Steps to be saved:")
@@ -26,7 +26,7 @@ initial_surface = np.tile(data_exp[:, np.newaxis], (1, dy))
 
 test_cases = [
     #{'name': 'C_1', 'D': 1.2, 'Q': 0.2, 'L0': 1000, 'b': 38, }, #Mismo periodo
-    {'name': 'C_1', 'D': 1.2, 'Q': 0.2, 'L0': 912.31250763, 'b':  41.32538414, }, #Test
+    {'name': 'C_1', 'D': 1.2, 'Q': 0.2, 'L0': 1667.32289493, 'b':  44.85048503, }, #Test
 ]
 
 #Excelente: {'name': 'C_1', 'D': 1.2, 'Q': 0.2, 'L0': 1000, 'b': 38, }

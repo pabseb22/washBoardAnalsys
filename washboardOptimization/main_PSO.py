@@ -18,13 +18,15 @@ file_path = os.path.join("ExperimentalData", "80thPass2ms.txt")
 data_exp = np.loadtxt(file_path)
 data_exp_offset = np.mean(data_exp[:, 1])
 data_exp[:, 1] = data_exp[:, 1] - data_exp_offset
-time_values = data_exp[:, 0]
-dt = np.mean(np.diff(time_values))  # Compute the average time step
+position_values = data_exp[:, 0]
+dt = np.mean(np.diff(position_values))  # Compute the average time step
 
 # Perform FFT on experimental data
 fft_result = np.fft.fft(data_exp[:, 1])*dt
 fft_freq = np.fft.fftfreq(len(data_exp[:, 1]), d=dt)*dt
 fft_exp = np.abs(fft_result)
+
+
 
 # Data of 5th Pass to generate same initial surface
 file_path_2 = os.path.join("ExperimentalData", "5thPass2ms.txt")
@@ -39,7 +41,8 @@ data_exp = interpolated_profile(np.arange(1, dx+1, 1))
 initial_surface = np.tile(data_exp[:, np.newaxis], (1, dy))
 
 # Steps to be analized
-steps = 80
+steps = 75
+control = 0
 
 # Objective function to minimize 
 def objective_function(params):
@@ -52,21 +55,22 @@ def objective_function(params):
     L0_ = params[:, 0]
     b_ = params[:, 1]
     differences = []
-    control = 0
     for L0, b in zip(L0_, b_):
         control += 1
-        print("Finished Particle #",control)
         cb = CellBedform(grid=(dx, dy), D=1.2, Q=0.2, L0=L0, b=b, y_cut=y_cut, h=initial_surface)
         fft_num = cb.run(steps)
         diff = fft_exp - fft_num
         difference = np.sum(diff**2)
         differences.append(difference)
+        print("Finished Particle #",control)
     return np.array(differences)
 
 
 
 #Define the bounds for each parameter
-bounds = [(500, 2000), (30, 45)]  # Example bounds, adjust as needed
+x_max=np.array([2000, 45])
+x_min=np.array([500, 30])
+bounds = (x_max, x_min)  # Example bounds, adjust as needed
 
 # Call the optimizer
 #Initialize the swarm
@@ -76,10 +80,11 @@ options = {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
 # Create a Particle Swarm Optimizer
 optimizer = GlobalBestPSO( n_particles=10, dimensions=2, options=options, bounds=bounds)
 
-cost, pos = optimizer.optimize(objective_function, 1)
+optimization_steps = 10
+cost, pos = optimizer.optimize(objective_function, optimization_steps)
 
 # Display the result
-print("Best Position:", cost)
+print("Best Position:", pos)
 
 program_end_time = datetime.datetime.now()
 total_duration = (program_end_time - program_start_time).total_seconds() / 60
