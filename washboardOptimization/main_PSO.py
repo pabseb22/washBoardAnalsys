@@ -74,9 +74,9 @@ bounds = [(500, 2000), (30, 45)]  # Example bounds, adjust as needed
 options = {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
 
 # Create a Particle Swarm Optimizer
-optimizer = GlobalBestPSO( n_particles=5, dimensions=2, options=options, bounds=bounds)
+optimizer = GlobalBestPSO( n_particles=10, dimensions=2, options=options, bounds=bounds)
 
-cost, pos = optimizer.optimize(objective_function, 10)
+cost, pos = optimizer.optimize(objective_function, 1)
 
 # Display the result
 print("Best Position:", cost)
