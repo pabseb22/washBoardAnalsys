@@ -253,6 +253,7 @@ class CellBedform():
         plt.plot(profile[0], profile[1], label='Numerical Data')
         plt.plot(data_exp[:, 0]*1000, data_exp[:, 1], label='Experimental Data') #Transforms x to value un mm since it is in m
         plt.grid(True)  # Add grid if needed
+        plt.legend()
 
         # Compute FFT comparison
         time_values = profile[0]/1000 # Needs to be divided to obtain sabe as test file
@@ -276,7 +277,8 @@ class CellBedform():
         # Subplot 1: Experimental FFT
         plt.subplot(3, 1, 1)
         plt.plot(fft_freq_exp, np.abs(fft_result_exp), color='blue')
-        plt.title('Experimental FFT')
+        plt.xlim(0,0.005)
+        plt.title('Numerical FFT')
         plt.xlabel('Frequency (Hz)')
         plt.ylabel('Amplitude')
         plt.grid(True)
@@ -284,16 +286,18 @@ class CellBedform():
         # Subplot 2: Comparison FFT
         plt.subplot(3, 1, 2)
         plt.plot(fft_freq, np.abs(fft_result), color='green')
-        plt.title('Numerical FFT')
+        plt.xlim(0,0.005)
+        plt.title('Experimental FFT')
         plt.xlabel('Frequency (Hz)')
         plt.ylabel('Amplitude')
         plt.grid(True)
 
         # Subplot 3: Combined
         plt.subplot(3, 1, 3)
-        plt.plot(fft_freq_exp, np.abs(fft_result_exp), label='Experimental FFT', color='blue')
-        plt.plot(fft_freq, np.abs(fft_result), label='Comparison FFT', linestyle='--', color='green')
+        plt.plot(fft_freq_exp, np.abs(fft_result_exp), label='Numerical FFT', color='blue')
+        plt.plot(fft_freq, np.abs(fft_result), label='Experimental FFT', linestyle='--', color='green')
         plt.xlim(0,0.005)
+        plt.legend()
         plt.title('Combined FFT Comparison')
         plt.xlabel('Frequency (Hz)')
         plt.ylabel('Amplitude')
