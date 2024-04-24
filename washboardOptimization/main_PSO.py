@@ -40,18 +40,24 @@ interpolated_profile = interp1d(data_surface[:, 0].T*1000, data_surface[:, 1].T)
 data_exp = interpolated_profile(np.arange(1, dx+1, 1))
 initial_surface = np.tile(data_exp[:, np.newaxis], (1, dy))
 
-# Steps to be analized
+# Steps to be analized in Cellbedform Simulation
 steps = 75
+
+# Steps for PSO optimization 
+optimization_steps = 10
+# Number of particles to be analized in each step of PSO optimization
+n_particles = 10
+
+# Flags to control current progress in Optmization
 control = 0
+total_comparisons = optimization_steps*n_particles
 
 # Objective function to minimize 
 def objective_function(params):
+    global control, total_comparisons
     iteration_start_time = datetime.datetime.now()
-    print("")
-    print(f"Time Step at {iteration_start_time.strftime('%Y-%m-%d %H:%M:%S')}")
-    print("")
-    print("Tested Params: ")
-    print(params)
+    print(f"\nTime {iteration_start_time.strftime('%Y-%m-%d %H:%M:%S')}\n")
+    print("Tested Params:", params, "\n")
     L0_ = params[:, 0]
     b_ = params[:, 1]
     differences = []
@@ -62,7 +68,7 @@ def objective_function(params):
         diff = fft_exp - fft_num
         difference = np.sum(diff**2)
         differences.append(difference)
-        print("Finished Particle #",control)
+        print(f"Finished {control}/{total_comparisons}")
     return np.array(differences)
 
 
@@ -80,7 +86,6 @@ options = {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
 # Create a Particle Swarm Optimizer
 optimizer = GlobalBestPSO( n_particles=10, dimensions=2, options=options, bounds=bounds)
 
-optimization_steps = 10
 cost, pos = optimizer.optimize(objective_function, optimization_steps)
 
 # Display the result

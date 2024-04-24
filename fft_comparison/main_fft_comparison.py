@@ -26,7 +26,7 @@ initial_surface = np.tile(data_exp[:, np.newaxis], (1, dy))
 
 test_cases = [
     #{'name': 'C_1', 'D': 1.2, 'Q': 0.2, 'L0': 1000, 'b': 38, }, #Mismo periodo
-    {'name': 'C_1', 'D': 1.2, 'Q': 0.2, 'L0': 1667.32289493, 'b':  44.85048503, }, #Test
+    {'name': 'C_1', 'D': 1.2, 'Q': 0.2, 'L0': 3489.10770983, 'b':  51.02204329, }, #Test
 ]
 
 #Excelente: {'name': 'C_1', 'D': 1.2, 'Q': 0.2, 'L0': 1000, 'b': 38, }
