@@ -8,10 +8,10 @@ import matplotlib.pyplot as plt
 
 #https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.differential_evolution.html#scipy.optimize.differential_evolution
 
-print("Program Initialization")
+print("\nProgram Initialization")
 program_start_time = datetime.datetime.now()
 
-print(f"Time Initialization at {program_start_time.strftime('%Y-%m-%d %H:%M:%S')}")
+print(f"Time Initialization at {program_start_time.strftime('%Y-%m-%d %H:%M:%S')}\n")
 
 # Calculate FFT for experimental data
 file_path = os.path.join("ExperimentalData", "80thPass2ms.txt")
@@ -44,20 +44,19 @@ initial_surface = np.tile(data_exp[:, np.newaxis], (1, dy))
 steps = 75
 
 # Steps for PSO optimization 
-optimization_steps = 10
+optimization_steps = 500
 # Number of particles to be analized in each step of PSO optimization
 n_particles = 10
 
 # Flags to control current progress in Optmization
 control = 0
-total_comparisons = optimization_steps*n_particles
+total_comparisons = optimization_steps*n_particles #100 -> 11 minutes on i5
 
 # Objective function to minimize 
 def objective_function(params):
+    print("")
     global control, total_comparisons
     iteration_start_time = datetime.datetime.now()
-    print(f"\nTime {iteration_start_time.strftime('%Y-%m-%d %H:%M:%S')}\n")
-    print("Tested Params:", params, "\n")
     L0_ = params[:, 0]
     b_ = params[:, 1]
     differences = []
@@ -68,7 +67,8 @@ def objective_function(params):
         diff = fft_exp - fft_num
         difference = np.sum(diff**2)
         differences.append(difference)
-        print(f"Finished {control}/{total_comparisons}")
+        print(f"{control}/{total_comparisons} -> [ {L0}, {b} ]")
+    print(f"\nTime {iteration_start_time.strftime('%Y-%m-%d %H:%M:%S')}\n")
     return np.array(differences)
 
 
@@ -80,7 +80,7 @@ bounds = (x_max, x_min)  # Example bounds, adjust as needed
 
 # Call the optimizer
 #Initialize the swarm
-# Define the options for PSO optimizer
+# Define the options for PSO optimizer https://pyswarms.readthedocs.io/en/latest/api/pyswarms.single.html#module-pyswarms.single.global_best
 options = {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
 
 # Create a Particle Swarm Optimizer
