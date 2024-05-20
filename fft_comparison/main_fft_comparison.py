@@ -28,10 +28,12 @@ test_cases = [
     #{'name': 'C_1', 'D': 1.2, 'Q': 0.2, 'L0': 1000, 'b': 38, }, #Mismo periodo
     # {'name': 'C_1', 'D': 1.2, 'Q': 0.2, 'L0': 3489.10770983, 'b':  51.02204329, }, #Test
     {'name': 'C_1', 'D': 1.2, 'Q': 0.2, 'L0': 2853.6357014, 'b':  49.74426548, }, 
+    {'name': 'C_1', 'D': 1.2, 'Q': 0.2, 'L0': 3333.27273652, 'b':  58.61955551 }, 
 ]
+# Optimizar para diferentes condiciones exprimentales y determinar que parametros afectan en termios de velocidad y compactacion
+# Verificar la simulacion numerica en un proceso evolutivo y comparar a 40 steps y ver que pasa a 160
+# Verificar si la fft el segundo pico es relevante o ruido. Poner mas peso 
 
-#Excelente: {'name': 'C_1', 'D': 1.2, 'Q': 0.2, 'L0': 1000, 'b': 38, }
-#912.31250763  41.32538414]
 
 
 

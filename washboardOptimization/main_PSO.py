@@ -44,7 +44,7 @@ initial_surface = np.tile(data_exp[:, np.newaxis], (1, dy))
 steps = 75
 
 # Steps for PSO optimization 
-optimization_steps = 500
+optimization_steps = 5
 # Number of particles to be analized in each step of PSO optimization
 n_particles = 10
 
@@ -64,8 +64,21 @@ def objective_function(params):
         control += 1
         cb = CellBedform(grid=(dx, dy), D=1.2, Q=0.2, L0=L0, b=b, y_cut=y_cut, h=initial_surface)
         fft_num = cb.run(steps)
+
+        # Calculate the center region (10% margin from the peak)
+        peak_index = np.argmax(fft_exp)
+        margin = int(0.1 * len(fft_exp))
+        start_index = max(0, peak_index - margin)
+        end_index = min(len(fft_exp), peak_index + margin)
+
+        # Calculate the differences
         diff = fft_exp - fft_num
-        difference = np.sum(diff**2)
+
+        # Apply additional weight to the center part of the FFT
+        weighted_diff = np.copy(diff)
+        weighted_diff[start_index:end_index] *= 2
+
+        difference = np.sum(weighted_diff**2)  # Sum of squared differences
         differences.append(difference)
         print(f"{control}/{total_comparisons} -> [ {L0}, {b} ]")
     print(f"\nTime {iteration_start_time.strftime('%Y-%m-%d %H:%M:%S')}\n")
