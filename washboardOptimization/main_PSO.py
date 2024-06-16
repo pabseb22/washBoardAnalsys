@@ -1,16 +1,16 @@
 from pyswarms.single.global_best import GlobalBestPSO
 from cellbedform_PSO import CellBedform
 import numpy as np
-import os, sys, datetime
+import os, datetime
 
 
 # Constants
 CONDITIONS_FOLDER = "1200g_VelocidadVariable_1740kg-m3"
-TEST_FOLDER = "0.78ms"
+TEST_FOLDER = "2.61ms"
 BASE_SURFACE_FILE = "Vuelta5.txt"
 EXPERIMENTAL_COMPARISON_FILE = "Vuelta80.txt"
 STEPS_CELLBEDFORM = 75
-OPTIMIZATION_STEPS = 100
+OPTIMIZATION_STEPS = 50
 N_PARTICLES = 10
 PSO_BOUNDS = (np.array([4000, 45]), np.array([500, 20])) 
 PSO_OPTIONS = {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
@@ -32,7 +32,6 @@ def create_initial_surface(file_path):
     global dx
     dx = len(data_exp)
     return np.tile(data_exp[:, np.newaxis], (1, D_Y))
-
 
 def load_experimental_data(file_path):
     """Load and preprocess experimental data obtaining its fft."""
@@ -99,7 +98,7 @@ def main():
     optimizer = GlobalBestPSO(n_particles=N_PARTICLES, dimensions=2, options=PSO_OPTIONS, bounds=PSO_BOUNDS)
 
     # Optimize
-    cost, pos = optimizer.optimize(objective_function, OPTIMIZATION_STEPS)
+    _, pos = optimizer.optimize(objective_function, OPTIMIZATION_STEPS)
 
     # Display the result
     print("Best Position:", pos)
