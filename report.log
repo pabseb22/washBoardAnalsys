@@ -1,2 +1,3 @@
 1200g_VelocidadVariable_1740kg-m3 / 0.78ms
 
+2024-06-19 19:32:53,130 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
