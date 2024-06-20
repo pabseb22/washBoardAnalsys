@@ -1,57 +1,74 @@
-import datetime
-from fft_comparison_cellbedform import CellBedform
 import os
 import numpy as np
+from fft_comparison_cellbedform import CellBedform
 from scipy.interpolate import interp1d
 
-print("Program Initialization")
-program_start_time = datetime.datetime.now()
+# CONSTANTS
 
-steps = 75
-save_space = 20
-save_values = list(range(1, steps + 1, save_space))
-print("Steps to be saved:")
-print(save_values)
-
-file_path = os.path.join("ExperimentalData", "5thPass2ms.txt") #Esta en mm Los datos de altura y el x esta en metros
-data_5th_pass = np.loadtxt(file_path)
-dx = len(data_5th_pass)
-dy = 40
-y_cut = 20
-# Define same original surface to get consistent results
-interpolated_profile = interp1d(data_5th_pass[:, 0].T*1000, data_5th_pass[:, 1].T)
-data_exp = interpolated_profile(np.arange(1, dx+1, 1))
-
-initial_surface = np.tile(data_exp[:, np.newaxis], (1, dy))
-
-test_cases = [
-    #{'name': 'C_1', 'D': 1.2, 'Q': 0.2, 'L0': 1000, 'b': 38, }, #Mismo periodo
-    # {'name': 'C_1', 'D': 1.2, 'Q': 0.2, 'L0': 3489.10770983, 'b':  51.02204329, }, #Test
-    {'name': 'C_1', 'D': 1.2, 'Q': 0.2, 'L0': 2853.6357014, 'b':  49.74426548, }, 
-    {'name': 'C_1', 'D': 1.2, 'Q': 0.2, 'L0': 3333.27273652, 'b':  58.61955551 }, 
+# TEST CASES
+TEST_CASES = [
+    {'D': 1.2, 'Q': 0.2, 'L0': 5727.55195664, 'b': 67.49656662},
 ]
-# Optimizar para diferentes condiciones exprimentales y determinar que parametros afectan en termios de velocidad y compactacion
-# Verificar la simulacion numerica en un proceso evolutivo y comparar a 40 steps y ver que pasa a 160
-# Verificar si la fft el segundo pico es relevante o ruido. Poner mas peso 
+
+# EXPERIMENTAL DATA FILES MANAGEMENT
+CONDITIONS_FOLDER = "1200g_VelocidadVariable_1740kg-m3"
+TEST_FOLDER = "2.08ms"
+BASE_SURFACE_FILE = "Vuelta5.txt"
+EXPERIMENTAL_COMPARISON_FILE = "Vuelta80.txt"
+SKIPROWS_FILES = 1
+
+# CELLBEDFORM NUMERICAL SIMULATION PARAMETERS
+STEPS_CELLBEDFORM = 75
+D_Y = 40
+D_X = 4450
+Y_CUT = 20
+
+def load_experimental_data(file_path):
+    """Load and preprocess experimental data obtaining its fft and interpolating it to 4450 mm."""
+    data = np.loadtxt(file_path, skiprows=SKIPROWS_FILES) # Load file
+    offset = np.mean(data[:, 1]) # Center the Signal on the axis
+    data[:, 1] -= offset
+    data[:,0]=data[:,0]*1000-min(data[:,0])*1000 # Normalize and transforming to mm
+    f = interp1d(data[:,0], data[:,1]) # Interpolation
+    array = np.arange(0, D_X, 1)
+    y_inter=f(array)
+    data_inter=np.array([array,y_inter])
+    return data_inter
+
+def create_initial_surface(data_surface):
+    """Create the initial surface for simulation."""
+    data_exp = data_surface[1]  # Use the second column as the data
+    return np.tile(data_exp[:, np.newaxis], (1, D_Y))
+
+def run_test_cases(initial_surface, experimental_comparison_data):
+    """Run test cases and compare FFT results."""
+    for _,test_case in enumerate(TEST_CASES, start=1):
+        cb = CellBedform(
+            grid=(D_X, D_Y),
+            D=test_case['D'],
+            Q=test_case['Q'],
+            L0=test_case['L0'],
+            b=test_case['b'],
+            y_cut=Y_CUT,
+            h=initial_surface
+        )
+        cb.run(STEPS_CELLBEDFORM)
+        cb.compare_fft(experimental_comparison_data)
+        
+
+def main():
+    # Create initial surface
+    base_surface_file_path = os.path.join("ExperimentalData", CONDITIONS_FOLDER, TEST_FOLDER, BASE_SURFACE_FILE)
+    base_surface_exp_data = load_experimental_data(base_surface_file_path)
+    initial_surface = create_initial_surface(base_surface_exp_data)
+
+    # Load experimental data  
+    experimental_file_path = os.path.join("ExperimentalData", CONDITIONS_FOLDER, TEST_FOLDER, EXPERIMENTAL_COMPARISON_FILE)
+    
+    experimental_comparison_data = load_experimental_data(experimental_file_path)
+    # Run test cases
+    run_test_cases(initial_surface, experimental_comparison_data)
 
 
-
-
-
-for idx, test_case in enumerate(test_cases, start=1):
-    iteration_start_time = datetime.datetime.now()
-    print(f"Starting Test For: {test_case['name']} at {iteration_start_time.strftime('%Y-%m-%d %H:%M:%S')}")
-    cb = CellBedform(grid=(dx, dy), D=test_case['D'], Q=test_case['Q'], L0=test_case['L0'], b=test_case['b'], y_cut=y_cut,h=initial_surface)
-    cb.run(steps, save_values, folder=test_case['name'])
-    # cb.save_images(folder=test_case['name'], filename=f"{test_case['name']}_case_{idx}", save_steps=save_values)
-    cb.compare_fft(save_values, folder=test_case['name'])
-    iteration_end_time = datetime.datetime.now()
-    print(f"Finished Test For: {test_case['name']} at {iteration_end_time.strftime('%Y-%m-%d %H:%M:%S')}")
-    duration = (iteration_end_time - iteration_start_time).total_seconds() / 60
-    print(f"Duration: {duration:.2f} minutes")
-    print("")
-
-program_end_time = datetime.datetime.now()
-total_duration = (program_end_time - program_start_time).total_seconds() / 60
-print(f"Program Ended in: {total_duration:.2f} minutes")
-
+if __name__ == "__main__":
+    main()

@@ -45,78 +45,17 @@ class CellBedform():
         self.amplitudes = []
         self.wavelengths = []
 
-    def run(self, steps=100, save_steps=None, folder='test'):
+    def run(self, steps=100, save_steps=None):
         for i in range(steps):
             self.run_one_step()
             # show progress
             print('', end='\r')
             print('{:.1f} % finished'.format(i / steps * 100), end='\r')
 
-            if save_steps is not None and i not in save_steps:
-                    continue
-            self._plot()
-            self.ims.append([self.surf])
-            self.y_cuts.append([np.arange(self._xgrid), self.h[:, self.y_cut]])
-            profile = [np.arange(self._xgrid), self.h[:, self.y_cut]]
-            # # Compute FFT for the Y-cut profiles
-            # time_values = profile[0]
-            # signal_values = profile[1]
-            # dt = np.mean(np.diff(time_values))  # Compute the average time step
-            # profile_fft = np.fft.fftshift(np.fft.fft(signal_values))
-            # frequencies = np.fft.fftshift(np.fft.fftfreq(len(signal_values), dt))
-
-            # # Find peaks
-            # peaks, _ = find_peaks(np.abs(profile_fft), height=0)  # Adjust the height parameter based on your data
-
-            # # Calculate amplitude and wavelength from the FFT result
-            # if len(peaks) > 0:
-            #     amplitude = np.abs(profile_fft[peaks[0]])
-            #     wavelength = 1 / frequencies[peaks[0]]
-            # else:
-            #     amplitude = 0
-            #     wavelength = 0
-
-            # # Perform FFT
-            # fft_result = np.fft.fft(signal_values)
-            # fft_freq = np.fft.fftfreq(len(signal_values), dt)
-
-            # # Calculate amplitude spectrum
-            # amplitude_spectrum = 2*np.abs(fft_result) / len(signal_values)
-
-            # # Remove DC component (frequency at index 0)
-            # amplitude_spectrum = amplitude_spectrum[1:]
-            # fft_freq = fft_freq[1:]
-
-            # # Find the index of the maximum amplitude
-            # max_amplitude_index = np.argmax(amplitude_spectrum)
-
-            # # Extract dominant frequency and amplitude
-            # dominant_frequency = fft_freq[max_amplitude_index]
-            # dominant_amplitude = amplitude_spectrum[max_amplitude_index]
-
-            # # Calculate wavelength of the dominant frequency
-            # dominant_wavelength = 1 / dominant_frequency
-            # # Save amplitude and wavelength for each step
-            # self.amplitudes.append(dominant_amplitude)
-            # self.wavelengths.append(dominant_wavelength)
-
-            # plt.figure()
-            # plt.subplot(2, 1, 1)
-            # plt.plot(time_values, signal_values)
-            # plt.title('Original Signal')
-            # plt.xlabel('Time (s)')
-            # plt.ylabel('Amplitude')
-
-            # plt.subplot(2, 1, 2)
-            # plt.plot(fft_freq, amplitude_spectrum)
-            # plt.scatter(dominant_frequency, dominant_amplitude, color='red', marker='x', label='Dominant Frequency')
-            # plt.title('Amplitude Spectrum')
-            # plt.xlabel('Frequency (Hz)')
-            # plt.ylabel('Amplitude')
-            # plt.legend()
-
-            # plt.tight_layout()
-            # plt.show()
+            if i == steps-1:
+                self._plot()
+                self.ims.append([self.surf])
+                self.y_cuts.append([np.arange(self._xgrid), self.h[:, self.y_cut]])
 
         # show progress
         print('', end='\r')
@@ -239,24 +178,20 @@ class CellBedform():
             print('Unexpected error occurred.')
             print(error)
 
-    def compare_fft(self, save_steps=None, folder='test'):
-        file_path_exp = os.path.join("ExperimentalData", "80thPass2ms.txt")
-        data_exp = np.loadtxt(file_path_exp)
+    def compare_fft(self, experimental_comparison_data):
+        # Numerical Data
         profile = self.y_cuts[-1]
-        # Align the profile data with zero on the y-axis
-        profile_offset = np.mean(profile[1])
-        profile[1] = profile[1]- profile_offset
-        data_exp_offset = np.mean(data_exp[:, 1])
-        data_exp[:, 1] = data_exp[:, 1] - data_exp_offset
+        profile_offset = np.mean(profile[1]) 
+        profile[1] = profile[1]- profile_offset # Align the profile data with zero on the y-axis
 
         plt.figure(figsize=(12, 6))
         plt.plot(profile[0], profile[1], label='Numerical Data')
-        plt.plot(data_exp[:, 0]*1000, data_exp[:, 1], label='Experimental Data') #Transforms x to value un mm since it is in m
+        plt.plot(experimental_comparison_data[0], experimental_comparison_data[1], label='Experimental Data') #Transforms x to value un mm since it is in m
         plt.grid(True)  # Add grid if needed
         plt.legend()
 
         # Compute FFT comparison
-        time_values = profile[0]/1000 # Needs to be divided to obtain sabe as test file
+        time_values = profile[0]/1000 # Needs to be divided to obtain same as test file
         dt = np.mean(np.diff(time_values))  # Compute the average time step
         # Perform FFT on experimental data
         fft_result_exp = np.fft.fft(profile[1])*dt
@@ -265,11 +200,11 @@ class CellBedform():
 
         # Calculate for experimental data
         # Perform FFT
-        time_values = data_exp[:, 0]
+        time_values = experimental_comparison_data[0]/1000
         dt = np.mean(np.diff(time_values))
         # Perform FFT on experimental data
-        fft_result = np.fft.fft(data_exp[:, 1])*dt
-        fft_freq = np.fft.fftfreq(len(data_exp[:, 1]), d=dt)*dt
+        fft_result = np.fft.fft(experimental_comparison_data[1])*dt
+        fft_freq = np.fft.fftfreq(len(experimental_comparison_data[1]), d=dt)*dt
 
 
         plt.figure(figsize=(6, 6))
