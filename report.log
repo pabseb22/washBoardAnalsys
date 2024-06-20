@@ -1,3 +1,10 @@
 1200g_VelocidadVariable_1740kg-m3 / 0.78ms
-
 2024-06-19 19:32:53,130 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+2024-06-19 21:10:10,460 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 17.604112413590595, best pos: [-322.7222912   55.8061736]
+1200g_VelocidadVariable_1740kg-m3 / 1.29ms
+2024-06-19 22:01:17,054 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+2024-06-19 23:45:56,521 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 472.5288941019848, best pos: [4588.61355303   55.65060651]
+1200g_VelocidadVariable_1740kg-m3 / 2.08ms
+2024-06-19 23:55:46,912 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+2024-06-20 01:31:52,019 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 372.639275065379, best pos: [4837.67381703   48.26318216]
+1200g_VelocidadVariable_1740kg-m3 / 2.61ms

@@ -7,12 +7,12 @@ from scipy.interpolate import interp1d
 
 # TEST CASES
 TEST_CASES = [
-    {'D': 1.2, 'Q': 0.2, 'L0': 5727.55195664, 'b': 67.49656662},
+    {'D': 1.2, 'Q': 0.2, 'L0': 4837.67381703, 'b': 48.26318216},
 ]
 
 # EXPERIMENTAL DATA FILES MANAGEMENT
-CONDITIONS_FOLDER = "1200g_VelocidadVariable_1740kg-m3"
 TEST_FOLDER = "2.08ms"
+CONDITIONS_FOLDER = "1200g_VelocidadVariable_1740kg-m3"
 BASE_SURFACE_FILE = "Vuelta5.txt"
 EXPERIMENTAL_COMPARISON_FILE = "Vuelta80.txt"
 SKIPROWS_FILES = 1
