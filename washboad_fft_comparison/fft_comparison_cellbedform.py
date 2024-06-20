@@ -178,7 +178,12 @@ class CellBedform():
             print('Unexpected error occurred.')
             print(error)
 
-    def compare_fft(self, experimental_comparison_data):
+    def compare_fft(self, experimental_comparison_data, filename):
+        # Save the plot for the generated surface
+        output_file = os.path.join("Images", filename+'_surface_generated.png')
+        plt.title(filename+' Surface Generated')
+        plt.savefig(output_file, dpi=300, bbox_inches='tight')
+
         # Numerical Data
         profile = self.y_cuts[-1]
         profile_offset = np.mean(profile[1]) 
@@ -206,14 +211,20 @@ class CellBedform():
         fft_result = np.fft.fft(experimental_comparison_data[1])*dt
         fft_freq = np.fft.fftfreq(len(experimental_comparison_data[1]), d=dt)*dt
 
+        # Save the plot
+        output_file = os.path.join("Images", filename+'_profile_comparison.png')
+
+        # Adjust layout and save the figure
+        plt.title(filename+' Profile Comparison')
+        plt.tight_layout()
+        plt.savefig(output_file, dpi=300, bbox_inches='tight')
 
         plt.figure(figsize=(6, 6))
-
         # Subplot 1: Experimental FFT
         plt.subplot(3, 1, 1)
         plt.plot(fft_freq_exp, np.abs(fft_result_exp), color='blue')
         plt.xlim(0,0.005)
-        plt.title('Numerical FFT')
+        plt.title('Numerical FFT '+filename)
         plt.xlabel('Frequency (Hz)')
         plt.ylabel('Amplitude')
         plt.grid(True)
@@ -222,7 +233,7 @@ class CellBedform():
         plt.subplot(3, 1, 2)
         plt.plot(fft_freq, np.abs(fft_result), color='green')
         plt.xlim(0,0.005)
-        plt.title('Experimental FFT')
+        plt.title('Experimental FFT '+filename)
         plt.xlabel('Frequency (Hz)')
         plt.ylabel('Amplitude')
         plt.grid(True)
@@ -233,12 +244,18 @@ class CellBedform():
         plt.plot(fft_freq, np.abs(fft_result), label='Experimental FFT', linestyle='--', color='green')
         plt.xlim(0,0.005)
         plt.legend()
-        plt.title('Combined FFT Comparison')
+        plt.title('Combined FFT Comparison '+filename)
         plt.xlabel('Frequency (Hz)')
         plt.ylabel('Amplitude')
         plt.grid(True)
 
+        # Save the plot
+        output_file = os.path.join("Images", filename+'_fft_comparison.png')
+
+        # Adjust layout and save the figure
         plt.tight_layout()
+        plt.savefig(output_file, dpi=300, bbox_inches='tight')
+
         plt.show()
 
 

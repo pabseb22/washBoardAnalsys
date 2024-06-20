@@ -7,11 +7,13 @@ from scipy.interpolate import interp1d
 
 # TEST CASES
 TEST_CASES = [
-    {'D': 1.2, 'Q': 0.2, 'L0': 4986.31878445, 'b': 50.22157854},
+    {'velocity': '0.78ms', 'D': 1.2, 'Q': 0.2, 'L0': -322.7222912, 'b': 55.8061736},
+    {'velocity': '1.29ms', 'D': 1.2, 'Q': 0.2, 'L0': 4588.61355303, 'b': 55.65060651},
+    {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4837.67381703, 'b': 48.26318216},
+    {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 4986.31878445, 'b': 50.22157854},
 ]
 
 # EXPERIMENTAL DATA FILES MANAGEMENT
-TEST_FOLDER = "2.61ms"
 CONDITIONS_FOLDER = "1200g_VelocidadVariable_1740kg-m3"
 BASE_SURFACE_FILE = "Vuelta5.txt"
 EXPERIMENTAL_COMPARISON_FILE = "Vuelta80.txt"
@@ -40,34 +42,34 @@ def create_initial_surface(data_surface):
     data_exp = data_surface[1]  # Use the second column as the data
     return np.tile(data_exp[:, np.newaxis], (1, D_Y))
 
-def run_test_cases(initial_surface, experimental_comparison_data):
+def run_test_cases(initial_surface, experimental_comparison_data,test_case):
     """Run test cases and compare FFT results."""
-    for _,test_case in enumerate(TEST_CASES, start=1):
-        cb = CellBedform(
-            grid=(D_X, D_Y),
-            D=test_case['D'],
-            Q=test_case['Q'],
-            L0=test_case['L0'],
-            b=test_case['b'],
-            y_cut=Y_CUT,
-            h=initial_surface
-        )
-        cb.run(STEPS_CELLBEDFORM)
-        cb.compare_fft(experimental_comparison_data)
-        
+    cb = CellBedform(
+        grid=(D_X, D_Y),
+        D=test_case['D'],
+        Q=test_case['Q'],
+        L0=test_case['L0'],
+        b=test_case['b'],
+        y_cut=Y_CUT,
+        h=initial_surface
+    )
+    cb.run(STEPS_CELLBEDFORM)
+    cb.compare_fft(experimental_comparison_data, test_case['velocity'])
 
 def main():
-    # Create initial surface
-    base_surface_file_path = os.path.join("ExperimentalData", CONDITIONS_FOLDER, TEST_FOLDER, BASE_SURFACE_FILE)
-    base_surface_exp_data = load_experimental_data(base_surface_file_path)
-    initial_surface = create_initial_surface(base_surface_exp_data)
+    for _,test_case in enumerate(TEST_CASES, start=1):
+        print("Starting test for: ",test_case['velocity'])
+        # Create initial surface
+        base_surface_file_path = os.path.join("ExperimentalData", CONDITIONS_FOLDER, test_case['velocity'], BASE_SURFACE_FILE)
+        base_surface_exp_data = load_experimental_data(base_surface_file_path)
+        initial_surface = create_initial_surface(base_surface_exp_data)
 
-    # Load experimental data  
-    experimental_file_path = os.path.join("ExperimentalData", CONDITIONS_FOLDER, TEST_FOLDER, EXPERIMENTAL_COMPARISON_FILE)
-    
-    experimental_comparison_data = load_experimental_data(experimental_file_path)
-    # Run test cases
-    run_test_cases(initial_surface, experimental_comparison_data)
+        # Load experimental data  
+        experimental_file_path = os.path.join("ExperimentalData", CONDITIONS_FOLDER, test_case['velocity'], EXPERIMENTAL_COMPARISON_FILE)
+
+        experimental_comparison_data = load_experimental_data(experimental_file_path)
+        # Run test cases
+        run_test_cases(initial_surface, experimental_comparison_data,test_case)
 
 
 if __name__ == "__main__":
