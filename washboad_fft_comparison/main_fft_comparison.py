@@ -8,15 +8,15 @@ from scipy.interpolate import interp1d
 # TEST CASES
 TEST_CASES = [
     {'velocity': '0.78ms', 'D': 1.2, 'Q': 0.2, 'L0': -322.7222912, 'b': 55.8061736},
-    {'velocity': '1.29ms', 'D': 1.2, 'Q': 0.2, 'L0': 4588.61355303, 'b': 55.65060651},
-    {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4837.67381703, 'b': 48.26318216},
-    {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 4986.31878445, 'b': 50.22157854},
+    # {'velocity': '1.29ms', 'D': 1.2, 'Q': 0.2, 'L0': 4588.61355303, 'b': 55.65060651},
+    # {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4837.67381703, 'b': 48.26318216},
+    # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 4986.31878445, 'b': 50.22157854},
 ]
 
 # EXPERIMENTAL DATA FILES MANAGEMENT
 CONDITIONS_FOLDER = "1200g_VelocidadVariable_1740kg-m3"
 BASE_SURFACE_FILE = "Vuelta5.txt"
-EXPERIMENTAL_COMPARISON_FILE = "Vuelta80.txt"
+EXPERIMENTAL_COMPARISON_FILE = "Vuelta80_filtered.txt"
 SKIPROWS_FILES = 1
 
 # CELLBEDFORM NUMERICAL SIMULATION PARAMETERS
