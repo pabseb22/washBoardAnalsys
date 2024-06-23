@@ -22,7 +22,7 @@ def butter_lowpass_filter(data, cutoff, fs, order=5):
     return y
 
 # Parameters for the low-pass filter
-cutoff = 0.01  # desired cutoff frequency of the filter in Hz
+cutoff = 0.008  # desired cutoff frequency of the filter in Hz
 fs = 1.0  # sample rate, in Hz
 
 # Filter the data
@@ -41,16 +41,12 @@ np.savetxt(filtered_filename, filtered_data, delimiter='\t', header='X(mm)\tZ(mm
 # Plot the original and filtered signals
 plt.figure(figsize=(10, 6))
 plt.plot(Data[:, 0], Data[:, 1], label='Original Signal')
-plt.plot(Data[:, 0], filtered_signal, label='Filtered Signal', linestyle='--')
-plt.xlabel('X (mm)', fontname='Times New Roman', fontweight='bold')
+plt.plot(Data[:, 0], filtered_signal, label='Filtered Signal')
+plt.xlabel('X (m)', fontname='Times New Roman', fontweight='bold')
 plt.ylabel('Z (mm)', fontname='Times New Roman', fontweight='bold')
 plt.title('Original and Filtered Signal', fontname='Times New Roman', fontweight='bold')
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
-
-# Save the plot
-# output_file = os.path.join("..", "images", 'original_filtered_signal.png')
-# plt.savefig(output_file, dpi=300, bbox_inches='tight')
 
 plt.show()
