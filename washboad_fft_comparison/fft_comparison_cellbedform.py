@@ -192,6 +192,7 @@ class CellBedform():
         plt.figure(figsize=(12, 6))
         plt.plot(profile[0], profile[1], label='Numerical Data')
         plt.plot(experimental_comparison_data[0], experimental_comparison_data[1], label='Experimental Data') #Transforms x to value un mm since it is in m
+        plt.ylim(-25,25)
         plt.grid(True)  # Add grid if needed
         plt.legend()
 
@@ -212,11 +213,14 @@ class CellBedform():
         fft_freq = np.fft.fftfreq(len(experimental_comparison_data[1]), d=dt)*dt
 
         # Identify the max and region around it
+        # Filter only the positive frequencies
+        positive_freqs = fft_freq > 0
+        fft_result_positive = np.abs(fft_result[positive_freqs])
         fft_exp = np.abs(fft_result)
-        peak_index = np.argmax(fft_exp)
-        margin = int(0.002 * len(fft_exp))  # Identify 10% of the total amount of data next to the highest peak to ponderate
+        peak_index = np.argmax(fft_result_positive)
+        margin = int(0.01 * len(fft_result_positive))  # Identify 10% of the total amount of data next to the highest peak to ponderate
         start_index = max(0, peak_index - margin)
-        end_index = min(len(fft_exp), peak_index + margin)
+        end_index = min(len(fft_result_positive), peak_index + margin)
 
         # Save the plot
         output_file = os.path.join("Images", filename+'_profile_comparison.png')
@@ -230,7 +234,7 @@ class CellBedform():
         # Subplot 1: Experimental FFT
         plt.subplot(3, 1, 1)
         plt.plot(fft_freq_exp, np.abs(fft_result_exp), color='blue')
-        plt.xlim(-0.015,0.015)
+        plt.xlim(0,0.015)
         plt.title('Numerical FFT '+filename)
         plt.xlabel('Frequency (Hz)')
         plt.ylabel('Amplitude')
@@ -240,8 +244,8 @@ class CellBedform():
         plt.subplot(3, 1, 2)
         plt.plot(fft_freq, np.abs(fft_result), color='green')
         plt.fill_between(fft_freq[start_index:end_index], 0, fft_exp[start_index:end_index], color='red', alpha=0.3, label='Peak Region')
-        plt.scatter(fft_freq[peak_index], fft_exp[peak_index], color='red', label='Peak')
-        plt.xlim(-0.015,0.015)
+        #plt.scatter(fft_freq[peak_index], fft_exp[peak_index], color='red', label='Peak')
+        plt.xlim(0,0.015)
         plt.title('Experimental FFT '+filename)
         plt.xlabel('Frequency (Hz)')
         plt.ylabel('Amplitude')
@@ -252,7 +256,7 @@ class CellBedform():
         plt.subplot(3, 1, 3)
         plt.plot(fft_freq_exp, np.abs(fft_result_exp), label='Numerical FFT', color='blue')
         plt.plot(fft_freq, np.abs(fft_result), label='Experimental FFT', linestyle='--', color='green')
-        plt.xlim(-0.015,0.015)
+        plt.xlim(0,0.015)
         plt.legend()
         plt.title('Combined FFT Comparison '+filename)
         plt.xlabel('Frequency (Hz)')

@@ -49,9 +49,16 @@ class CellBedform():
         # Compute FFT comparison
         position_values = profile[0]/1000
         dt = np.mean(np.diff(position_values))  # Compute the average time step
-        # Perform FFT on experimental data
-        fft_result = np.fft.fft(profile[1])*dt
-        return np.abs(fft_result)
+        
+        # Perform FFT on profile data
+        fft_result = np.fft.fft(profile[1]) * dt
+        fft_freq = np.fft.fftfreq(len(profile[1]), d=dt)
+
+        # Filter only the positive frequencies
+        positive_freqs = fft_freq > 0
+        fft_result_positive = np.abs(fft_result[positive_freqs])
+        
+        return fft_result_positive
 
     def run_one_step(self):
         """Calculate one step of the model

@@ -7,10 +7,10 @@ from scipy.interpolate import interp1d
 
 # TEST CASES
 TEST_CASES = [
-    {'velocity': '0.78ms', 'D': 1.2, 'Q': 0.2, 'L0': -40.39188802, 'b': 45.82976483},
-    # {'velocity': '1.29ms', 'D': 1.2, 'Q': 0.2, 'L0': 4588.61355303, 'b': 55.65060651},
-    # {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4837.67381703, 'b': 48.26318216},
-    # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 4986.31878445, 'b': 50.22157854},
+    {'velocity': '0.78ms', 'D': 1.2, 'Q': 0.2, 'L0': -40.39188802, 'b': 45.82976483}, # Frecuencia: 0.005 - 0.01 rango
+    # {'velocity': '1.29ms', 'D': 1.2, 'Q': 0.2, 'L0': 4588.61355303, 'b': 55.65060651}, # Frecuencia 0.0042 0 - 0.005
+    # {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4837.67381703, 'b': 48.26318216}, # Frecuencia 0.00188
+    # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 4986.31878445, 'b': 50.22157854}, # Frecuencia 0.00166
 ]
 
 # EXPERIMENTAL DATA FILES MANAGEMENT
