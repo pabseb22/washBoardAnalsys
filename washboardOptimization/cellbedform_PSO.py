@@ -56,9 +56,9 @@ class CellBedform():
 
         # Filter only the positive frequencies
         positive_freqs = fft_freq > 0
-        fft_result_positive = np.abs(fft_result[positive_freqs])
+        fft_result_positive = fft_result[positive_freqs]
         
-        return fft_result_positive
+        return np.abs(fft_result)
 
     def run_one_step(self):
         """Calculate one step of the model

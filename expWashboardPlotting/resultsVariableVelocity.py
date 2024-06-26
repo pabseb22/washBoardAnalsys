@@ -4,46 +4,24 @@ import os
 # Simplified dictionary to store optimization results
 optimization_results = {
     0.78: {
-        "velocity": "0.78ms",
-        "D": 1.2,
-        "Q": 0.2,
-        "L0": -40.39188802,
-        "b": 45.82976483
-    },
-    1.03: {
-        "velocity": "1.03ms",
-        "D": 1.2,
-        "Q": 0.2,
-        "L0": -2299.30289414,
-        "b": 45.85475005
+        "best_cost": 17.604112413590595,
+        "L0": -54.08357045 ,
+        "b": 57.64161001
     },
     1.29: {
-        "velocity": "1.29ms",
-        "D": 1.2,
-        "Q": 0.2,
-        "L0": 4647.05717735,
-        "b": 68.69560751
-    },
-    1.55: {
-        "velocity": "1.55ms",
-        "D": 1.2,
-        "Q": 0.2,
-        "L0": 5844.33512412,
-        "b": 51.92830198
+        "best_cost": 472.5288941019848,
+        "L0": 4588.61355303,
+        "b": 55.65060651
     },
     2.08: {
-        "velocity": "2.08ms",
-        "D": 1.2,
-        "Q": 0.2,
-        "L0": 5911.81381374,
-        "b": 60.81679517
+        "best_cost": 372.639275065379,
+        "L0": 4837.67381703,
+        "b": 48.26318216
     },
     2.61: {
-        "velocity": "2.61ms",
-        "D": 1.2,
-        "Q": 0.2,
-        "L0": 5699.00532478,
-        "b": 58.49857392
+        "best_cost": 339.71329700953237,
+        "L0": 4986.31878445,
+        "b": 50.22157854
     }
 }
 
@@ -69,6 +47,7 @@ plt.grid(True)
 plt.subplot(1, 2, 2)
 plt.plot(velocities, b_values, marker='o', linestyle='-', color='r')
 plt.xlabel('Velocity (m/s)')
+plt.ylim(0,80)
 plt.ylabel('b')
 plt.title('b', fontweight='bold')
 plt.grid(True)

@@ -7,9 +7,9 @@ import os, datetime
 ### CONSTANTS  ###
 # EXPERIMENTAL DATA
 CONDITIONS_FOLDER = "1200g_VelocidadVariable_1740kg-m3"
-TEST_FOLDERS = ["1.03ms", "1.29ms", "1.55ms", "2.08ms", "2.61ms"]
+TEST_FOLDERS = ["0.78ms"]
 BASE_SURFACE_FILE = "Vuelta5.txt"
-EXPERIMENTAL_COMPARISON_FILE = "Vuelta80.txt"
+EXPERIMENTAL_COMPARISON_FILE = "Vuelta80_filtered.txt"
 SKIPROWS_FILES = 1
 
 # CELLBEDFORM NUMERICAL SIMULATION PARAMETERS
@@ -61,10 +61,10 @@ def perform_fft(data):
 
     # Filter only the positive frequencies
     positive_freqs = fft_freq > 0
-    fft_result_positive = np.abs(fft_result[positive_freqs])
+    fft_result_positive = fft_result[positive_freqs]
 
     global fft_exp
-    fft_exp = fft_result_positive
+    fft_exp = np.abs(fft_result)
 
 def objective_function(params):
     """Objective function to minimize."""
@@ -79,7 +79,7 @@ def objective_function(params):
         fft_numerical = cb.run(STEPS_CELLBEDFORM) # Perform Cellbedform Numerical Simulation and obtain fft
 
         peak_index = np.argmax(fft_exp)
-        margin = int(0.005 * len(fft_exp))  # Identify % of the total amount of data next to the highest peak to ponderate
+        margin = int(0.1 * len(fft_exp))  # Identify % of the total amount of data next to the highest peak to ponderate
         start_index = max(0, peak_index - margin)
         end_index = min(len(fft_exp), peak_index + margin)
 

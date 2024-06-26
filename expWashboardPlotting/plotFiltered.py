@@ -5,7 +5,7 @@ import os
 
 # EXPERIMENTAL DATA FILES MANAGEMENT
 CONDITIONS_FOLDER = "1200g_VelocidadVariable_1740kg-m3"
-TEST_FOLDER = "0.78ms"
+TEST_FOLDER = "1.03ms"
 FILE = "Vuelta80.txt"
 
 # Load the data into a NumPy array
@@ -35,7 +35,7 @@ filtered_filename = filename.replace(".txt", "_filtered.txt")
 filtered_data = np.column_stack((Data[:, 0], filtered_signal))
 
 # Save the filtered data to a new text file
-# np.savetxt(filtered_filename, filtered_data, delimiter='\t', header='X(mm)\tZ(mm)', comments='')
+np.savetxt(filtered_filename, filtered_data, delimiter='\t', header='X(mm)\tZ(mm)', comments='')
 
 
 # Plot the original and filtered signals
