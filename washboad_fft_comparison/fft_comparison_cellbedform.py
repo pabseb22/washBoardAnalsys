@@ -218,7 +218,7 @@ class CellBedform():
         fft_result_positive = np.abs(fft_result[positive_freqs])
         fft_exp = np.abs(fft_result)
         peak_index = np.argmax(fft_result_positive)
-        margin = int(0.01 * len(fft_result_positive))  # Identify 10% of the total amount of data next to the highest peak to ponderate
+        margin = int(0.005 * len(fft_result_positive))  # Identify 10% of the total amount of data next to the highest peak to ponderate
         start_index = max(0, peak_index - margin)
         end_index = min(len(fft_result_positive), peak_index + margin)
 

@@ -7,16 +7,18 @@ from scipy.interpolate import interp1d
 
 # TEST CASES
 TEST_CASES = [
-    {'velocity': '0.78ms', 'D': 1.2, 'Q': 0.2, 'L0': -40.39188802, 'b': 45.82976483}, # Frecuencia: 0.005 - 0.01 rango
-    # {'velocity': '1.29ms', 'D': 1.2, 'Q': 0.2, 'L0': 4588.61355303, 'b': 55.65060651}, # Frecuencia 0.0042 0 - 0.005
-    # {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4837.67381703, 'b': 48.26318216}, # Frecuencia 0.00188
-    # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 4986.31878445, 'b': 50.22157854}, # Frecuencia 0.00166
+    {'velocity': '0.78ms', 'D': 1.2, 'Q': 0.2, 'L0': -40.39188802 , 'b': 45.82976483}, 
+    {'velocity': '1.03ms', 'D': 1.2, 'Q': 0.2, 'L0': -2299.30289414, 'b': 45.85475005}, 
+    {'velocity': '1.29ms', 'D': 1.2, 'Q': 0.2, 'L0': 4647.05717735, 'b': 68.69560751}, 
+    {'velocity': '1.55ms', 'D': 1.2, 'Q': 0.2, 'L0': 5844.33512412, 'b': 51.92830198},
+    {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 5911.81381374 , 'b': 60.81679517},
+    {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 5699.00532478, 'b': 58.49857392}
 ]
 
 # EXPERIMENTAL DATA FILES MANAGEMENT
 CONDITIONS_FOLDER = "1200g_VelocidadVariable_1740kg-m3"
 BASE_SURFACE_FILE = "Vuelta5.txt"
-EXPERIMENTAL_COMPARISON_FILE = "Vuelta80_filtered.txt"
+EXPERIMENTAL_COMPARISON_FILE = "Vuelta80.txt"
 SKIPROWS_FILES = 1
 
 # CELLBEDFORM NUMERICAL SIMULATION PARAMETERS
