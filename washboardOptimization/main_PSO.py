@@ -34,11 +34,6 @@ def initialize_program():
     print(f"Time Initialization at {start_time.strftime('%Y-%m-%d %H:%M:%S')}\n")
     return start_time
 
-def create_initial_surface(data_surface):
-    """Create the initial surface for simulation."""
-    data_exp = data_surface[1]  # Use the second column as the data
-    return np.tile(data_exp[:, np.newaxis], (1, D_Y))
-
 def load_experimental_data(file_path):
     """Load and preprocess experimental data obtaining its fft and interpolating it to 4450 mm."""
     data = np.loadtxt(file_path, skiprows=SKIPROWS_FILES) # Load file
@@ -50,6 +45,11 @@ def load_experimental_data(file_path):
     y_inter=f(array)
     data_inter=np.array([array,y_inter])
     return data_inter
+
+def create_initial_surface(data_surface):
+    """Create the initial surface for simulation."""
+    data_exp = data_surface[1]  # Use the second column as the data
+    return np.tile(data_exp[:, np.newaxis], (1, D_Y))
 
 def perform_fft(data):
     """Perform FFT on the experimental data."""

@@ -7,12 +7,12 @@ from scipy.interpolate import interp1d
 
 # TEST CASES
 TEST_CASES = [
-    {'velocity': '0.78ms', 'D': 1.2, 'Q': 0.2, 'L0': -40.39188802 , 'b': 45.82976483}, 
-    {'velocity': '1.03ms', 'D': 1.2, 'Q': 0.2, 'L0': -2299.30289414, 'b': 45.85475005}, 
-    {'velocity': '1.29ms', 'D': 1.2, 'Q': 0.2, 'L0': 4647.05717735, 'b': 68.69560751}, 
-    {'velocity': '1.55ms', 'D': 1.2, 'Q': 0.2, 'L0': 5844.33512412, 'b': 51.92830198},
-    {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 5911.81381374 , 'b': 60.81679517},
-    {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 5699.00532478, 'b': 58.49857392}
+    {'velocity': '2.08ms', 'D': 1.4, 'Q': 0.2, 'L0': 4837.67381703 , 'b': 48.26318216},
+    # {'velocity': '2.08ms', 'D': 1, 'Q': 0.2, 'L0': 4837.67381703 , 'b': 48.26318216},
+    # {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4837.67381703 , 'b': 48.26318216},
+    # {'velocity': '2.08ms', 'D': 1.4, 'Q': 0.2, 'L0': 4837.67381703 , 'b': 48.26318216},
+    # {'velocity': '2.08ms', 'D': 1.6, 'Q': 0.2, 'L0': 4837.67381703 , 'b': 48.26318216},
+    # {'velocity': '2.08ms', 'D': 1.8, 'Q': 0.2, 'L0': 4837.67381703 , 'b': 48.26318216},
 ]
 
 # EXPERIMENTAL DATA FILES MANAGEMENT
@@ -56,7 +56,8 @@ def run_test_cases(initial_surface, experimental_comparison_data,test_case):
         h=initial_surface
     )
     cb.run(STEPS_CELLBEDFORM)
-    cb.compare_fft(experimental_comparison_data, test_case['velocity'])
+    filename = str(test_case['velocity']+"_D_"+str(test_case['D']))
+    cb.compare_fft(experimental_comparison_data, filename)
 
 def main():
     for _,test_case in enumerate(TEST_CASES, start=1):

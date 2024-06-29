@@ -1,0 +1,18 @@
+1. Probar en superficies aleatorias  ver donde se llega
+
+2. Grafica que muestra comparativa de varios D uno encima de otro.
+
+3. Probar para diferentes densidades.
+
+4. Tambien con la masa. Ya que da mas fuerza.
+
+5. Ajustar L0 a una funcion y b. Para definir como se hace funciones que representen el model segun la velocidad, densidad y peso.
+O considerar b como un valor a no optimizar.
+
+6. Funcion puede ser en function de la velocidad critica.
+
+7. Analizar numericos como experimentales y er velocidades criticas.
+
+8. Incrementar steps y particulas. Ademas, codigo de almacenar cada step para comparar cada pasado con el experimental.
+
+9. Aplicar variaciones en el proceso de optimizar entre c1 y c2.

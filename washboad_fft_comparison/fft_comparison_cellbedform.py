@@ -180,9 +180,10 @@ class CellBedform():
 
     def compare_fft(self, experimental_comparison_data, filename):
         # Save the plot for the generated surface
+        print(filename)
         output_file = os.path.join("Images", filename+'_surface_generated.png')
         plt.title(filename+' Surface Generated')
-        plt.savefig(output_file, dpi=300, bbox_inches='tight')
+        # plt.savefig(output_file, dpi=300, bbox_inches='tight')
 
         # Numerical Data
         profile = self.y_cuts[-1]
@@ -228,7 +229,7 @@ class CellBedform():
         # Adjust layout and save the figure
         plt.title(filename+' Profile Comparison')
         plt.tight_layout()
-        plt.savefig(output_file, dpi=300, bbox_inches='tight')
+        # plt.savefig(output_file, dpi=300, bbox_inches='tight')
 
         plt.figure(figsize=(6, 6))
         # Subplot 1: Experimental FFT
@@ -268,7 +269,7 @@ class CellBedform():
 
         # Adjust layout and save the figure
         plt.tight_layout()
-        plt.savefig(output_file, dpi=300, bbox_inches='tight')
+        # plt.savefig(output_file, dpi=300, bbox_inches='tight')
 
         plt.show()
 
