@@ -1,6 +1,6 @@
 1. Probar en superficies aleatorias  ver donde se llega
 
-2. Grafica que muestra comparativa de varios D uno encima de otro.
+2. Grafica que muestra comparativa de varios D uno encima de otro. Ademas de hacer lo mismo para varias velocidades.
 
 3. Probar para diferentes densidades.
 
@@ -16,3 +16,5 @@ O considerar b como un valor a no optimizar.
 8. Incrementar steps y particulas. Ademas, codigo de almacenar cada step para comparar cada pasado con el experimental.
 
 9. Aplicar variaciones en el proceso de optimizar entre c1 y c2.
+
+10. Ver cual forma es mejor para optimizar, ponderando, seccionando, o normal.
