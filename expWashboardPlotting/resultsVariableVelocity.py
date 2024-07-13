@@ -5,8 +5,8 @@ import os
 optimization_results = {
     0.78: {
         "best_cost": 17.604112413590595,
-        "L0": -322.7222912,
-        "b": 55.8061736
+        "L0": -54.08357045 ,
+        "b": 57.64161001
     },
     1.29: {
         "best_cost": 472.5288941019848,
@@ -24,6 +24,7 @@ optimization_results = {
         "b": 50.22157854
     }
 }
+
 
 # Extract velocities, L0, and b from the dictionary
 velocities = list(optimization_results.keys())
@@ -46,6 +47,7 @@ plt.grid(True)
 plt.subplot(1, 2, 2)
 plt.plot(velocities, b_values, marker='o', linestyle='-', color='r')
 plt.xlabel('Velocity (m/s)')
+plt.ylim(0,80)
 plt.ylabel('b')
 plt.title('b', fontweight='bold')
 plt.grid(True)

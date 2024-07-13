@@ -7,16 +7,18 @@ from scipy.interpolate import interp1d
 
 # TEST CASES
 TEST_CASES = [
-    {'velocity': '0.78ms', 'D': 1.2, 'Q': 0.2, 'L0': -322.7222912, 'b': 55.8061736},
-    # {'velocity': '1.29ms', 'D': 1.2, 'Q': 0.2, 'L0': 4588.61355303, 'b': 55.65060651},
-    # {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4837.67381703, 'b': 48.26318216},
-    # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 4986.31878445, 'b': 50.22157854},
+    {'velocity': '2.08ms', 'D': 1.4, 'Q': 0.2, 'L0': 4837.67381703 , 'b': 48.26318216},
+    # {'velocity': '2.08ms', 'D': 1, 'Q': 0.2, 'L0': 4837.67381703 , 'b': 48.26318216},
+    # {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4837.67381703 , 'b': 48.26318216},
+    # {'velocity': '2.08ms', 'D': 1.4, 'Q': 0.2, 'L0': 4837.67381703 , 'b': 48.26318216},
+    # {'velocity': '2.08ms', 'D': 1.6, 'Q': 0.2, 'L0': 4837.67381703 , 'b': 48.26318216},
+    # {'velocity': '2.08ms', 'D': 1.8, 'Q': 0.2, 'L0': 4837.67381703 , 'b': 48.26318216},
 ]
 
 # EXPERIMENTAL DATA FILES MANAGEMENT
 CONDITIONS_FOLDER = "1200g_VelocidadVariable_1740kg-m3"
 BASE_SURFACE_FILE = "Vuelta5.txt"
-EXPERIMENTAL_COMPARISON_FILE = "Vuelta80_filtered.txt"
+EXPERIMENTAL_COMPARISON_FILE = "Vuelta80.txt"
 SKIPROWS_FILES = 1
 
 # CELLBEDFORM NUMERICAL SIMULATION PARAMETERS
@@ -54,7 +56,8 @@ def run_test_cases(initial_surface, experimental_comparison_data,test_case):
         h=initial_surface
     )
     cb.run(STEPS_CELLBEDFORM)
-    cb.compare_fft(experimental_comparison_data, test_case['velocity'])
+    filename = str(test_case['velocity']+"_D_"+str(test_case['D']))
+    cb.compare_fft(experimental_comparison_data, filename)
 
 def main():
     for _,test_case in enumerate(TEST_CASES, start=1):

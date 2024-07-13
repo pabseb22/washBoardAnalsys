@@ -7,9 +7,9 @@ import os, datetime
 ### CONSTANTS  ###
 # EXPERIMENTAL DATA
 CONDITIONS_FOLDER = "1200g_VelocidadVariable_1740kg-m3"
-TEST_FOLDER = "2.61ms"
+TEST_FOLDERS = ["0.78ms"]
 BASE_SURFACE_FILE = "Vuelta5.txt"
-EXPERIMENTAL_COMPARISON_FILE = "Vuelta80.txt"
+EXPERIMENTAL_COMPARISON_FILE = "Vuelta80_filtered.txt"
 SKIPROWS_FILES = 1
 
 # CELLBEDFORM NUMERICAL SIMULATION PARAMETERS
@@ -34,11 +34,6 @@ def initialize_program():
     print(f"Time Initialization at {start_time.strftime('%Y-%m-%d %H:%M:%S')}\n")
     return start_time
 
-def create_initial_surface(data_surface):
-    """Create the initial surface for simulation."""
-    data_exp = data_surface[1]  # Use the second column as the data
-    return np.tile(data_exp[:, np.newaxis], (1, D_Y))
-
 def load_experimental_data(file_path):
     """Load and preprocess experimental data obtaining its fft and interpolating it to 4450 mm."""
     data = np.loadtxt(file_path, skiprows=SKIPROWS_FILES) # Load file
@@ -51,11 +46,23 @@ def load_experimental_data(file_path):
     data_inter=np.array([array,y_inter])
     return data_inter
 
+def create_initial_surface(data_surface):
+    """Create the initial surface for simulation."""
+    data_exp = data_surface[1]  # Use the second column as the data
+    return np.tile(data_exp[:, np.newaxis], (1, D_Y))
+
 def perform_fft(data):
     """Perform FFT on the experimental data."""
     time_values = data[0]/1000
     dt = np.mean(np.diff(time_values))
+    # Perform FFT on profile data
     fft_result = np.fft.fft(data[1]) * dt
+    fft_freq = np.fft.fftfreq(len(data[1]), d=dt)
+
+    # Filter only the positive frequencies
+    positive_freqs = fft_freq > 0
+    fft_result_positive = fft_result[positive_freqs]
+
     global fft_exp
     fft_exp = np.abs(fft_result)
 
@@ -94,29 +101,37 @@ def weighted_diff(fft_exp,fft_numerical):
 def main():
     program_start_time = initialize_program()
 
-    # Load experimental data
-    experimental_file_path = os.path.join("ExperimentalData", CONDITIONS_FOLDER, TEST_FOLDER, EXPERIMENTAL_COMPARISON_FILE)
-    base_surface_file_path = os.path.join("ExperimentalData", CONDITIONS_FOLDER, TEST_FOLDER, BASE_SURFACE_FILE)
-    data_exp = load_experimental_data(experimental_file_path)
+    results = []
 
-    perform_fft(data_exp)
+    for TEST_FOLDER in TEST_FOLDERS:
+        print(f"Running optimization for {TEST_FOLDER}")
+        
+        # Load experimental data
+        experimental_file_path = os.path.join("ExperimentalData", CONDITIONS_FOLDER, TEST_FOLDER, EXPERIMENTAL_COMPARISON_FILE)
+        base_surface_file_path = os.path.join("ExperimentalData", CONDITIONS_FOLDER, TEST_FOLDER, BASE_SURFACE_FILE)
+        data_exp = load_experimental_data(experimental_file_path)
 
-    # Create initial surface
-    base_surface_exp_data = load_experimental_data(base_surface_file_path)
-    global initial_surface
-    initial_surface = create_initial_surface(base_surface_exp_data)
+        perform_fft(data_exp)
 
-    # Initialize PSO
-    global control, total_comparisons
-    control = 0
-    total_comparisons = OPTIMIZATION_STEPS * N_PARTICLES
-    optimizer = GlobalBestPSO(n_particles=N_PARTICLES, dimensions=2, options=PSO_OPTIONS, bounds=PSO_BOUNDS)
+        # Create initial surface
+        base_surface_exp_data = load_experimental_data(base_surface_file_path)
+        global initial_surface
+        initial_surface = create_initial_surface(base_surface_exp_data)
 
-    # Optimize
-    _, pos = optimizer.optimize(objective_function, OPTIMIZATION_STEPS)
+        # Initialize PSO
+        global control, total_comparisons
+        control = 0
+        total_comparisons = OPTIMIZATION_STEPS * N_PARTICLES
+        optimizer = GlobalBestPSO(n_particles=N_PARTICLES, dimensions=2, options=PSO_OPTIONS, bounds=PSO_BOUNDS)
 
-    # Display the result
-    print("Best Position:", pos)
+        # Optimize
+        _, pos = optimizer.optimize(objective_function, OPTIMIZATION_STEPS)
+
+        # Store the result
+        results.append((TEST_FOLDER, pos))
+
+        # Display the result
+        print(f"Best Position for {TEST_FOLDER}: {pos}")
 
     program_end_time = datetime.datetime.now()
     total_duration = (program_end_time - program_start_time).total_seconds() / 60
