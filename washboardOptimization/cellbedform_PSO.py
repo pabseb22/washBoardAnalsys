@@ -41,12 +41,12 @@ class CellBedform():
             self.run_one_step()
             self.y_cuts.append([np.arange(self._xgrid), self.h[:, self.y_cut]])
 
+        # Center de Signal
         profile = self.y_cuts[-1]
         profile_offset = np.mean(profile[1])
         profile[1] = profile[1]- profile_offset
 
-        #Compare results
-        # Compute FFT comparison
+        # Compute FFT
         position_values = profile[0]/1000
         dt = np.mean(np.diff(position_values))  # Compute the average time step
         # Perform FFT on experimental data

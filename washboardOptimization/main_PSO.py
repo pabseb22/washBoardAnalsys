@@ -70,19 +70,26 @@ def objective_function(params):
         control += 1
         cb = CellBedform(grid=(D_X, D_Y), D=D, Q=Q, L0=L0, b=b, y_cut=Y_CUT, h=initial_surface)
         fft_numerical = cb.run(STEPS_CELLBEDFORM) # Perform Cellbedform Numerical Simulation and obtain fft
-
-        peak_index = np.argmax(fft_exp)
-        margin = int(0.1 * len(fft_exp))  # Identify 10% of the total amount of data next to the highest peak to ponderate
-        start_index = max(0, peak_index - margin)
-        end_index = min(len(fft_exp), peak_index + margin)
-
-        diff = fft_exp - fft_numerical
-        weighted_diff = np.copy(diff)
-        weighted_diff[start_index:end_index] *= 2  # Amplify error importance to 10% of data from the peak of FFT
-        difference = np.sum(weighted_diff ** 2)
+        difference = direct_diff(fft_exp, fft_numerical)
         differences.append(difference)
         print(f"{control}/{total_comparisons} -> [ {L0}, {b} ]")
     return np.array(differences)
+
+def direct_diff(fft_exp,fft_numerical):
+    diff = fft_exp - fft_numerical
+    difference = np.sum(diff ** 2)
+    return difference
+
+
+def weighted_diff(fft_exp,fft_numerical):
+    peak_index = np.argmax(fft_exp)
+    margin = int(0.1 * len(fft_exp))  # Identify 10% of the total amount of data next to the highest peak to ponderate
+    start_index = max(0, peak_index - margin)
+    end_index = min(len(fft_exp), peak_index + margin)
+    diff = fft_exp - fft_numerical
+    diff[start_index:end_index] *= 2  # Amplify error importance to 10% of data from the peak of FFT
+    difference = np.sum(diff ** 2)
+    return difference
 
 def main():
     program_start_time = initialize_program()
