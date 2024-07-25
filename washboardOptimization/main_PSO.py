@@ -7,9 +7,9 @@ import os, datetime
 ### CONSTANTS  ###
 # EXPERIMENTAL DATA
 CONDITIONS_FOLDER = "1200g_VelocidadVariable_1740kg-m3"
-TEST_FOLDERS = ["0.78ms"]
+TEST_FOLDERS = ["2.08ms","2.61ms","3.15ms"]
 BASE_SURFACE_FILE = "Vuelta5.txt"
-EXPERIMENTAL_COMPARISON_FILE = "Vuelta80_filtered.txt"
+EXPERIMENTAL_COMPARISON_FILE = "Vuelta80.txt"
 SKIPROWS_FILES = 1
 
 # CELLBEDFORM NUMERICAL SIMULATION PARAMETERS
@@ -24,8 +24,11 @@ Q = 0.2
 # PSO OPTIMIZATION PARAMETERS
 OPTIMIZATION_STEPS = 100
 N_PARTICLES = 10
-PSO_BOUNDS = (np.array([4000, 45]), np.array([500, 20])) 
+TOTAL_COMPARISONS = OPTIMIZATION_STEPS * N_PARTICLES
+PSO_BOUNDS = (np.array([0, 20]),np.array([6000, 70])) 
 PSO_OPTIONS = {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+# Estrategias disponibles
+strategies = ['nearest', 'random', 'shrink', 'reflect', 'unmodified']
 
 def initialize_program():
     """Initialize the program and print the start time."""
@@ -68,7 +71,7 @@ def perform_fft(data):
 
 def objective_function(params):
     """Objective function to minimize."""
-    global control, total_comparisons
+    global control
     L0_ = params[:, 0]
     b_ = params[:, 1]
     differences = []
@@ -79,7 +82,7 @@ def objective_function(params):
         fft_numerical = cb.run(STEPS_CELLBEDFORM) # Perform Cellbedform Numerical Simulation and obtain fft
         difference = direct_diff(fft_exp, fft_numerical)
         differences.append(difference)
-        print(f"{control}/{total_comparisons} -> [ {L0}, {b} ]")
+        print(f"{control}/{TOTAL_COMPARISONS} -> [ {L0}, {b} ]")
     return np.array(differences)
 
 def direct_diff(fft_exp,fft_numerical):
@@ -119,10 +122,9 @@ def main():
         initial_surface = create_initial_surface(base_surface_exp_data)
 
         # Initialize PSO
-        global control, total_comparisons
+        global control
         control = 0
-        total_comparisons = OPTIMIZATION_STEPS * N_PARTICLES
-        optimizer = GlobalBestPSO(n_particles=N_PARTICLES, dimensions=2, options=PSO_OPTIONS, bounds=PSO_BOUNDS)
+        optimizer = GlobalBestPSO(n_particles=N_PARTICLES, dimensions=2, options=PSO_OPTIONS, bounds=PSO_BOUNDS, bh_strategy='shrink')
 
         # Optimize
         _, pos = optimizer.optimize(objective_function, OPTIMIZATION_STEPS)
