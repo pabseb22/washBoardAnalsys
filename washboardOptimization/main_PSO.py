@@ -7,7 +7,7 @@ import os, datetime
 ### CONSTANTS  ###
 # EXPERIMENTAL DATA
 CONDITIONS_FOLDER = "1200g_VelocidadVariable_1740kg-m3"
-TEST_FOLDERS = ["2.08ms","2.61ms","3.15ms"]
+TEST_FOLDERS = ["1.55ms","2.08ms","2.61ms","3.15ms"]
 BASE_SURFACE_FILE = "Vuelta5.txt"
 EXPERIMENTAL_COMPARISON_FILE = "Vuelta80.txt"
 SKIPROWS_FILES = 1
@@ -80,7 +80,7 @@ def objective_function(params):
         control += 1
         cb = CellBedform(grid=(D_X, D_Y), D=D, Q=Q, L0=L0, b=b, y_cut=Y_CUT, h=initial_surface)
         fft_numerical = cb.run(STEPS_CELLBEDFORM) # Perform Cellbedform Numerical Simulation and obtain fft
-        difference = direct_diff(fft_exp, fft_numerical)
+        difference = weighted_diff(fft_exp, fft_numerical)
         differences.append(difference)
         print(f"{control}/{TOTAL_COMPARISONS} -> [ {L0}, {b} ]")
     return np.array(differences)
