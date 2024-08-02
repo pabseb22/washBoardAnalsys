@@ -2,19 +2,16 @@ import os
 import numpy as np
 from fft_comparison_cellbedform import CellBedform
 from scipy.interpolate import interp1d
+import matplotlib.pyplot as plt
 
 # CONSTANTS
 
 # TEST CASES
 TEST_CASES = [
-    {'velocity': '0.78ms', 'D': 1.4, 'Q': 0.2, 'L0': 0 , 'b': 46.67572938},
-    {'velocity': '1.03ms', 'D': 1.4, 'Q': 0.2, 'L0': 0 , 'b': 68.35793813},
-    {'velocity': '1.29ms', 'D': 1.4, 'Q': 0.2, 'L0': 4617.805031, 'b': 52.86663449},
-    {'velocity': '1.55ms', 'D': 1.4, 'Q': 0.2, 'L0': 4078.63196, 'b': 31.5755327},
+    {'velocity': '2.08ms', 'D': 0.2, 'Q': 0.2, 'L0': 4863.081098, 'b': 55.91198882},
+    {'velocity': '2.08ms', 'D': 0.6, 'Q': 0.2, 'L0': 4863.081098, 'b': 55.91198882},
+    {'velocity': '2.08ms', 'D': 1, 'Q': 0.2, 'L0': 4863.081098, 'b': 55.91198882},
     {'velocity': '2.08ms', 'D': 1.4, 'Q': 0.2, 'L0': 4863.081098, 'b': 55.91198882},
-    {'velocity': '2.61ms', 'D': 1.4, 'Q': 0.2, 'L0': 3655.35865, 'b': 48.95082549},
-    {'velocity': '3.15ms', 'D': 1.4, 'Q': 0.2, 'L0': 1466.327696, 'b': 67.90288156},
-
 ]
 
 # EXPERIMENTAL DATA FILES MANAGEMENT
@@ -22,6 +19,7 @@ CONDITIONS_FOLDER = "1200g_VelocidadVariable_1740kg-m3"
 BASE_SURFACE_FILE = "Vuelta5.txt"
 EXPERIMENTAL_COMPARISON_FILE = "Vuelta80.txt"
 SKIPROWS_FILES = 1
+ALL_FFTS = []
 
 # CELLBEDFORM NUMERICAL SIMULATION PARAMETERS
 STEPS_CELLBEDFORM = 75
@@ -46,7 +44,7 @@ def create_initial_surface(data_surface):
     data_exp = data_surface[1]  # Use the second column as the data
     return np.tile(data_exp[:, np.newaxis], (1, D_Y))
 
-def run_test_cases(initial_surface, experimental_comparison_data,test_case):
+def run_test_cases(initial_surface,test_case):
     """Run test cases and compare FFT results."""
     cb = CellBedform(
         grid=(D_X, D_Y),
@@ -58,8 +56,7 @@ def run_test_cases(initial_surface, experimental_comparison_data,test_case):
         h=initial_surface
     )
     cb.run(STEPS_CELLBEDFORM)
-    filename = str(test_case['velocity']+"_D_"+str(test_case['D']))
-    cb.compare_fft(experimental_comparison_data, filename)
+    ALL_FFTS.append(cb.extract_experimental_fft())
 
 def main():
     for _,test_case in enumerate(TEST_CASES, start=1):
@@ -69,12 +66,28 @@ def main():
         base_surface_exp_data = load_experimental_data(base_surface_file_path)
         initial_surface = create_initial_surface(base_surface_exp_data)
 
-        # Load experimental data  
-        experimental_file_path = os.path.join("ExperimentalData", CONDITIONS_FOLDER, test_case['velocity'], EXPERIMENTAL_COMPARISON_FILE)
-
-        experimental_comparison_data = load_experimental_data(experimental_file_path)
         # Run test cases
-        run_test_cases(initial_surface, experimental_comparison_data,test_case)
+        run_test_cases(initial_surface,test_case)
+    
+    plt.close()
+    # Plotting all FFT results on the same plot
+    plt.figure(figsize=(10, 6))
+    
+    colors = ['green', 'blue', 'orange', 'purple', 'cyan']  # Add more colors if needed
+
+    for i, fft_data in enumerate(ALL_FFTS):
+        fft_freq, fft_result = fft_data
+        color = colors[i % len(colors)]
+        plt.plot(fft_freq, fft_result, color=color, label=f'FFT {i+1}')
+    plt.xlim(0, 0.015)
+    plt.title('Experimental FFTs')
+    plt.xlabel('Frequency (Hz)')
+    plt.ylabel('Amplitude')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+
 
 
 if __name__ == "__main__":

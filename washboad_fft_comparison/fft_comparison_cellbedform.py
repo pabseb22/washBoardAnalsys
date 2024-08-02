@@ -183,7 +183,7 @@ class CellBedform():
         print(filename)
         output_file = os.path.join("Images", filename+'_surface_generated.png')
         plt.title(filename+' Surface Generated')
-        # plt.savefig(output_file, dpi=300, bbox_inches='tight')
+        plt.savefig(output_file, dpi=300, bbox_inches='tight')
 
         # Numerical Data
         profile = self.y_cuts[-1]
@@ -229,7 +229,7 @@ class CellBedform():
         # Adjust layout and save the figure
         plt.title(filename+' Profile Comparison')
         plt.tight_layout()
-        # plt.savefig(output_file, dpi=300, bbox_inches='tight')
+        plt.savefig(output_file, dpi=300, bbox_inches='tight')
 
         plt.figure(figsize=(6, 6))
         # Subplot 1: Experimental FFT
@@ -269,9 +269,25 @@ class CellBedform():
 
         # Adjust layout and save the figure
         plt.tight_layout()
-        # plt.savefig(output_file, dpi=300, bbox_inches='tight')
+        plt.savefig(output_file, dpi=300, bbox_inches='tight')
 
         plt.show()
+
+    def extract_experimental_fft(self):
+        # Numerical Data
+        profile = self.y_cuts[-1]
+        profile_offset = np.mean(profile[1]) 
+        profile[1] = profile[1]- profile_offset # Align the profile data with zero on the y-axis
+
+        # Calculate for numerical data
+        # Perform FFT
+        time_values = profile[0]/1000 # Needs to be divided to obtain same as test file
+        dt = np.mean(np.diff(time_values))  # Compute the average time step
+        # Perform FFT on experimental data
+        fft_result_exp = np.fft.fft(profile[1])*dt
+        fft_freq_exp = np.fft.fftfreq(len(profile[1]), d=dt)*dt
+
+        return [fft_freq_exp, np.abs(fft_result_exp) ]
 
 
 
