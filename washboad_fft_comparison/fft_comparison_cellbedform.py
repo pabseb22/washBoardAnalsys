@@ -212,16 +212,7 @@ class CellBedform():
         # Perform FFT on experimental data
         fft_result = np.fft.fft(experimental_comparison_data[1])*dt
         fft_freq = np.fft.fftfreq(len(experimental_comparison_data[1]), d=dt)*dt
-
-        # Identify the max and region around it
-        # Filter only the positive frequencies
-        positive_freqs = fft_freq > 0
-        fft_result_positive = np.abs(fft_result[positive_freqs])
         fft_exp = np.abs(fft_result)
-        peak_index = np.argmax(fft_result_positive)
-        margin = int(0.005 * len(fft_result_positive))  # Identify 10% of the total amount of data next to the highest peak to ponderate
-        start_index = max(0, peak_index - margin)
-        end_index = min(len(fft_result_positive), peak_index + margin)
 
         # Save the plot
         output_file = os.path.join("Images", filename+'_profile_comparison.png')
@@ -244,7 +235,7 @@ class CellBedform():
         # Subplot 2: Experimental FFT with peak highlight
         plt.subplot(3, 1, 2)
         plt.plot(fft_freq, np.abs(fft_result), color='green')
-        plt.fill_between(fft_freq[start_index:end_index], 0, fft_exp[start_index:end_index], color='red', alpha=0.3, label='Peak Region')
+        plt.fill_between(fft_freq[6:25], 0, fft_exp[6:25], color='red', alpha=0.3, label='Peak Region')
         #plt.scatter(fft_freq[peak_index], fft_exp[peak_index], color='red', label='Peak')
         plt.xlim(0,0.015)
         plt.title('Experimental FFT '+filename)
@@ -287,7 +278,7 @@ class CellBedform():
         fft_result_exp = np.fft.fft(profile[1])*dt
         fft_freq_exp = np.fft.fftfreq(len(profile[1]), d=dt)*dt
 
-        return [fft_freq_exp, np.abs(fft_result_exp) ]
+        return [fft_freq_exp, np.abs(fft_result_exp), profile[0],profile[1] ]
 
 
 

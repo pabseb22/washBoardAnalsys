@@ -9,6 +9,8 @@ import os, datetime
 CONDITIONS_FOLDER = "1200g_VelocidadVariable_1740kg-m3"
 TEST_FOLDERS = ["0.78ms"]
 BASE_SURFACE_FILE = "Vuelta5.txt"
+START_INDEX = 6
+END_INDEX = 25
 EXPERIMENTAL_COMPARISON_FILE = "Vuelta80_filtered.txt"
 SKIPROWS_FILES = 1
 
@@ -78,14 +80,9 @@ def objective_function(params):
         cb = CellBedform(grid=(D_X, D_Y), D=D, Q=Q, L0=L0, b=b, y_cut=Y_CUT, h=initial_surface)
         fft_numerical = cb.run(STEPS_CELLBEDFORM) # Perform Cellbedform Numerical Simulation and obtain fft
 
-        peak_index = np.argmax(fft_exp)
-        margin = int(0.1 * len(fft_exp))  # Identify % of the total amount of data next to the highest peak to ponderate
-        start_index = max(0, peak_index - margin)
-        end_index = min(len(fft_exp), peak_index + margin)
-
         diff = fft_exp - fft_numerical
         weighted_diff = np.copy(diff)
-        weighted_diff[start_index:end_index] *= 2  # Amplify error importance to 10% of data from the peak of FFT
+        weighted_diff[START_INDEX:END_INDEX] *= 2  # Amplify error importance to 10% of data from the peak of FFT
         difference = np.sum(weighted_diff ** 2)
         differences.append(difference)
         print(f"{control}/{total_comparisons} -> [ {L0}, {b} ]")

@@ -8,10 +8,10 @@ import matplotlib.pyplot as plt
 
 # TEST CASES
 TEST_CASES = [
-    {'velocity': '2.08ms', 'D': 0.2, 'Q': 0.2, 'L0': 4863.081098, 'b': 55.91198882},
-    {'velocity': '2.08ms', 'D': 0.6, 'Q': 0.2, 'L0': 4863.081098, 'b': 55.91198882},
-    {'velocity': '2.08ms', 'D': 1, 'Q': 0.2, 'L0': 4863.081098, 'b': 55.91198882},
-    {'velocity': '2.08ms', 'D': 1.4, 'Q': 0.2, 'L0': 4863.081098, 'b': 55.91198882},
+    {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4863.081098, 'b': 60},
+    {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4863.081098, 'b': 50},
+    {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4863.081098, 'b': 40},
+    {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4863.081098, 'b': 30},
 ]
 
 # EXPERIMENTAL DATA FILES MANAGEMENT
@@ -76,7 +76,7 @@ def main():
     colors = ['green', 'blue', 'orange', 'purple', 'cyan']  # Add more colors if needed
 
     for i, fft_data in enumerate(ALL_FFTS):
-        fft_freq, fft_result = fft_data
+        fft_freq, fft_result, x_profile, y_profile = fft_data
         color = colors[i % len(colors)]
         plt.plot(fft_freq, fft_result, color=color, label=f'FFT {i+1}')
     plt.xlim(0, 0.015)
@@ -85,7 +85,21 @@ def main():
     plt.ylabel('Amplitude')
     plt.legend()
     plt.grid(True)
+
+    plt.figure(figsize=(10, 6))
+    
+    for i, fft_data in enumerate(ALL_FFTS):
+        fft_freq, fft_result, x_profile, y_profile = fft_data
+        color = colors[i % len(colors)]
+        plt.plot(x_profile, y_profile, color=color, label=f'FFT {i+1}')
+    plt.ylim(-25, 25)
+    plt.title('Numerical Profiles')
+    plt.xlabel('mm')
+    plt.ylabel('mm')
+    plt.legend()
+    plt.grid(True)
     plt.show()
+
 
 
 
