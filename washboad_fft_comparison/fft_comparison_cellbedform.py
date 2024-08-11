@@ -1,11 +1,10 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-from scipy.signal import find_peaks
 import os
 import pandas as pd
-from scipy.interpolate import interp1d
+from scipy.signal import find_peaks
+from scipy.signal import butter, filtfilt, find_peaks
 
 class CellBedform():
 
@@ -55,7 +54,7 @@ class CellBedform():
             if i == steps-1:
                 self._plot()
                 self.ims.append([self.surf])
-                self.y_cuts.append([np.arange(self._xgrid), self.h[:, self.y_cut]])
+            self.y_cuts.append([np.arange(self._xgrid), self.h[:, self.y_cut]])
 
         # show progress
         print('', end='\r')
@@ -178,15 +177,17 @@ class CellBedform():
             print('Unexpected error occurred.')
             print(error)
 
-    def compare_fft(self, experimental_comparison_data, filename):
+    def compare_fft(self, experimental_comparison_data, filename,boundaries, save_images,IMAGES_FOLDER):
         # Save the plot for the generated surface
         print(filename)
-        output_file = os.path.join("Images", filename+'_surface_generated.png')
+        output_file = os.path.join(IMAGES_FOLDER, filename+'_surface_generated.png')
         plt.title(filename+' Surface Generated')
-        plt.savefig(output_file, dpi=300, bbox_inches='tight')
+        if(save_images):
+            plt.savefig(output_file, dpi=300, bbox_inches='tight')
 
         # Numerical Data
         profile = self.y_cuts[-1]
+        print(profile)
         profile_offset = np.mean(profile[1]) 
         profile[1] = profile[1]- profile_offset # Align the profile data with zero on the y-axis
 
@@ -215,12 +216,13 @@ class CellBedform():
         fft_exp = np.abs(fft_result)
 
         # Save the plot
-        output_file = os.path.join("Images", filename+'_profile_comparison.png')
+        output_file = os.path.join(IMAGES_FOLDER, filename+'_profile_comparison.png')
 
         # Adjust layout and save the figure
         plt.title(filename+' Profile Comparison')
         plt.tight_layout()
-        plt.savefig(output_file, dpi=300, bbox_inches='tight')
+        if(save_images):
+            plt.savefig(output_file, dpi=300, bbox_inches='tight')
 
         plt.figure(figsize=(6, 6))
         # Subplot 1: Experimental FFT
@@ -235,8 +237,7 @@ class CellBedform():
         # Subplot 2: Experimental FFT with peak highlight
         plt.subplot(3, 1, 2)
         plt.plot(fft_freq, np.abs(fft_result), color='green')
-        plt.fill_between(fft_freq[6:25], 0, fft_exp[6:25], color='red', alpha=0.3, label='Peak Region')
-        #plt.scatter(fft_freq[peak_index], fft_exp[peak_index], color='red', label='Peak')
+        plt.fill_between(fft_freq[boundaries[0]:boundaries[1]], 0, fft_exp[boundaries[0]:boundaries[1]], color='red', alpha=0.3, label='Peak Region')
         plt.xlim(0,0.015)
         plt.title('Experimental FFT '+filename)
         plt.xlabel('Frequency (Hz)')
@@ -256,11 +257,12 @@ class CellBedform():
         plt.grid(True)
 
         # Save the plot
-        output_file = os.path.join("Images", filename+'_fft_comparison.png')
+        output_file = os.path.join(IMAGES_FOLDER, filename+'_fft_comparison.png')
 
         # Adjust layout and save the figure
         plt.tight_layout()
-        plt.savefig(output_file, dpi=300, bbox_inches='tight')
+        if(save_images):
+            plt.savefig(output_file, dpi=300, bbox_inches='tight')
 
         plt.show()
 
@@ -280,6 +282,70 @@ class CellBedform():
 
         return [fft_freq_exp, np.abs(fft_result_exp), profile[0],profile[1] ]
 
+    def obtain_average_amplitude(self,min_distance,low_pass,control_steps,images_folder,filename, save_images):
+        amplitudes = []
+
+        for i in range(len(self.y_cuts)):
+            # Analyze Y-cut profiles
+            profile = self.y_cuts[i]
+            x_values = profile[0]
+            y_values = profile[1]
+
+            # Apply low-pass filter to smooth the signal
+            cutoff_frequency = low_pass  # Adjust this value based on your data
+            sampling_rate = 1 / np.mean(np.diff(x_values))  # Assuming uniform spacing
+            filtered_y_values = butter_lowpass_filter(y_values, cutoff_frequency, sampling_rate)
+
+            # Find crests and troughs on the filtered signal
+            peaks, _ = find_peaks(filtered_y_values, distance=min_distance)
+            crests = filtered_y_values[peaks]
+
+            troughs, _ = find_peaks(-filtered_y_values)
+            trough_values = filtered_y_values[troughs]
+
+            # Calculate average amplitude for this profile
+            if len(crests) > 0 and len(trough_values) > 0:
+                average_amplitude = (np.mean(crests) - np.mean(trough_values))
+                amplitudes.append(average_amplitude)
+
+            # Plot Y-cut profile and identified peaks/troughs
+            if((i+1) in control_steps):
+                plt.figure(figsize=(6,6))
+                plt.plot(x_values, y_values, label='Original Profile')
+                plt.plot(x_values, filtered_y_values, label='Filtered Profile')
+                plt.plot(x_values[peaks], crests, "x", label='Peaks')
+                plt.plot(x_values[troughs], trough_values, "o", label='Troughs')
+                plt.title(f'Y-cut Profile at Y={self.y_cut} (Step {i+1})')
+                plt.xlabel('Distance (X)')
+                plt.ylabel('Elevation')
+                plt.legend()
+                plt.grid(True)
+
+        # Plot amplitude development over steps
+        plt.figure(figsize=(6,6))
+        plt.scatter(range(len(amplitudes)), amplitudes, marker='o', color='b')
+        plt.title('Amplitude Development Over Steps')
+        plt.xlabel('Step')
+        plt.ylabel('Amplitude (mm)')
+        plt.grid(True)
+
+        # Save the plot
+        output_file = os.path.join(images_folder,filename+'_amplitud_development.png')
+
+        # Adjust layout and save the figure
+        if(save_images):
+            plt.savefig(output_file, dpi=300, bbox_inches='tight')
+
+        plt.show()
+
+        print('Done. All data processed.')
+
+def butter_lowpass_filter(data, cutoff, fs, order=5):
+    nyquist = 0.5 * fs
+    normal_cutoff = cutoff / nyquist
+    b, a = butter(order, normal_cutoff, btype='low', analog=False)
+    y = filtfilt(b, a, data)
+    return y
 
 
 

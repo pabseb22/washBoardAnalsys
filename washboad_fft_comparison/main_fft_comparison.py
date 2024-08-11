@@ -7,14 +7,15 @@ from scipy.interpolate import interp1d
 
 # TEST CASES
 TEST_CASES = [
-    {'velocity': '0.78ms', 'D': 1.4, 'Q': 0.2, 'L0': 7.68863481, 'b': 36.56879344},
-
+    {'velocity': '0.78ms', 'D': 1.4, 'Q': 0.2, 'L0': 7.68863481, 'b': 50, 'boundaries': [6, 25], 'min_distance': 50, 'low_pass':0.003,'control_steps':[10,25,50,75], 'save_images':False },
+    {'velocity': '2.08ms', 'D': 1.4, 'Q': 0.2, 'L0': 4863.081098, 'b': 55.92, 'boundaries': [6, 25], 'min_distance': 50, 'low_pass':0.008, 'control_steps':[10,25,50,75], 'save_images':True },
 ]
 
 # EXPERIMENTAL DATA FILES MANAGEMENT
 CONDITIONS_FOLDER = "1200g_VelocidadVariable_1740kg-m3"
 BASE_SURFACE_FILE = "Vuelta5.txt"
 EXPERIMENTAL_COMPARISON_FILE = "Vuelta80.txt"
+IMAGES_FOLDER = "Images"
 SKIPROWS_FILES = 1
 
 # CELLBEDFORM NUMERICAL SIMULATION PARAMETERS
@@ -53,7 +54,8 @@ def run_test_cases(initial_surface, experimental_comparison_data,test_case):
     )
     cb.run(STEPS_CELLBEDFORM)
     filename = str(test_case['velocity']+"_D_"+str(test_case['D']))
-    cb.compare_fft(experimental_comparison_data, filename)
+    cb.obtain_average_amplitude(test_case['min_distance'], test_case['low_pass'], test_case['control_steps'], IMAGES_FOLDER, filename, test_case['save_images'])
+    # cb.compare_fft(experimental_comparison_data, filename,test_case['boundaries'], SAVE_IMAGES, IMAGES_FOLDER)
 
 def main():
     for _,test_case in enumerate(TEST_CASES, start=1):
