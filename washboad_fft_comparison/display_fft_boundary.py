@@ -4,7 +4,13 @@ from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
 
 # CONSTANTS
-BOUNDARY_SELECTIONS = [{'velocity': '0.78ms', 'start_index': 6, 'end_index': 25, 'start_value': 0.001348314606741573, 'end_value': 0.0056179775280898875}]
+BOUNDARY_SELECTIONS = [{'velocity': '0.78ms', 'start_index': np.int64(6), 'end_index': np.int64(25), 'start_value': np.float64(0.001348314606741573), 'end_value': np.float64(0.0056179775280898875)}, 
+                       {'velocity': '1.03ms', 'start_index': np.int64(7), 'end_index': np.int64(37), 'start_value': np.float64(0.0015730337078651683), 'end_value': np.float64(0.008314606741573034)}, 
+                       {'velocity': '1.29ms', 'start_index': np.int64(14), 'end_index': np.int64(36), 'start_value': np.float64(0.0031460674157303367), 'end_value': np.float64(0.008089887640449439)}, 
+                       {'velocity': '1.55ms', 'start_index': np.int64(11), 'end_index': np.int64(33), 'start_value': np.float64(0.0024719101123595504), 'end_value': np.float64(0.007415730337078651)}, 
+                       {'velocity': '2.08ms', 'start_index': np.int64(4), 'end_index': np.int64(32), 'start_value': np.float64(0.0008988764044943821), 'end_value': np.float64(0.0071910112359550565)}, 
+                       {'velocity': '2.61ms', 'start_index': np.int64(4), 'end_index': np.int64(29), 'start_value': np.float64(0.0008988764044943821), 'end_value': np.float64(0.00651685393258427)}, 
+                       {'velocity': '3.15ms', 'start_index': np.int64(3), 'end_index': np.int64(27), 'start_value': np.float64(0.0006741573033707865), 'end_value': np.float64(0.006067415730337079)}]
 
 # EXPERIMENTAL DATA FILES MANAGEMENT
 CONDITIONS_FOLDER = "1200g_VelocidadVariable_1740kg-m3"

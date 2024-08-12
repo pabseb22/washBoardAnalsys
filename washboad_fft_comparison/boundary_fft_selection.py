@@ -4,8 +4,7 @@ from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
 
 # CONSTANTS
-VELOCITY = ["0.78ms"]
-# VELOCITY = ["0.78ms","1.03ms","1.29ms","1.55ms","2.08ms","2.61ms","3.15ms"]
+VELOCITY = ["0.78ms","1.03ms","1.29ms","1.55ms","2.08ms","2.61ms","3.15ms"]
 
 
 # EXPERIMENTAL DATA FILES MANAGEMENT
@@ -83,8 +82,6 @@ def main():
         plt.show()
 
     print(boundaries)
-    print(boundaries[0])
-    print(boundaries[0]["velocity"])
 
 
 if __name__ == "__main__":
