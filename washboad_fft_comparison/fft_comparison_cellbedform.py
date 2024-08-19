@@ -187,7 +187,6 @@ class CellBedform():
 
         # Numerical Data
         profile = self.y_cuts[-1]
-        print(profile)
         profile_offset = np.mean(profile[1]) 
         profile[1] = profile[1]- profile_offset # Align the profile data with zero on the y-axis
 
@@ -300,7 +299,7 @@ class CellBedform():
             peaks, _ = find_peaks(filtered_y_values, distance=min_distance)
             crests = filtered_y_values[peaks]
 
-            troughs, _ = find_peaks(-filtered_y_values)
+            troughs, _ = find_peaks(-filtered_y_values, distance=min_distance)
             trough_values = filtered_y_values[troughs]
 
             # Calculate average amplitude for this profile
@@ -318,6 +317,7 @@ class CellBedform():
                 plt.title(f'Y-cut Profile at Y={self.y_cut} (Step {i+1})')
                 plt.xlabel('Distance (X)')
                 plt.ylabel('Elevation')
+                plt.ylim([-20,20])
                 plt.legend()
                 plt.grid(True)
 
@@ -332,6 +332,7 @@ class CellBedform():
         # Save the plot
         output_file = os.path.join(images_folder,filename+'_amplitud_development.png')
 
+        
         # Adjust layout and save the figure
         if(save_images):
             plt.savefig(output_file, dpi=300, bbox_inches='tight')

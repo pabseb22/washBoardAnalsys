@@ -8,16 +8,16 @@ import matplotlib.pyplot as plt
 
 # TEST CASES
 TEST_CASES = [
-    {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4863.081098, 'b': 60},
-    {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4863.081098, 'b': 50},
-    {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4863.081098, 'b': 40},
-    {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4863.081098, 'b': 30},
+    {'velocity': '0.78ms', 'D': 1.2, 'Q': 0.2, 'L0': 0, 'b': 50},
+    {'velocity': '0.78ms', 'D': 1.2, 'Q': 0.2, 'L0': -50, 'b': 50},
+    {'velocity': '0.78ms', 'D': 1.2, 'Q': 0.2, 'L0': -100, 'b': 50},
+
 ]
 
 # EXPERIMENTAL DATA FILES MANAGEMENT
 CONDITIONS_FOLDER = "1200g_VelocidadVariable_1740kg-m3"
 BASE_SURFACE_FILE = "Vuelta5.txt"
-EXPERIMENTAL_COMPARISON_FILE = "Vuelta80.txt"
+EXPERIMENTAL_COMPARISON_FILE = "Vuelta80_filtered.txt"
 SKIPROWS_FILES = 1
 ALL_FFTS = []
 

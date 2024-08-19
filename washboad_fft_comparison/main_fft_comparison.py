@@ -7,8 +7,9 @@ from scipy.interpolate import interp1d
 
 # TEST CASES
 TEST_CASES = [
-    {'velocity': '0.78ms', 'D': 1.4, 'Q': 0.2, 'L0': 7.68863481, 'b': 50, 'boundaries': [6, 25], 'min_distance': 50, 'low_pass':0.003,'control_steps':[10,25,50,75], 'save_images':False },
-    {'velocity': '2.08ms', 'D': 1.4, 'Q': 0.2, 'L0': 4863.081098, 'b': 55.92, 'boundaries': [6, 25], 'min_distance': 50, 'low_pass':0.008, 'control_steps':[10,25,50,75], 'save_images':True },
+    {'velocity': '0.78ms', 'D': 1.2, 'Q': 0.2, 'L0': -70.8919893, 'b': 68.98991874, 'boundaries': [6, 25], 'min_distance': 50, 'low_pass':0.003,'control_steps':[10,25,50,75], 'save_images':False },
+    {'velocity': '0.78ms', 'D': 1.2, 'Q': 0.2, 'L0': -322.7222912, 'b': 55.8061736, 'boundaries': [6, 25], 'min_distance': 100, 'low_pass':0.009,'control_steps':[10,25,50,75], 'save_images':False },
+    # {'velocity': '2.08ms', 'D': 0.8, 'Q': 0.2, 'L0': 4074.968307, 'b': 25.03648751, 'boundaries': [4, 32], 'min_distance': 200, 'low_pass':0.2,'control_steps':[10,25,50,75,145, 290, 980], 'save_images':False },
 ]
 
 # EXPERIMENTAL DATA FILES MANAGEMENT
@@ -19,7 +20,7 @@ IMAGES_FOLDER = "Images"
 SKIPROWS_FILES = 1
 
 # CELLBEDFORM NUMERICAL SIMULATION PARAMETERS
-STEPS_CELLBEDFORM = 75
+STEPS_CELLBEDFORM = 100
 D_Y = 40
 D_X = 4450
 Y_CUT = 20
@@ -54,8 +55,8 @@ def run_test_cases(initial_surface, experimental_comparison_data,test_case):
     )
     cb.run(STEPS_CELLBEDFORM)
     filename = str(test_case['velocity']+"_D_"+str(test_case['D']))
-    cb.obtain_average_amplitude(test_case['min_distance'], test_case['low_pass'], test_case['control_steps'], IMAGES_FOLDER, filename, test_case['save_images'])
-    # cb.compare_fft(experimental_comparison_data, filename,test_case['boundaries'], SAVE_IMAGES, IMAGES_FOLDER)
+    cb.compare_fft(experimental_comparison_data, filename,test_case['boundaries'], test_case['save_images'], IMAGES_FOLDER)
+    # cb.obtain_average_amplitude(test_case['min_distance'], test_case['low_pass'], test_case['control_steps'], IMAGES_FOLDER, filename, test_case['save_images'])
 
 def main():
     for _,test_case in enumerate(TEST_CASES, start=1):
