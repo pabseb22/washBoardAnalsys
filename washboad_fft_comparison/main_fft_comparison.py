@@ -8,16 +8,16 @@ from scipy.interpolate import interp1d
 # TEST CASES
 TEST_CASES = [
     # {'velocity': '0.78ms', 'D': 1.2, 'Q': 0.2, 'L0': -70.89, 'b': 68.99, 'boundaries': [6, 25], 'min_distance': 200, 'low_pass':0.02,'control_steps':[5,15,35,75], 'save_images':True, 'compare_fft': False,'obtain_amplitude':True },
-    # {'velocity': '1.29ms', 'D': 1.2, 'Q': 0.2, 'L0': 217.81, 'b': 22.5, 'boundaries': [14, 36], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': False,'obtain_amplitude':True },
-    {'velocity': '1.55ms', 'D': 1.2, 'Q': 0.2, 'L0': 826.41, 'b': 19.85, 'boundaries': [11, 33], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False },
-    {'velocity': '1.55ms', 'D': 1.2, 'Q': 0.2, 'L0': 826.41, 'b': 39.85, 'boundaries': [11, 33], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False },
-    {'velocity': '1.55ms', 'D': 1.2, 'Q': 0.2, 'L0': 826.41, 'b': 69.85, 'boundaries': [11, 33], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False },
-    
-    {'velocity': '1.55ms', 'D': 1.2, 'Q': 0.2, 'L0': 1026.41, 'b': 19.85, 'boundaries': [11, 33], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False },
-    {'velocity': '1.55ms', 'D': 1.2, 'Q': 0.2, 'L0': 1426.41, 'b': 39.85, 'boundaries': [11, 33], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False },
+    # {'velocity': '1.29ms', 'D': 1.2, 'Q': 0.2, 'L0': 352.81, 'b': 47.5, 'boundaries': [14, 36], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': False,'obtain_amplitude':True },
+    # {'velocity': '1.55ms', 'D': 1.2, 'Q': 0.2, 'L0': 826.41, 'b': 22.85, 'boundaries': [11, 33], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': False,'obtain_amplitude':True },
+    # {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4374.97, 'b': 19.04, 'boundaries': [4, 32], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': False,'obtain_amplitude':True },
 
-    # {'velocity': '2.08ms', 'D': 0.8, 'Q': 0.2, 'L0': 4074.968307, 'b': 25.03648751, 'boundaries': [4, 32], 'min_distance': 200, 'low_pass':0.2,'control_steps':[10,25,50,75,145, 290, 980], 'save_images':False },
 ]
+
+#Additional:
+# {'velocity': '1.29ms', 'D': 1.2, 'Q': 0.2, 'L0': 217.81, 'b': 22.5, 'boundaries': [14, 36], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False },
+# {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4074.97, 'b': 25.04, 'boundaries': [4, 32], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': False,'obtain_amplitude':True },
+
 
 # EXPERIMENTAL DATA FILES MANAGEMENT
 CONDITIONS_FOLDER = "1200g_VelocidadVariable_1740kg-m3"
@@ -27,7 +27,7 @@ RESULTS_FOLDER = "Results"
 SKIPROWS_FILES = 1
 
 # CELLBEDFORM NUMERICAL SIMULATION PARAMETERS
-STEPS_CELLBEDFORM = 75
+STEPS_CELLBEDFORM = 150
 D_Y = 40
 D_X = 4450
 Y_CUT = 20
