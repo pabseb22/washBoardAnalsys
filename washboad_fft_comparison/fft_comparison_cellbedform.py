@@ -177,13 +177,12 @@ class CellBedform():
             print('Unexpected error occurred.')
             print(error)
 
-    def compare_fft(self, experimental_comparison_data, filename,boundaries, save_images,IMAGES_FOLDER):
+    def compare_fft(self, experimental_comparison_data, filename,boundaries, save_images):
         # Save the plot for the generated surface
-        print(filename)
-        output_file = os.path.join(IMAGES_FOLDER, filename+'_surface_generated.png')
+        output_file = os.path.join(filename+'_surface_generated.png')
         plt.title(filename+' Surface Generated')
-        if(save_images):
-            plt.savefig(output_file, dpi=300, bbox_inches='tight')
+        # if(save_images):
+        #     plt.savefig(output_file, dpi=300, bbox_inches='tight')
 
         # Numerical Data
         profile = self.y_cuts[-1]
@@ -215,13 +214,14 @@ class CellBedform():
         fft_exp = np.abs(fft_result)
 
         # Save the plot
-        output_file = os.path.join(IMAGES_FOLDER, filename+'_profile_comparison.png')
+        output_file = os.path.join(filename+'_profile_comparison.png')
 
         # Adjust layout and save the figure
         plt.title(filename+' Profile Comparison')
         plt.tight_layout()
-        if(save_images):
-            plt.savefig(output_file, dpi=300, bbox_inches='tight')
+        # if(save_images):
+        #     # plt.savefig(output_file, dpi=300, bbox_inches='tight')
+
 
         plt.figure(figsize=(6, 6))
         # Subplot 1: Experimental FFT
@@ -256,12 +256,12 @@ class CellBedform():
         plt.grid(True)
 
         # Save the plot
-        output_file = os.path.join(IMAGES_FOLDER, filename+'_fft_comparison.png')
+        output_file = os.path.join(filename+'_fft_comparison.png')
 
         # Adjust layout and save the figure
         plt.tight_layout()
-        if(save_images):
-            plt.savefig(output_file, dpi=300, bbox_inches='tight')
+        # if(save_images):
+        #     plt.savefig(output_file, dpi=300, bbox_inches='tight')
 
         plt.show()
 
@@ -281,9 +281,8 @@ class CellBedform():
 
         return [fft_freq_exp, np.abs(fft_result_exp), profile[0],profile[1] ]
 
-    def obtain_average_amplitude(self,min_distance,low_pass,control_steps,images_folder,filename, save_images):
+    def obtain_average_amplitude(self,min_distance,low_pass,control_steps,filename, save_images):
         amplitudes = []
-
         for i in range(len(self.y_cuts)):
             # Analyze Y-cut profiles
             profile = self.y_cuts[i]
@@ -309,6 +308,9 @@ class CellBedform():
 
             # Plot Y-cut profile and identified peaks/troughs
             if((i+1) in control_steps):
+                if save_images:
+                    output_file_data = os.path.join(filename,'profile_'+str(i+6)+'th.txt')
+                    np.savetxt(output_file_data, profile[1], fmt='%.4f', delimiter='\n')
                 plt.figure(figsize=(6,6))
                 plt.plot(x_values, y_values, label='Original Profile')
                 plt.plot(x_values, filtered_y_values, label='Filtered Profile')
@@ -330,12 +332,14 @@ class CellBedform():
         plt.grid(True)
 
         # Save the plot
-        output_file = os.path.join(images_folder,filename+'_amplitud_development.png')
+        output_file = os.path.join(filename,'amplitud_development.png')
+        output_file_data = os.path.join(filename,'amplitud_development.txt')
 
-        
         # Adjust layout and save the figure
         if(save_images):
-            plt.savefig(output_file, dpi=300, bbox_inches='tight')
+            #plt.savefig(output_file, dpi=300, bbox_inches='tight')
+            np.savetxt(output_file_data, amplitudes, fmt='%.8f', delimiter='\n')
+
 
         plt.show()
 
