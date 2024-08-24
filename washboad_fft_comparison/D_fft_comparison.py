@@ -3,23 +3,27 @@ import numpy as np
 from fft_comparison_cellbedform import CellBedform
 from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
+import pandas as pd
 
 # CONSTANTS
 
 # TEST CASES
 TEST_CASES = [
-    {'velocity': '0.78ms', 'D': 1.2, 'Q': 0.2, 'L0': 0, 'b': 50},
-    {'velocity': '0.78ms', 'D': 1.2, 'Q': 0.2, 'L0': -50, 'b': 50},
-    {'velocity': '0.78ms', 'D': 1.2, 'Q': 0.2, 'L0': -100, 'b': 50},
+    {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 4978.56, 'b': 18.16},
+    {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 4978.56, 'b': 38.16},
+    {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 4978.56, 'b': 58.16},
+    {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 4978.56, 'b': 78.16},
 
 ]
 
 # EXPERIMENTAL DATA FILES MANAGEMENT
 CONDITIONS_FOLDER = "1200g_VelocidadVariable_1740kg-m3"
 BASE_SURFACE_FILE = "Vuelta5.txt"
-EXPERIMENTAL_COMPARISON_FILE = "Vuelta80_filtered.txt"
+EXPERIMENTAL_COMPARISON_FILE = "Vuelta80.txt"
 SKIPROWS_FILES = 1
 ALL_FFTS = []
+TEST_FILE = "b_Variation_Comparison.xlsx"
+FOLDER = os.path.join("Results",TEST_FILE)
 
 # CELLBEDFORM NUMERICAL SIMULATION PARAMETERS
 STEPS_CELLBEDFORM = 75
@@ -72,9 +76,26 @@ def main():
     plt.close()
     # Plotting all FFT results on the same plot
     plt.figure(figsize=(10, 6))
-    
-    colors = ['green', 'blue', 'orange', 'purple', 'cyan']  # Add more colors if needed
 
+    # Save Data
+    # Prepare data for Excel
+    data = {}
+    for i, fft_data in enumerate(ALL_FFTS):
+        fft_freq, fft_result, x_profile, y_profile = fft_data
+        
+        # Create column names with test case numbers
+        data[f'Test Case {i+1} FFT Frequency'] = fft_freq
+        data[f'Test Case {i+1} FFT Result'] = fft_result
+        data[f'Test Case {i+1} X Profile'] = x_profile
+        data[f'Test Case {i+1} Y Profile'] = y_profile
+
+    # Convert dictionary to DataFrame
+    df = pd.DataFrame(data)
+
+    # Save the DataFrame to an Excel file
+    df.to_excel(FOLDER, index=False)
+
+    colors = ['green', 'blue', 'orange', 'purple', 'cyan']  # Add more colors if needed
     for i, fft_data in enumerate(ALL_FFTS):
         fft_freq, fft_result, x_profile, y_profile = fft_data
         color = colors[i % len(colors)]
