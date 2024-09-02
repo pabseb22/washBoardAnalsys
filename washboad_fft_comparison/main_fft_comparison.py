@@ -7,13 +7,13 @@ from scipy.interpolate import interp1d
 
 # TEST CASES
 TEST_CASES = [
-    # {'velocity': '0.78ms', 'D': 1.2, 'Q': 0.2, 'L0': -70.89, 'b': 68.99, 'boundaries': [6, 25], 'min_distance': 200, 'low_pass':0.02,'control_steps':[5,15,35,75], 'save_images':True, 'compare_fft': False,'obtain_amplitude':True },
-    # {'velocity': '1.03ms', 'D': 1.2, 'Q': 0.2, 'L0': -50.67, 'b': 51.23, 'boundaries': [7, 37], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': False,'obtain_amplitude':True },
-    # {'velocity': '1.29ms', 'D': 1.2, 'Q': 0.2, 'L0': 352.81, 'b': 47.50, 'boundaries': [14, 36], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': False,'obtain_amplitude':True },
-    # {'velocity': '1.55ms', 'D': 1.2, 'Q': 0.2, 'L0': 826.41, 'b': 22.85, 'boundaries': [11, 33], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': False,'obtain_amplitude':True },
-    # {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4374.97, 'b': 19.04, 'boundaries': [4, 32], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': False,'obtain_amplitude':True },
-    # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 4978.56, 'b': 38.16, 'boundaries': [4, 29], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': False,'obtain_amplitude':True },
-    # {'velocity': '3.15ms', 'D': 1.2, 'Q': 0.2, 'L0': 1466.33, 'b': 67.90, 'boundaries': [3, 27], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': False,'obtain_amplitude':True },
+    {'velocity': '0.78ms', 'D': 1.2, 'Q': 0.2, 'L0': -70.89, 'b': 68.99, 'boundaries': [6, 25], 'min_distance': 200, 'low_pass':0.02,'control_steps':[5,15,35,75], 'save_images':False, 'compare_fft': False,'obtain_amplitude':False ,'obtain_scalogram': True},
+    # {'velocity': '1.03ms', 'D': 1.2, 'Q': 0.2, 'L0': -50.67, 'b': 51.23, 'boundaries': [7, 37], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': False,'obtain_amplitude':False ,'obtain_scalogram': True },
+    # {'velocity': '1.29ms', 'D': 1.2, 'Q': 0.2, 'L0': 352.81, 'b': 47.50, 'boundaries': [14, 36], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': False,'obtain_amplitude':False ,'obtain_scalogram': True},
+    # {'velocity': '1.55ms', 'D': 1.2, 'Q': 0.2, 'L0': 826.41, 'b': 22.85, 'boundaries': [11, 33], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': False,'obtain_amplitude':False ,'obtain_scalogram': True},
+    {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4374.97, 'b': 19.04, 'boundaries': [4, 32], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': False,'obtain_amplitude':False ,'obtain_scalogram': True},
+    # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 4978.56, 'b': 38.16, 'boundaries': [4, 29], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': False,'obtain_amplitude':False ,'obtain_scalogram': True},
+    # {'velocity': '3.15ms', 'D': 1.2, 'Q': 0.2, 'L0': 1466.33, 'b': 67.90, 'boundaries': [3, 27], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': False,'obtain_amplitude':False ,'obtain_scalogram': True},
 
 ]
 
@@ -30,7 +30,7 @@ RESULTS_FOLDER = "Results"
 SKIPROWS_FILES = 1
 
 # CELLBEDFORM NUMERICAL SIMULATION PARAMETERS
-STEPS_CELLBEDFORM = 150
+STEPS_CELLBEDFORM = 75
 D_Y = 40
 D_X = 4450
 Y_CUT = 20
@@ -66,18 +66,19 @@ def run_test_cases(initial_surface, experimental_comparison_data,test_case):
     cb.run(STEPS_CELLBEDFORM)
 
     folder = ""
-    if test_case['save_images']:
-        folder_name = str(test_case['velocity']+"_L0="+str(test_case['L0'])+"_b="+str(test_case['b']))
-        # Create the main folder if it doesn't exist
-        os.makedirs(RESULTS_FOLDER, exist_ok=True)
-        folder = os.path.join(RESULTS_FOLDER, folder_name)
-        # Create the main folder if it doesn't exist
-        os.makedirs(folder, exist_ok=True)
+    folder_name = str(test_case['velocity']+"_L0="+str(test_case['L0'])+"_b="+str(test_case['b']))
+    # Create the main folder if it doesn't exist
+    os.makedirs(RESULTS_FOLDER, exist_ok=True)
+    folder = os.path.join(RESULTS_FOLDER, folder_name)
+    # Create the main folder if it doesn't exist
+    os.makedirs(folder, exist_ok=True)
 
     if test_case['compare_fft']:
         cb.compare_fft(experimental_comparison_data, folder,test_case['boundaries'], test_case['save_images'])
     if test_case['obtain_amplitude']:
         cb.obtain_average_amplitude(test_case['min_distance'], test_case['low_pass'], test_case['control_steps'], folder, test_case['save_images'])
+    if test_case['obtain_scalogram']:
+        cb.plot_scalogram( folder,test_case['velocity'], True)
 
 def main():
     for _,test_case in enumerate(TEST_CASES, start=1):

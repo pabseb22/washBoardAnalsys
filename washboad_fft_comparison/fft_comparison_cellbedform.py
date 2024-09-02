@@ -5,6 +5,7 @@ import os
 import pandas as pd
 from scipy.signal import find_peaks
 from scipy.signal import butter, filtfilt, find_peaks
+import pywt
 
 class CellBedform():
 
@@ -43,8 +44,11 @@ class CellBedform():
         self.y_cut = y_cut
         self.amplitudes = []
         self.wavelengths = []
+        self.scalogram_y_data = []
+
 
     def run(self, steps=100, save_steps=None):
+        profiles = []
         for i in range(steps):
             self.run_one_step()
             # show progress
@@ -55,6 +59,10 @@ class CellBedform():
                 self._plot()
                 self.ims.append([self.surf])
             self.y_cuts.append([np.arange(self._xgrid), self.h[:, self.y_cut]])
+
+            profiles.append(self.h[:, self.y_cut])
+
+        self.scalogram_y_data = np.hstack(profiles)
 
         # show progress
         print('', end='\r')
@@ -344,6 +352,31 @@ class CellBedform():
         plt.show()
 
         print('Done. All data processed.')
+
+
+    def plot_scalogram(self,filename,velocity, save_images):
+        Y = self.scalogram_y_data
+
+        X = np.arange(1, len(Y)+1)
+
+        # Define the parameters for the cmor wavelet
+        wavelet = 'cmor1.0-0.5'  # Example parameters; adjust as needed
+        scales = np.arange(1, 60)
+
+        # Perform CWT
+        coef, freqs = pywt.cwt(Y, scales, wavelet)
+        plt.cla()
+        # Create the scalogram
+        plt.figure(figsize=(12, 6))
+        plt.imshow(np.abs(coef), aspect='auto', extent=[1, len(Y), 1, 60], cmap='jet', interpolation='bilinear', vmin=0, vmax=50)
+        plt.colorbar(label='Magnitude')
+        plt.title('Scalogram '+velocity)
+        plt.xlabel('Position(mm)')
+        plt.ylabel('Frequenzy(Hz)')
+        if(save_images):
+            output_file = os.path.join(filename,'scalogram.png')
+            plt.savefig(output_file, dpi=300, bbox_inches='tight')
+            print(f'Scalogram saved to {output_file}')
 
 def butter_lowpass_filter(data, cutoff, fs, order=5):
     nyquist = 0.5 * fs
