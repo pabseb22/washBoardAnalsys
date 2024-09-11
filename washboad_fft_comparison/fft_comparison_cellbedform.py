@@ -361,14 +361,14 @@ class CellBedform():
 
         # Define the parameters for the cmor wavelet
         wavelet = 'cmor1.0-0.5'  # Example parameters; adjust as needed
-        scales = np.arange(1, 60)
+        scales = np.arange(1, 20)
 
         # Perform CWT
         coef, freqs = pywt.cwt(Y, scales, wavelet)
         plt.cla()
         # Create the scalogram
         plt.figure(figsize=(12, 6))
-        plt.imshow(np.abs(coef), aspect='auto', extent=[1, len(Y), 1, 60], cmap='jet', interpolation='bilinear', vmin=0, vmax=50)
+        plt.imshow(np.abs(coef), aspect='auto', extent=[1, len(Y), 1, 10], cmap='jet', interpolation='bilinear', vmin=0, vmax=20)
         plt.colorbar(label='Magnitude')
         plt.title('Scalogram '+velocity)
         plt.xlabel('Position(mm)')

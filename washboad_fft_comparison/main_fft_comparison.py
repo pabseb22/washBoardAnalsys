@@ -7,7 +7,7 @@ from scipy.interpolate import interp1d
 
 # TEST CASES
 TEST_CASES = [
-    {'velocity': '0.78ms', 'D': 1.2, 'Q': 0.2, 'L0': -70.89, 'b': 68.99, 'boundaries': [6, 25], 'min_distance': 200, 'low_pass':0.02,'control_steps':[5,15,35,75], 'save_images':False, 'compare_fft': False,'obtain_amplitude':False ,'obtain_scalogram': True},
+    # {'velocity': '0.78ms', 'D': 1.2, 'Q': 0.2, 'L0': -70.89, 'b': 68.99, 'boundaries': [6, 25], 'min_distance': 200, 'low_pass':0.02,'control_steps':[5,15,35,75], 'save_images':False, 'compare_fft': False,'obtain_amplitude':False ,'obtain_scalogram': True},
     # {'velocity': '1.03ms', 'D': 1.2, 'Q': 0.2, 'L0': -50.67, 'b': 51.23, 'boundaries': [7, 37], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': False,'obtain_amplitude':False ,'obtain_scalogram': True },
     # {'velocity': '1.29ms', 'D': 1.2, 'Q': 0.2, 'L0': 352.81, 'b': 47.50, 'boundaries': [14, 36], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': False,'obtain_amplitude':False ,'obtain_scalogram': True},
     # {'velocity': '1.55ms', 'D': 1.2, 'Q': 0.2, 'L0': 826.41, 'b': 22.85, 'boundaries': [11, 33], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': False,'obtain_amplitude':False ,'obtain_scalogram': True},
@@ -78,7 +78,7 @@ def run_test_cases(initial_surface, experimental_comparison_data,test_case):
     if test_case['obtain_amplitude']:
         cb.obtain_average_amplitude(test_case['min_distance'], test_case['low_pass'], test_case['control_steps'], folder, test_case['save_images'])
     if test_case['obtain_scalogram']:
-        cb.plot_scalogram( folder,test_case['velocity'], True)
+        cb.plot_scalogram( folder,test_case['velocity'], False)
 
 def main():
     for _,test_case in enumerate(TEST_CASES, start=1):
