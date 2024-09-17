@@ -9,8 +9,8 @@ import os, datetime
 CONDITIONS_FOLDER = "1200g_VelocidadVariable_1740kg-m3"
 TEST_FOLDERS = ["3.15ms"]
 BASE_SURFACE_FILE = "Vuelta5.txt"
-START_INDEX = 3
-END_INDEX = 27
+START_INDEX = 4
+END_INDEX = 32
 EXPERIMENTAL_COMPARISON_FILE = "Vuelta80.txt"
 SKIPROWS_FILES = 1
 
@@ -26,8 +26,8 @@ Q = 0.2
 # PSO OPTIMIZATION PARAMETERS
 OPTIMIZATION_STEPS = 100
 N_PARTICLES = 10
-PSO_BOUNDS = (np.array([0, 20]),np.array([6000, 60])) 
-PSO_OPTIONS = {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+PSO_BOUNDS = (np.array([10, 0]),np.array([1000, 1000])) 
+PSO_OPTIONS = {'c1': 1.0, 'c2':1.0, 'w': 0.9}
 
 def initialize_program():
     """Initialize the program and print the start time."""
@@ -122,6 +122,8 @@ def main():
 
         # Display the result
         print(f"Best Position for {TEST_FOLDER}: {pos}")
+        with open(TEST_FOLDER+'.txt','w') as file:
+            file.write(f"Best Position for {TEST_FOLDER}: {pos}")
 
     program_end_time = datetime.datetime.now()
     total_duration = (program_end_time - program_start_time).total_seconds() / 60

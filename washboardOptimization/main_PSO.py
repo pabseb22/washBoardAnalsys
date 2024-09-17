@@ -25,8 +25,8 @@ Q = 0.2
 OPTIMIZATION_STEPS = 100
 N_PARTICLES = 10
 TOTAL_COMPARISONS = OPTIMIZATION_STEPS * N_PARTICLES
-PSO_BOUNDS = (np.array([10, 0]),np.array([1000, 100])) 
-PSO_OPTIONS = {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+PSO_BOUNDS = (np.array([10, 0]),np.array([1000, 1000])) 
+PSO_OPTIONS = {'c1': 1.0, 'c2': 1.0, 'w': 0.9}
 # Estrategias disponibles
 strategies = ['nearest', 'random', 'shrink', 'reflect', 'unmodified']
 
