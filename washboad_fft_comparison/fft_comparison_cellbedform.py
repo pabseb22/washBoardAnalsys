@@ -191,7 +191,6 @@ class CellBedform():
         plt.title(filename+' Surface Generated')
         # if(save_images):
         #     plt.savefig(output_file, dpi=300, bbox_inches='tight')
-
         # Numerical Data
         profile = self.y_cuts[-1]
         profile_offset = np.mean(profile[1]) 
@@ -231,37 +230,37 @@ class CellBedform():
         #     # plt.savefig(output_file, dpi=300, bbox_inches='tight')
 
 
-        plt.figure(figsize=(6, 6))
-        # Subplot 1: Experimental FFT
-        plt.subplot(3, 1, 1)
-        plt.plot(fft_freq_exp, np.abs(fft_result_exp), color='blue')
-        plt.xlim(0,0.015)
-        plt.title('Numerical FFT '+filename)
-        plt.xlabel('Frequency (Hz)')
-        plt.ylabel('Amplitude')
-        plt.grid(True)
+        # plt.figure(figsize=(6, 6))
+        # # Subplot 1: Experimental FFT
+        # plt.subplot(3, 1, 1)
+        # plt.plot(fft_freq_exp, np.abs(fft_result_exp), color='blue')
+        # plt.xlim(0,0.015)
+        # plt.title('Numerical FFT '+filename)
+        # plt.xlabel('Frequency (Hz)')
+        # plt.ylabel('Amplitude')
+        # plt.grid(True)
 
-        # Subplot 2: Experimental FFT with peak highlight
-        plt.subplot(3, 1, 2)
-        plt.plot(fft_freq, np.abs(fft_result), color='green')
-        plt.fill_between(fft_freq[boundaries[0]:boundaries[1]], 0, fft_exp[boundaries[0]:boundaries[1]], color='red', alpha=0.3, label='Peak Region')
-        plt.xlim(0,0.015)
-        plt.title('Experimental FFT '+filename)
-        plt.xlabel('Frequency (Hz)')
-        plt.ylabel('Amplitude')
-        plt.legend()
-        plt.grid(True)
+        # # Subplot 2: Experimental FFT with peak highlight
+        # plt.subplot(3, 1, 2)
+        # plt.plot(fft_freq, np.abs(fft_result), color='green')
+        # plt.fill_between(fft_freq[boundaries[0]:boundaries[1]], 0, fft_exp[boundaries[0]:boundaries[1]], color='red', alpha=0.3, label='Peak Region')
+        # plt.xlim(0,0.015)
+        # plt.title('Experimental FFT '+filename)
+        # plt.xlabel('Frequency (Hz)')
+        # plt.ylabel('Amplitude')
+        # plt.legend()
+        # plt.grid(True)
 
-        # Subplot 3: Combined
-        plt.subplot(3, 1, 3)
-        plt.plot(fft_freq_exp, np.abs(fft_result_exp), label='Numerical FFT', color='blue')
-        plt.plot(fft_freq, np.abs(fft_result), label='Experimental FFT', linestyle='--', color='green')
-        plt.xlim(0,0.015)
-        plt.legend()
-        plt.title('Combined FFT Comparison '+filename)
-        plt.xlabel('Frequency (Hz)')
-        plt.ylabel('Amplitude')
-        plt.grid(True)
+        # # Subplot 3: Combined
+        # plt.subplot(3, 1, 3)
+        # plt.plot(fft_freq_exp, np.abs(fft_result_exp), label='Numerical FFT', color='blue')
+        # plt.plot(fft_freq, np.abs(fft_result), label='Experimental FFT', linestyle='--', color='green')
+        # plt.xlim(0,0.015)
+        # plt.legend()
+        # plt.title('Combined FFT Comparison '+filename)
+        # plt.xlabel('Frequency (Hz)')
+        # plt.ylabel('Amplitude')
+        # plt.grid(True)
 
         # Save the plot
         output_file = os.path.join(filename+'_fft_comparison.png')
@@ -270,8 +269,11 @@ class CellBedform():
         plt.tight_layout()
         # if(save_images):
         #     plt.savefig(output_file, dpi=300, bbox_inches='tight')
+        if(save_images):
+            output_file_data_fft = os.path.join(filename,'fft_80th.txt')
+            np.savetxt(output_file_data_fft, [fft_freq_exp, np.abs(fft_result_exp)], fmt='%.6f', delimiter='\n')
 
-        plt.show()
+        # plt.show()
 
     def extract_experimental_fft(self):
         # Numerical Data
@@ -319,6 +321,8 @@ class CellBedform():
                 if save_images:
                     output_file_data = os.path.join(filename,'profile_'+str(i+6)+'th.txt')
                     np.savetxt(output_file_data, profile[1], fmt='%.4f', delimiter='\n')
+                    output_file_data_fft = os.path.join(filename,'fft_'+str(i+6)+'th.txt')
+                    np.savetxt(output_file_data_fft, profile[1], fmt='%.4f', delimiter='\n')
                 plt.figure(figsize=(6,6))
                 plt.plot(x_values, y_values, label='Original Profile')
                 plt.plot(x_values, filtered_y_values, label='Filtered Profile')

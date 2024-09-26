@@ -7,10 +7,11 @@ import os, datetime
 ### CONSTANTS  ###
 # EXPERIMENTAL DATA
 CONDITIONS_FOLDER = "1200g_VelocidadVariable_1740kg-m3"
-TEST_FOLDERS = ["3.15ms"]
+TEST_FOLDERS = ["2.08ms"]
 BASE_SURFACE_FILE = "Vuelta5.txt"
-START_INDEX = 3
-END_INDEX = 27
+START_INDEX = 4
+END_INDEX = 32
+PONDERATION = 2
 EXPERIMENTAL_COMPARISON_FILE = "Vuelta80.txt"
 SKIPROWS_FILES = 1
 
@@ -24,10 +25,10 @@ D = 1.2
 Q = 0.2
 
 # PSO OPTIMIZATION PARAMETERS
-OPTIMIZATION_STEPS = 100
+OPTIMIZATION_STEPS = 150
 N_PARTICLES = 10
-PSO_BOUNDS = (np.array([0, 20]),np.array([6000, 60])) 
-PSO_OPTIONS = {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+PSO_BOUNDS = (np.array([10, 0]),np.array([1000, 1000])) 
+PSO_OPTIONS = {'c1': 1, 'c2': 1, 'w': 0.9}
 
 def initialize_program():
     """Initialize the program and print the start time."""
@@ -56,14 +57,11 @@ def create_initial_surface(data_surface):
 def perform_fft(data):
     """Perform FFT on the experimental data."""
     time_values = data[0]/1000
+    print(time_values)
     dt = np.mean(np.diff(time_values))
     # Perform FFT on profile data
     fft_result = np.fft.fft(data[1]) * dt
     fft_freq = np.fft.fftfreq(len(data[1]), d=dt)
-
-    # Filter only the positive frequencies
-    positive_freqs = fft_freq > 0
-    fft_result_positive = fft_result[positive_freqs]
 
     global fft_exp
     fft_exp = np.abs(fft_result)
@@ -82,7 +80,7 @@ def objective_function(params):
 
         diff = fft_exp - fft_numerical
         weighted_diff = np.copy(diff)
-        weighted_diff[START_INDEX:END_INDEX] *= 2  # Amplify error importance to 10% of data from the peak of FFT
+        weighted_diff[START_INDEX:END_INDEX] *= PONDERATION  # Amplify error importance to 10% of data from the peak of FFT
         difference = np.sum(weighted_diff ** 2)
         differences.append(difference)
         print(f"{control}/{total_comparisons} -> [ {L0}, {b} ]")

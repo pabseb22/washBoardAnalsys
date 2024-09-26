@@ -17,15 +17,16 @@ STEPS_CELLBEDFORM = 75
 D_Y = 40
 D_X = 4450 # Length Experimental Track in mm
 Y_CUT = 20
+
 # Parameters Used
 D = 1.2 
 Q = 0.2
 
 # PSO OPTIMIZATION PARAMETERS
-OPTIMIZATION_STEPS = 100
+OPTIMIZATION_STEPS = 150
 N_PARTICLES = 10
 TOTAL_COMPARISONS = OPTIMIZATION_STEPS * N_PARTICLES
-PSO_BOUNDS = (np.array([10, 0]),np.array([1000, 100])) 
+PSO_BOUNDS = (np.array([10, 0]),np.array([1000, 1000])) 
 PSO_OPTIONS = {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
 # Estrategias disponibles
 strategies = ['nearest', 'random', 'shrink', 'reflect', 'unmodified']
@@ -84,12 +85,6 @@ def objective_function(params):
         differences.append(difference)
         print(f"{control}/{TOTAL_COMPARISONS} -> [ {L0}, {b} ]")
     return np.array(differences)
-
-def direct_diff(fft_exp,fft_numerical):
-    diff = fft_exp - fft_numerical
-    difference = np.sum(diff ** 2)
-    return difference
-
 
 def weighted_diff(fft_exp,fft_numerical):
     peak_index = np.argmax(fft_exp)
