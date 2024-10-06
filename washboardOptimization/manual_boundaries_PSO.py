@@ -7,14 +7,14 @@ import logging
 
 ### CONSTANTS  ###
 # EXPERIMENTAL DATA
-CONDITIONS_FOLDER = "1200g_VelocidadVariable_1520kg-m3"
-TEST_FOLDERS = ["2.61ms"]
+CONDITIONS_FOLDER = "2.08ms_MasaVariable_1740kg-m3"
+TEST_FOLDERS = ["1475g"]
 BASE_SURFACE_FILE = "Vuelta5.txt"
 START_INDEX = 8
-END_INDEX = 20
-PONDERATION = 8
+END_INDEX = 22
+PONDERATION = 10
 EXPERIMENTAL_COMPARISON_FILE = "Vuelta80.txt"
-SKIPROWS_FILES = 1
+SKIPROWS_FILES = 2
 logging.basicConfig(filename='report.log', level=logging.INFO,
                     format='%(asctime)s - %(message)s')
 
@@ -28,7 +28,7 @@ D = 1.2
 Q = 0.2
 
 # PSO OPTIMIZATION PARAMETERS
-OPTIMIZATION_STEPS = 110
+OPTIMIZATION_STEPS = 120
 N_PARTICLES = 10
 PSO_BOUNDS = (np.array([0, 0]),np.array([10000, 200])) 
 PSO_OPTIONS = {'c1': 1, 'c2': 1, 'w': 0.9}
@@ -42,6 +42,7 @@ def initialize_program():
 
 def load_experimental_data(file_path):
     """Load and preprocess experimental data obtaining its fft and interpolating it to 4450 mm."""
+    print(file_path)
     data = np.loadtxt(file_path, skiprows=SKIPROWS_FILES) # Load file
     offset = np.mean(data[:, 1]) # Center the Signal on the axis
     data[:, 1] -= offset
