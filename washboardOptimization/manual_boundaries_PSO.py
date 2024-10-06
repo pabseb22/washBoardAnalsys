@@ -11,8 +11,8 @@ CONDITIONS_FOLDER = "1200g_VelocidadVariable_1520kg-m3"
 TEST_FOLDERS = ["2.61ms"]
 BASE_SURFACE_FILE = "Vuelta5.txt"
 START_INDEX = 8
-END_INDEX = 20
-PONDERATION = 8
+END_INDEX = 22
+PONDERATION = 10
 EXPERIMENTAL_COMPARISON_FILE = "Vuelta80.txt"
 SKIPROWS_FILES = 1
 logging.basicConfig(filename='report.log', level=logging.INFO,
@@ -28,7 +28,7 @@ D = 1.2
 Q = 0.2
 
 # PSO OPTIMIZATION PARAMETERS
-OPTIMIZATION_STEPS = 110
+OPTIMIZATION_STEPS = 120
 N_PARTICLES = 10
 PSO_BOUNDS = (np.array([0, 0]),np.array([10000, 200])) 
 PSO_OPTIONS = {'c1': 1, 'c2': 1, 'w': 0.9}
@@ -98,6 +98,7 @@ def main():
         print(f"Running optimization for {TEST_FOLDER}")
         logging.info(f"Starting optimization {TEST_FOLDER} in {CONDITIONS_FOLDER}")
         # Load experimental data
+        print("FILE: ", os.path.join("ExperimentalData", CONDITIONS_FOLDER, TEST_FOLDER, EXPERIMENTAL_COMPARISON_FILE))
         experimental_file_path = os.path.join("ExperimentalData", CONDITIONS_FOLDER, TEST_FOLDER, EXPERIMENTAL_COMPARISON_FILE)
         base_surface_file_path = os.path.join("ExperimentalData", CONDITIONS_FOLDER, TEST_FOLDER, BASE_SURFACE_FILE)
         data_exp = load_experimental_data(experimental_file_path)
