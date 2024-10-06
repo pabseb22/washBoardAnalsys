@@ -5,7 +5,7 @@ import os
 import pandas as pd
 from scipy.signal import find_peaks
 from scipy.signal import butter, filtfilt, find_peaks
-import pywt
+#import pywt
 
 class CellBedform():
 

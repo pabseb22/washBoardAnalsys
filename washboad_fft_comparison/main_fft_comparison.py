@@ -26,14 +26,18 @@ TEST_CASES = [
     # {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4374.97, 'b': 19.04, 'boundaries': [4, 32], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False ,'obtain_scalogram': False},
 
     # Densidad Variable a 1520
-    {'velocity': '1.55ms', 'D': 1.2, 'Q': 0.2, 'L0': 1958.89, 'b': 14.33, 'boundaries': [8, 20], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False,'obtain_scalogram': False },
-    {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 3848.92, 'b': 30.99, 'boundaries': [8, 20], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False,'obtain_scalogram': False },
-    {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 5365.42, 'b': 34.82, 'boundaries': [8, 20], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False,'obtain_scalogram': False },
+    # {'velocity': '1.55ms', 'D': 1.2, 'Q': 0.2, 'L0': 1958.89, 'b': 14.33, 'boundaries': [8, 20], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False,'obtain_scalogram': False },
+    # {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 3848.92, 'b': 30.99, 'boundaries': [8, 20], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False,'obtain_scalogram': False },
+    # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 5365.42, 'b': 34.82, 'boundaries': [8, 20], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False,'obtain_scalogram': False },
+
+    # Masa Variable a 1520
+    # {'velocity': '1200g', 'D': 1.2, 'Q': 0.2, 'L0': 3809.78, 'b': 40.53, 'boundaries': [8, 20], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False,'obtain_scalogram': False },
+    {'velocity': '1331g', 'D': 1.2, 'Q': 0.2, 'L0': 1894.845, 'b': 20.38, 'boundaries': [8, 20], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False,'obtain_scalogram': False },
 ]
 
 
 # EXPERIMENTAL DATA FILES MANAGEMENT
-CONDITIONS_FOLDER = "1200g_VelocidadVariable_1520kg-m3"
+CONDITIONS_FOLDER = "2.08ms_MasaVariable_1740kg-m3"
 BASE_SURFACE_FILE = "Vuelta5.txt"
 EXPERIMENTAL_COMPARISON_FILE = "Vuelta80.txt"
 RESULTS_FOLDER = "Results"
@@ -47,6 +51,7 @@ Y_CUT = 20
 
 def load_experimental_data(file_path):
     """Load and preprocess experimental data obtaining its fft and interpolating it to 4450 mm."""
+    print(file_path)
     data = np.loadtxt(file_path, skiprows=SKIPROWS_FILES) # Load file
     offset = np.mean(data[:, 1]) # Center the Signal on the axis
     data[:, 1] -= offset
