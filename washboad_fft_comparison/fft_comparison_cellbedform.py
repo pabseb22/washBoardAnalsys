@@ -199,7 +199,7 @@ class CellBedform():
         plt.figure(figsize=(12, 6))
         plt.plot(profile[0], profile[1], label='Numerical Data')
         plt.plot(experimental_comparison_data[0], experimental_comparison_data[1], label='Experimental Data') #Transforms x to value un mm since it is in m
-        plt.ylim(-25,25)
+        plt.ylim(-50,50)
         plt.grid(True)  # Add grid if needed
         plt.legend()
 
