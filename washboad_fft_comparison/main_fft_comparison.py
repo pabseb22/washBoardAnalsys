@@ -7,28 +7,59 @@ import matplotlib.pyplot as plt
 
 # TEST CASES
 TEST_CASES = [
-    # {'velocity': '0.78ms', 'D': 1.2, 'Q': 0.2, 'L0': -70.89, 'b': 68.99, 'boundaries': [6, 25], 'min_distance': 200, 'low_pass':0.02,'control_steps':[5,15,35,75], 'save_images':False, 'compare_fft': False,'obtain_amplitude':False ,'obtain_scalogram': True},
+    # {'velocity': '0.78ms', 'D': 1.2, 'Q': 0.2, 'L0': -70.89, 'b': 68.99, 'boundaries': [6, 25], 'min_distance': 200, 'low_pass':0.02,'control_steps':[5,15,35,75], 'save_images':False, 'compare_fft': True,'obtain_amplitude':False ,'obtain_scalogram': False},
     # {'velocity': '1.03ms', 'D': 1.2, 'Q': 0.2, 'L0': -50.67, 'b': 51.23, 'boundaries': [7, 37], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False ,'obtain_scalogram': False },
     # {'velocity': '1.29ms', 'D': 1.2, 'Q': 0.2, 'L0': 352.81, 'b': 47.50, 'boundaries': [14, 36], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False ,'obtain_scalogram': False},
     # {'velocity': '1.55ms', 'D': 1.2, 'Q': 0.2, 'L0': 826.41, 'b': 22.85, 'boundaries': [11, 33], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False ,'obtain_scalogram': False},
-    # {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4374.97, 'b': 19.04, 'boundaries': [4, 32], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False ,'obtain_scalogram': False},
+    # {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4808.85, 'b': 50.94, 'boundaries': [4, 32], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False ,'obtain_scalogram': False},
     # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 4978.56, 'b': 38.16, 'boundaries': [4, 29], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False ,'obtain_scalogram': False},
     # {'velocity': '3.15ms', 'D': 1.2, 'Q': 0.2, 'L0': 1466.33, 'b': 67.90, 'boundaries': [3, 27], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False ,'obtain_scalogram': False},
     
+    # Densidad Variable a 1520
+    # {'velocity': '0.52ms', 'D': 1.2, 'Q': 0.2, 'L0': -62.33, 'b': 11.41, 'boundaries': [8, 20], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False,'obtain_scalogram': False },
+    # {'velocity': '1.03ms', 'D': 1.2, 'Q': 0.2, 'L0': -60.62, 'b': 10.03, 'boundaries': [8, 20], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False,'obtain_scalogram': False },
+    # {'velocity': '1.55ms', 'D': 1.2, 'Q': 0.2, 'L0': 2590.62, 'b': 30.03, 'boundaries': [8, 20], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False,'obtain_scalogram': False },
+    # {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4983.85, 'b': 30.94, 'boundaries': [8, 20], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False,'obtain_scalogram': False },
+    # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 5181.56, 'b': 18.86, 'boundaries': [8, 20], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False,'obtain_scalogram': False },
+
+    # Masa Variable a 1740
+    # {'velocity': '1200g', 'D': 1.2, 'Q': 0.2, 'L0': 4808.85, 'b': 50.94, 'boundaries': [8, 22], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False,'obtain_scalogram': False },
+    # {'velocity': '1331g', 'D': 1.2, 'Q': 0.2, 'L0': 4996.16, 'b': 46.69, 'boundaries': [8, 22], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False,'obtain_scalogram': False },
+    # {'velocity': '1475g', 'D': 1.2, 'Q': 0.2, 'L0': 4794.845, 'b': 47.38, 'boundaries': [8, 22], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False,'obtain_scalogram': False },
+
+    # Masa Variable a 1520
+    # {'velocity': '1200g', 'D': 1.2, 'Q': 0.2, 'L0': 5408.85, 'b': 50.94, 'boundaries': [8, 22], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False,'obtain_scalogram': False },
+    # {'velocity': '1331g', 'D': 1.2, 'Q': 0.2, 'L0': 6894.85, 'b': 45.38, 'boundaries': [8, 22], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False,'obtain_scalogram': False },
+
+    ###### OPCIONES ADICIONALES ######
+
     # Opciones 2.08ms
     # {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 3866.94, 'b': 36.71, 'boundaries': [4, 32], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False ,'obtain_scalogram': False},
     # {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4837.67, 'b': 48.26, 'boundaries': [4, 32], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False ,'obtain_scalogram': False},
     # {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4808.85, 'b': 50.94, 'boundaries': [4, 32], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False ,'obtain_scalogram': False},
     # {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4790.50, 'b': 41.58, 'boundaries': [4, 32], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False ,'obtain_scalogram': False},
-    {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4074.97, 'b': 25.04, 'boundaries': [4, 32], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False,'obtain_scalogram': False },
+    # {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4074.97, 'b': 25.04, 'boundaries': [4, 32], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False,'obtain_scalogram': False },
 
     # Previo 2.08ms
     # {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4374.97, 'b': 19.04, 'boundaries': [4, 32], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False ,'obtain_scalogram': False},
+
+    # Adicionales Masa Variable 1520
+    # {'velocity': '1331g', 'D': 1.2, 'Q': 0.2, 'L0': 6824.85, 'b': 27.38, 'boundaries': [8, 22], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False,'obtain_scalogram': False },
+
+    # Adicionales Densidad Baja Velocidad Variable 1520
+    # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 5731.01, 'b': 37.40, 'boundaries': [8, 20], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False,'obtain_scalogram': False },
+    # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 5178.56, 'b': 18.16, 'boundaries': [8, 20], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False,'obtain_scalogram': False },
 ]
+
+# Objetivos: 
+# Densidad Variable: 1520 debe ser una proyeccion superior de la actual 1740 por picos mas altos
+# Masa Variable: 1740 debe usar 2.08 que tenemos para 1200 y tener uno mayor para 1331 e intermedio a 1475
+# Masa Variable 2: 1520 debe tener todo por sobre 1740 de L0.
 
 
 # EXPERIMENTAL DATA FILES MANAGEMENT
-CONDITIONS_FOLDER = "1200g_VelocidadVariable_1740kg-m3"
+# CONDITIONS_FOLDER = "2.08ms_MasaVariable_1520kg-m3"
+CONDITIONS_FOLDER = "1200g_VelocidadVariable_1520kg-m3"
 BASE_SURFACE_FILE = "Vuelta5.txt"
 EXPERIMENTAL_COMPARISON_FILE = "Vuelta80.txt"
 RESULTS_FOLDER = "Results"

@@ -3,17 +3,20 @@ from cellbedform_PSO import CellBedform
 from scipy.interpolate import interp1d
 import numpy as np
 import os, datetime
+import logging
 
 ### CONSTANTS  ###
 # EXPERIMENTAL DATA
-CONDITIONS_FOLDER = "1200g_VelocidadVariable_1740kg-m3"
-TEST_FOLDERS = ["2.08ms"]
+CONDITIONS_FOLDER = "2.08ms_MasaVariable_1740kg-m3"
+TEST_FOLDERS = ["1475g"]
 BASE_SURFACE_FILE = "Vuelta5.txt"
-START_INDEX = 4
-END_INDEX = 32
-PONDERATION = 2
+START_INDEX = 8
+END_INDEX = 22
+PONDERATION = 10
 EXPERIMENTAL_COMPARISON_FILE = "Vuelta80.txt"
-SKIPROWS_FILES = 1
+SKIPROWS_FILES = 2
+logging.basicConfig(filename='report.log', level=logging.INFO,
+                    format='%(asctime)s - %(message)s')
 
 # CELLBEDFORM NUMERICAL SIMULATION PARAMETERS
 STEPS_CELLBEDFORM = 75
@@ -25,9 +28,9 @@ D = 1.2
 Q = 0.2
 
 # PSO OPTIMIZATION PARAMETERS
-OPTIMIZATION_STEPS = 150
+OPTIMIZATION_STEPS = 120
 N_PARTICLES = 10
-PSO_BOUNDS = (np.array([10, 0]),np.array([1000, 1000])) 
+PSO_BOUNDS = (np.array([0, 0]),np.array([10000, 200])) 
 PSO_OPTIONS = {'c1': 1, 'c2': 1, 'w': 0.9}
 
 def initialize_program():
@@ -39,6 +42,7 @@ def initialize_program():
 
 def load_experimental_data(file_path):
     """Load and preprocess experimental data obtaining its fft and interpolating it to 4450 mm."""
+    print(file_path)
     data = np.loadtxt(file_path, skiprows=SKIPROWS_FILES) # Load file
     offset = np.mean(data[:, 1]) # Center the Signal on the axis
     data[:, 1] -= offset
@@ -93,8 +97,9 @@ def main():
 
     for TEST_FOLDER in TEST_FOLDERS:
         print(f"Running optimization for {TEST_FOLDER}")
-        
+        logging.info(f"Starting optimization {TEST_FOLDER} in {CONDITIONS_FOLDER}")
         # Load experimental data
+        print("FILE: ", os.path.join("ExperimentalData", CONDITIONS_FOLDER, TEST_FOLDER, EXPERIMENTAL_COMPARISON_FILE))
         experimental_file_path = os.path.join("ExperimentalData", CONDITIONS_FOLDER, TEST_FOLDER, EXPERIMENTAL_COMPARISON_FILE)
         base_surface_file_path = os.path.join("ExperimentalData", CONDITIONS_FOLDER, TEST_FOLDER, BASE_SURFACE_FILE)
         data_exp = load_experimental_data(experimental_file_path)
@@ -124,6 +129,7 @@ def main():
     program_end_time = datetime.datetime.now()
     total_duration = (program_end_time - program_start_time).total_seconds() / 60
     print(f"\nProgram Ended in: {total_duration:.2f} minutes")
-
+    print(f"Finished optimization for {TEST_FOLDERS[0]}")
+    logging.info(f"Finished optimization for {TEST_FOLDERS[0]} in {CONDITIONS_FOLDER}")
 if __name__ == "__main__":
     main()
