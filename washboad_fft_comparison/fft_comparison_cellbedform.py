@@ -111,86 +111,9 @@ class CellBedform():
             antialiased=True)
 
 
-    def save_images(self, folder='test', filename='bed', save_steps=None):
-        try:
-            if len(self.ims) == 0:
-                raise Exception('Run the model before saving images.')
-
-            # Create the main folder if it doesn't exist
-            os.makedirs("Results", exist_ok=True)
-            folder = os.path.join("Results", folder)
-
-            # Create the main folder if it doesn't exist
-            os.makedirs(folder, exist_ok=True)
-
-            # Create a subfolder for Steps
-            steps_folder = os.path.join(folder, f'steps_{filename}')
-            os.makedirs(steps_folder, exist_ok=True)
-
-            # Create a subfolder for Steps Images
-            steps_images_folder = os.path.join(folder, f'steps_{filename}_images')
-            os.makedirs(steps_images_folder, exist_ok=True)
-
-            # Create a subfolder for Y-cut profiles
-            y_cut_folder = os.path.join(folder, f'{filename}_y={self.y_cut}')
-            os.makedirs(y_cut_folder, exist_ok=True) if self.y_cut is not None else None
-
-            # Create a subfolder for Y-cut profile images
-            y_cut_images_folder = os.path.join(folder, f'{filename}_y={self.y_cut}_images')
-            os.makedirs(y_cut_images_folder, exist_ok=True) if self.y_cut is not None else None
-
-            for i in range(len(save_steps)):
-                # show progress
-                print('', end='\r')
-                print('Saving images... {:.1f}%'.format(i / len(self.ims) * 100), end='\r')
-
-                # Save images to the specified folder
-                plt.cla()  # Clear axes
-                self.ax.add_collection3d(self.ims[i][0])  # Load surface plot
-                self.ax.autoscale_view()
-                self.ax.set_zlim3d(-20, 150)
-                self.ax.set_xlabel('Distance (X)')
-                self.ax.set_ylabel('Distance (Y)')
-                self.ax.set_zlabel('Elevation')
-                plt.savefig(os.path.join(steps_images_folder, f'{filename}_{i:04d}.png'))
-                steps_filename = os.path.join(steps_folder, f'step_{i:04d}.txt')
-                elevation_data = self.ims[i][0].get_array()
-                np.savetxt(steps_filename, elevation_data)
-
-                # Save Y-cut profiles
-                profile = self.y_cuts[i]
-                #profile_filename = os.path.join(y_cut_folder, f'step_{i:04d}.txt')
-                #np.savetxt(profile_filename, np.column_stack(profile), comments="", delimiter="    ",fmt="%d %.9f")
-
-                df = pd.DataFrame(np.column_stack(profile), columns=['Index', 'Value'])
-
-                # Specify the filename for the Excel file. This uses the same naming convention as before.
-                profile_filename = os.path.join(y_cut_folder, f'step_{i:04d}.xlsx')
-
-                # Save the DataFrame to an Excel file. The engine='openpyxl' is specified to ensure compatibility with .xlsx format.
-                df.to_excel(profile_filename, index=False, engine='openpyxl')
-
-                # Save Y-cut profile images
-                plt.figure()
-                plt.plot(profile[0], profile[1])
-                plt.title(f'Y-cut Profile at Y={self.y_cut} (Step {i})')
-                plt.xlabel('Distance (X)')
-                plt.ylabel('Elevation')
-                plt.savefig(os.path.join(y_cut_images_folder, f'profile_step_{i:04d}.png'))
-                plt.close()
-
-            print('Done. All data were saved and cleared.')
-
-        except Exception as error:
-            print('Unexpected error occurred.')
-            print(error)
-
     def compare_fft(self, experimental_comparison_data, filename,boundaries,control_steps, save_images):
-        # Save the plot for the generated surface
-        output_file = os.path.join(filename+'_surface_generated.png')
         plt.title(filename+' Surface Generated')
-        # if(save_images):
-        #     plt.savefig(output_file, dpi=300, bbox_inches='tight')
+
         # Numerical Data
         profile = self.y_cuts[-1]
         profile_offset = np.mean(profile[1]) 
@@ -210,7 +133,6 @@ class CellBedform():
         fft_result_exp = np.fft.fft(profile[1])*dt
         fft_freq_exp = np.fft.fftfreq(len(profile[1]), d=dt)*dt
 
-
         # Calculate for experimental data
         # Perform FFT
         time_values = experimental_comparison_data[0]/1000
@@ -220,15 +142,9 @@ class CellBedform():
         fft_freq = np.fft.fftfreq(len(experimental_comparison_data[1]), d=dt)*dt
         fft_exp = np.abs(fft_result)
 
-        # Save the plot
-        output_file = os.path.join(filename+'_profile_comparison.png')
-
         # Adjust layout and save the figure
         plt.title(filename+' Profile Comparison')
         plt.tight_layout()
-        # if(save_images):
-        #     # plt.savefig(output_file, dpi=300, bbox_inches='tight')
-
 
         plt.figure(figsize=(6, 6))
         # Subplot 1: Experimental FFT
@@ -267,8 +183,6 @@ class CellBedform():
 
         # Adjust layout and save the figure
         plt.tight_layout()
-        # if(save_images):
-        #     plt.savefig(output_file, dpi=300, bbox_inches='tight')
         if(save_images):
             output_file_data_fft = os.path.join(filename,'fft_80th.xlsx')
             df = pd.DataFrame({
@@ -286,7 +200,7 @@ class CellBedform():
                     output_file_data = os.path.join(filename,'profile_'+str(i+6)+'th.txt')
                     np.savetxt(output_file_data, profile[1], fmt='%.4f', delimiter='\n')
 
-        # plt.show()
+        plt.show()
 
     def extract_experimental_fft(self):
         # Numerical Data
@@ -331,9 +245,6 @@ class CellBedform():
 
             # Plot Y-cut profile and identified peaks/troughs
             if((i+1) in control_steps):
-                if save_images:
-                    output_file_data = os.path.join(filename,'profile_'+str(i+6)+'th.txt')
-                    np.savetxt(output_file_data, profile[1], fmt='%.4f', delimiter='\n')
                 plt.figure(figsize=(6,6))
                 plt.plot(x_values, y_values, label='Original Profile')
                 plt.plot(x_values, filtered_y_values, label='Filtered Profile')
@@ -360,7 +271,6 @@ class CellBedform():
 
         # Adjust layout and save the figure
         if(save_images):
-            #plt.savefig(output_file, dpi=300, bbox_inches='tight')
             np.savetxt(output_file_data, amplitudes, fmt='%.8f', delimiter='\n')
 
 
