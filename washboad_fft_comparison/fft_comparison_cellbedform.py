@@ -240,7 +240,7 @@ class CellBedform():
 
             # Calculate average amplitude for this profile
             if len(crests) > 0 and len(trough_values) > 0:
-                average_amplitude = (np.mean(crests) - np.mean(trough_values))
+                average_amplitude = (abs(np.mean(crests)) + abs(np.mean(trough_values)))
                 amplitudes.append(average_amplitude)
 
             # Plot Y-cut profile and identified peaks/troughs

@@ -10,7 +10,7 @@ TEST_CASES = [
     # Velocidad Variable a 1740
     # {'velocity': '0.78ms', 'D': 1.2, 'Q': 0.2, 'L0': -70.89, 'b': 10.99, 'boundaries': [6, 25], 'min_distance': 200, 'low_pass':0.02,'control_steps':[5,15,35,75], 'save_images':True, 'compare_fft': True,'obtain_amplitude':True ,'obtain_scalogram': False},
     # {'velocity': '1.03ms', 'D': 1.2, 'Q': 0.2, 'L0': -50.67, 'b': 11.23, 'boundaries': [7, 37], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': True,'obtain_amplitude':True ,'obtain_scalogram': False },
-    {'velocity': '1.29ms', 'D': 1.2, 'Q': 0.2, 'L0': 352.81, 'b': 47.50, 'boundaries': [14, 36], 'min_distance': 100, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': False,'obtain_amplitude':True ,'obtain_scalogram': False},
+    # {'velocity': '1.29ms', 'D': 1.2, 'Q': 0.2, 'L0': 352.81, 'b': 47.50, 'boundaries': [14, 36], 'min_distance': 100, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': False,'obtain_amplitude':True ,'obtain_scalogram': False},
     # {'velocity': '1.55ms', 'D': 1.2, 'Q': 0.2, 'L0': 1026.41, 'b': 32.85, 'boundaries': [11, 33], 'min_distance': 100, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': False,'obtain_amplitude':True ,'obtain_scalogram': False},
     # {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4808.85, 'b': 50.94, 'boundaries': [4, 32], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': False,'obtain_amplitude':True ,'obtain_scalogram': False},
     # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 4978.56, 'b': 38.16, 'boundaries': [4, 29], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': True,'obtain_amplitude':True ,'obtain_scalogram': False},
@@ -21,7 +21,7 @@ TEST_CASES = [
     # {'velocity': '1.03ms', 'D': 1.2, 'Q': 0.2, 'L0': -60.62, 'b': 10.03, 'boundaries': [8, 22], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': False,'obtain_amplitude':True,'obtain_scalogram': False },
     # {'velocity': '1.55ms', 'D': 1.2, 'Q': 0.2, 'L0': 2590.62, 'b': 30.03, 'boundaries': [8, 22], 'min_distance': 100, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': False,'obtain_amplitude':True,'obtain_scalogram': False },
     # {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4983.85, 'b': 30.94, 'boundaries': [8, 22], 'min_distance': 225, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': False,'obtain_amplitude':True,'obtain_scalogram': False },
-    # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 5181.56, 'b': 18.86, 'boundaries': [8, 22], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': False,'obtain_amplitude':True,'obtain_scalogram': False },
+    # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 5181.56, 'b': 18.86, 'boundaries': [8, 22], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': True,'obtain_amplitude':True,'obtain_scalogram': False },
 
     # Masa Variable a 1740
     # {'velocity': '1200g', 'D': 1.2, 'Q': 0.2, 'L0': 4808.85, 'b': 50.94, 'boundaries': [8, 22], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': True,'obtain_amplitude':True,'obtain_scalogram': False },
@@ -31,6 +31,7 @@ TEST_CASES = [
     # Masa Variable a 1520
     # {'velocity': '1200g', 'D': 1.2, 'Q': 0.2, 'L0': 5108.85, 'b': 30.94, 'boundaries': [8, 22], 'min_distance': 300, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': False,'obtain_amplitude':True,'obtain_scalogram': False },
     # {'velocity': '1331g', 'D': 1.2, 'Q': 0.2, 'L0': 6794.85, 'b': 28.38, 'boundaries': [8, 22], 'min_distance': 300, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': False,'obtain_amplitude':True,'obtain_scalogram': False },
+    {'velocity': '1475g', 'D': 1.2, 'Q': 0.2, 'L0': 4094.85, 'b': 26.38, 'boundaries': [8, 22], 'min_distance': 300, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': True,'obtain_amplitude':True,'obtain_scalogram': False },
 
     ###### OPCIONES ADICIONALES ######
 
@@ -59,9 +60,9 @@ TEST_CASES = [
 
 
 # EXPERIMENTAL DATA FILES MANAGEMENT
-DENSITY = "1740kg-m3"
-# CONDITIONS = "2.08ms_MasaVariable_"
-CONDITIONS = "1200g_VelocidadVariable_"
+DENSITY = "1520kg-m3"
+CONDITIONS = "2.08ms_MasaVariable_"
+# CONDITIONS = "1200g_VelocidadVariable_"
 CONDITIONS_FOLDER = CONDITIONS + DENSITY
 BASE_SURFACE_FILE = "Vuelta5.txt"
 EXPERIMENTAL_COMPARISON_FILE = "Vuelta80.txt"
@@ -69,7 +70,7 @@ RESULTS_FOLDER = "Results"
 SKIPROWS_FILES = 1
 
 # CELLBEDFORM NUMERICAL SIMULATION PARAMETERS
-STEPS_CELLBEDFORM = 10000
+STEPS_CELLBEDFORM = 75
 D_Y = 40
 D_X = 4450
 Y_CUT = 20
