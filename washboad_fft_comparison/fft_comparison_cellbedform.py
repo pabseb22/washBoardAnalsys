@@ -200,7 +200,7 @@ class CellBedform():
                     output_file_data = os.path.join(filename,'profile_'+str(i+6)+'th.txt')
                     np.savetxt(output_file_data, profile[1], fmt='%.4f', delimiter='\n')
 
-        plt.show()
+        # plt.show()
 
     def extract_experimental_fft(self):
         # Numerical Data

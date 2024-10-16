@@ -26,12 +26,12 @@ TEST_CASES = [
     # Masa Variable a 1740
     # {'velocity': '1200g', 'D': 1.2, 'Q': 0.2, 'L0': 4808.85, 'b': 50.94, 'boundaries': [8, 22], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': True,'obtain_amplitude':True,'obtain_scalogram': False },
     # {'velocity': '1331g', 'D': 1.2, 'Q': 0.2, 'L0': 4996.16, 'b': 46.69, 'boundaries': [8, 22], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': True,'obtain_amplitude':True,'obtain_scalogram': False },
-    # {'velocity': '1475g', 'D': 1.2, 'Q': 0.2, 'L0': 4794.845, 'b': 47.38, 'boundaries': [8, 22], 'min_distance': 220, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': False,'obtain_amplitude':True,'obtain_scalogram': False },
+    # {'velocity': '1475g', 'D': 1.2, 'Q': 0.2, 'L0': 4794.845, 'b': 47.38, 'boundaries': [8, 22], 'min_distance': 220, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False,'obtain_scalogram': False },
 
     # Masa Variable a 1520
     # {'velocity': '1200g', 'D': 1.2, 'Q': 0.2, 'L0': 5108.85, 'b': 30.94, 'boundaries': [8, 22], 'min_distance': 300, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': False,'obtain_amplitude':True,'obtain_scalogram': False },
     # {'velocity': '1331g', 'D': 1.2, 'Q': 0.2, 'L0': 6794.85, 'b': 28.38, 'boundaries': [8, 22], 'min_distance': 300, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': False,'obtain_amplitude':True,'obtain_scalogram': False },
-    {'velocity': '1475g', 'D': 1.2, 'Q': 0.2, 'L0': 4094.85, 'b': 26.38, 'boundaries': [8, 22], 'min_distance': 300, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': True,'obtain_amplitude':True,'obtain_scalogram': False },
+    # {'velocity': '1475g', 'D': 1.2, 'Q': 0.2, 'L0': 4894.76, 'b': 46.27, 'boundaries': [8, 22], 'min_distance': 300, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False,'obtain_scalogram': False },
 
     ###### OPCIONES ADICIONALES ######
 
@@ -136,7 +136,7 @@ def main():
         # Run test cases
         run_test_cases(initial_surface, experimental_comparison_data,test_case)
     
-    # plt.show()
+    plt.show()
 
 
 if __name__ == "__main__":

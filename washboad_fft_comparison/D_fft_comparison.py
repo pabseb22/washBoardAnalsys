@@ -7,12 +7,12 @@ import pandas as pd
 
 # CONSTANTS
 
-# TEST CASES
+# TEST CASES 
 TEST_CASES = [
-    {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 1000.56, 'b': 38.16},
-    {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 5000, 'b': 38.16},
-    {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 10000, 'b': 38.16},
-    {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 100000, 'b': 38.16},
+    {'velocity': '0.78ms', 'D': 1.2, 'Q': 0.2, 'L0': 4978.56, 'b': 38.16},
+    {'velocity': '1.55ms', 'D': 1.2, 'Q': 0.2, 'L0': 4978.56, 'b': 38.16},
+    {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4978.56, 'b': 38.16},
+    {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 4978.56, 'b': 38.16},
 
 ]
 
@@ -22,7 +22,7 @@ BASE_SURFACE_FILE = "Vuelta5.txt"
 EXPERIMENTAL_COMPARISON_FILE = "Vuelta80.txt"
 SKIPROWS_FILES = 1
 ALL_FFTS = []
-TEST_FILE = "L0_Variation_Comparison_.xlsx"
+TEST_FILE = "InitialSurface_Variation_Comparison_.xlsx"
 FOLDER = os.path.join("Results",TEST_FILE)
 
 # CELLBEDFORM NUMERICAL SIMULATION PARAMETERS
