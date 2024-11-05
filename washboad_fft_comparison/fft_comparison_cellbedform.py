@@ -183,6 +183,15 @@ class CellBedform():
 
         # Adjust layout and save the figure
         plt.tight_layout()
+
+        # save Experimental FFT
+        # output_file_data_fft = os.path.join(filename,'Exp_fft_80th.xlsx')
+        # df = pd.DataFrame({
+        #     'Frequency': fft_freq,
+        #     'Amplitude': np.abs(fft_result)
+        # })
+        # df.to_excel(output_file_data_fft, index=False)
+
         if(save_images):
             output_file_data_fft = os.path.join(filename,'fft_80th.xlsx')
             df = pd.DataFrame({
