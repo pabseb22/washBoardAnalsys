@@ -4,13 +4,16 @@ import matplotlib.pyplot as plt
 from scipy.signal import butter, filtfilt
 
 # Configuration for File Processing and Filter
-TEST_PROFILE = False
-CUTOFF_FREQ = 1.0       # Cutoff frequency for the low-pass filter (Hz)
+TEST_PROFILE = True
+CUTOFF_FREQ = 10.0       # Cutoff frequency for the low-pass filter (Hz)
 FILTER_ORDER = 4        # Filter order
 
 # File paths and x-ranges for analysis
-TEST_FOLDERS_D1D2 = ["datos_d1md2_1.txt", "datos_d1md2_2.txt", "datos_d1md2_3.txt", "datos_d1md2_4.txt"]
-TEST_FOLDERS_PROFILE = ["datos_perfil_1.txt", "datos_perfil_2.txt", "datos_perfil_3.txt", "datos_perfil_4.txt"]
+TEST_FOLDERS_D1D2 = ["datos_d1md2_1.txt"]
+# TEST_FOLDERS_D1D2 = ["datos_d1md2_1.txt", "datos_d1md2_2.txt", "datos_d1md2_3.txt", "datos_d1md2_4.txt"]
+TEST_FOLDERS_PROFILE = ["datos_perfil_1.txt"]
+# TEST_FOLDERS_PROFILE = ["datos_perfil_1.txt", "datos_perfil_2.txt", "datos_perfil_3.txt", "datos_perfil_4.txt"]
+
 x_ranges = [(0.5, 20), (0.5, 30), (0.5, 25), (60, 80)]  # Define x-ranges for each file
 
 # Output directories
@@ -66,6 +69,7 @@ def perform_fft(data, filename):
     plt.xlabel('Frequency (Hz)')
     plt.ylabel('Amplitude')
     plt.grid(True)
+    plt.show()
     output_png_path = os.path.join(OUTPUT_PATH, f"{filename}_fft.png")
     plt.savefig(output_png_path)
     plt.close()
@@ -82,7 +86,7 @@ def plot_signals(time_values, original_signal, smoothed_signal):
     plt.title("Signal Comparison")
     plt.legend()
     plt.grid(True)
-    plt.show()
+
 
 def main():
     files = TEST_FOLDERS_PROFILE if TEST_PROFILE else TEST_FOLDERS_D1D2

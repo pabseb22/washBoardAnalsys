@@ -355,7 +355,7 @@ end
 
 % Define la función para filtrar los datos del acelerómetro.
 function [acelerometro1_filtrado, acelerometro2_filtrado] = filter_accelerometer_data(acelerometro1_centrada, acelerometro2_centrada, Fs)
-    f_corte_highpass = 1; % Frecuencia de corte del filtro de paso alto (Hz).
+    f_corte_highpass = 0.5; % Frecuencia de corte del filtro de paso alto (Hz).
 
     acelerometro1_filtrado = highpass(acelerometro1_centrada, f_corte_highpass, Fs); % Aplica el filtro de paso alto.
     acelerometro2_filtrado = highpass(acelerometro2_centrada, f_corte_highpass, Fs); % Aplica el filtro de paso alto.
