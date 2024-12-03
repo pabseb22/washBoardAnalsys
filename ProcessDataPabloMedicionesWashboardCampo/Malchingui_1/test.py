@@ -1,36 +1,32 @@
 import numpy as np
+from scipy.signal import welch
 import matplotlib.pyplot as plt
-from scipy.signal import butter, filtfilt
 
-# Crear una señal de ejemplo con frecuencias bajas y altas
-fs = 500  # frecuencia de muestreo en Hz
-t = np.linspace(0, 1, fs, endpoint=False)  # vector de tiempo de 1 segundo
+# Simulated Signal
+fs = 1000  # Sampling frequency (Hz)
+T = 1.0  # Duration (seconds)
+N = int(fs * T)  # Total samples
+t = np.linspace(0, T, N, endpoint=False)  # Time vector
+signal = np.sin(2 * np.pi * 50 * t) + 0.5 * np.random.normal(size=t.shape)
 
-# Crear una señal que mezcla una frecuencia baja (5 Hz) y una alta (50 Hz)
-frecuencia_baja = 5
-frecuencia_alta = 50
-signal = np.sin(2 * np.pi * frecuencia_baja * t) + 0.5 * np.sin(2 * np.pi * frecuencia_alta * t)
+# FFT
+fft_vals = np.fft.fft(signal)
+freqs = np.fft.fftfreq(N, 1/fs)
+positive_freqs = freqs[:N//2]
+fft_magnitude = np.abs(fft_vals[:N//2]) ** 2  # Power Spectrum
 
-# Diseñar el filtro pasa-alto
-fc = 20  # frecuencia de corte (en Hz)
-b, a = butter(4, fc / (0.5 * fs), btype='high')  # Filtro Butterworth de orden 4
+# Normalize to obtain PSD
+psd_fft = fft_magnitude / (fs * N)
 
-# Aplicar el filtro a la señal
-filtered_signal = filtfilt(b, a, signal)
+# Compute PSD with Welch's Method
+frequencies, psd_welch = welch(signal, fs, nperseg=256)
 
-# Graficar la señal original y la señal filtrada
-plt.figure(figsize=(12, 6))
-plt.subplot(2, 1, 1)
-plt.plot(t, signal, label='Señal Original')
-plt.xlabel('Tiempo [s]')
-plt.ylabel('Amplitud')
+# Plot
+plt.figure(figsize=(10, 6))
+plt.plot(positive_freqs, psd_fft, label="PSD from FFT")
+plt.semilogy(frequencies, psd_welch, label="PSD from Welch", linestyle="--")
+plt.xlabel("Frequency (Hz)")
+plt.ylabel("Power Spectral Density")
 plt.legend()
-
-plt.subplot(2, 1, 2)
-plt.plot(t, filtered_signal, label='Señal Filtrada (High-Pass)', color='orange')
-plt.xlabel('Tiempo [s]')
-plt.ylabel('Amplitud')
-plt.legend()
-
-plt.tight_layout()
+plt.grid()
 plt.show()

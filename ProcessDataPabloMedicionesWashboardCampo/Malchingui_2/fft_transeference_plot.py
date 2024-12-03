@@ -1,7 +1,7 @@
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.signal import butter, filtfilt
+from scipy.signal import butter, filtfilt, welch
 
 # Configuration for File Processing and Filter
 CUTOFF_FREQ = 20       # Cutoff frequency for the low-pass filter (Hz)
@@ -134,6 +134,32 @@ def plot_all_transfer_functions(transfer_functions, fft_freq, filenames):
     plt.close()
     print(f"All transfer functions saved to {output_path}")
 
+def calculate_psd(data, fs, nperseg=256):
+    """Calculate Power Spectral Density (PSD) using the Welch method."""
+    time_values, signal = data
+    freqs, psd = welch(signal, fs=fs, nperseg=nperseg)
+    return freqs, psd
+
+def save_psd_results(psd_freq, psd_result, filename, path):
+    """Save PSD results to a text file and plot as PNG."""
+    output_txt_path = os.path.join(path, f"{filename}_psd.txt")
+    np.savetxt(output_txt_path, np.column_stack((psd_freq, psd_result)),
+               header="Frequency (Hz)\tPSD (Amplitude^2/Hz)", delimiter="\t")
+    print(f"PSD results saved to {output_txt_path}")
+
+    # Plot PSD results and save as PNG
+    plt.figure(figsize=(6, 6))
+    plt.semilogy(psd_freq, psd_result, color='green')  # Logarithmic scale for better visualization
+    plt.xlim(0, 10)
+    plt.title('PSD_' + filename)
+    plt.xlabel('Frequency (Hz)')
+    plt.ylabel('PSD (Amplitude^2/Hz)')
+    plt.grid(True)
+    output_png_path = os.path.join(path, f"{filename}_psd.png")
+    plt.savefig(output_png_path)
+    plt.close()
+    print(f"PSD plot saved to {output_png_path}")
+
 def main():
     transfer_functions = []
     filenames = []
@@ -163,6 +189,19 @@ def main():
         # Save FFT results for each signal
         save_fft_results(fft_freq, fft_profile, filename=os.path.splitext(profile_file)[0], path=PROFILE_PATH)
         save_fft_results(fft_freq, fft_d1d2, filename=os.path.splitext(d1d2_file)[0], path=ACCELEROMETER_PATH)
+
+        # Calculate PSD for profile and d1d2 data
+        dt_profile = np.mean(np.diff(time_values_profile))
+        fs_profile = 1 / dt_profile
+        psd_freq_profile, psd_profile = calculate_psd((time_values_profile, smoothed_profile), fs=fs_profile)
+
+        dt_d1d2 = np.mean(np.diff(data_d1d2[:, 0]))
+        fs_d1d2 = 1 / dt_d1d2
+        psd_freq_d1d2, psd_d1d2 = calculate_psd((data_d1d2[:, 0], data_d1d2[:, 1]), fs=fs_d1d2)
+
+        # Save PSD results
+        save_psd_results(psd_freq_profile, psd_profile, filename=os.path.splitext(profile_file)[0], path=PROFILE_PATH)
+        save_psd_results(psd_freq_d1d2, psd_d1d2, filename=os.path.splitext(d1d2_file)[0], path=ACCELEROMETER_PATH)
 
         # Calculate and save transfer function
         transfer_function = calculate_transfer_function(fft_profile, fft_d1d2, fft_freq)
