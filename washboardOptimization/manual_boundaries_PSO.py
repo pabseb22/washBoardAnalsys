@@ -24,9 +24,9 @@ D = 1.2
 Q = 0.2
 
 # PSO OPTIMIZATION PARAMETERS
-OPTIMIZATION_STEPS = 100
+OPTIMIZATION_STEPS = 10
 N_PARTICLES = 10
-PSO_BOUNDS = (np.array([10, 0]),np.array([1000, 1000])) 
+PSO_BOUNDS = (np.array([10, 0]),np.array([400, 10000])) 
 PSO_OPTIONS = {'c1': 1.0, 'c2':1.0, 'w': 0.9}
 
 def initialize_program():

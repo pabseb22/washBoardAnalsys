@@ -11,7 +11,9 @@ TEST_CASES = [
     #{'velocity': '0.78ms', 'D': 1.2, 'Q': 0.2, 'L0': 631.3905, 'b': 653.8433, 'boundaries': [7, 37], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': True,'obtain_amplitude':True ,'obtain_scalogram': True },
     #{'velocity': '1.03ms', 'D': 1.2, 'Q': 0.2, 'L0': 546.2337, 'b': 455.4837, 'boundaries': [14, 36], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': True,'obtain_amplitude':True ,'obtain_scalogram': True},
     #{'velocity': '1.29ms', 'D': 1.2, 'Q': 0.2, 'L0': 797.5033, 'b': 27.42289, 'boundaries': [11, 33], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': True,'obtain_amplitude':True ,'obtain_scalogram': True},
-    {'velocity': '1.55ms', 'D': 1.2, 'Q': 0.2, 'L0': 611.7129, 'b': 25.3944, 'boundaries': [4, 29], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': True,'obtain_amplitude':True ,'obtain_scalogram': True},
+    ##jp    
+    #{'velocity': '1.03ms', 'D': 1.2, 'Q': 0.2, 'L0': 248.67797387, 'b': 252.65758766, 'boundaries': [4, 29], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': True,'obtain_amplitude':True ,'obtain_scalogram': False},
+    {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 283.9005963, 'b': 98.2670792, 'boundaries': [4, 29], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': True,'obtain_amplitude':True ,'obtain_scalogram': False},
 
 ]
 
@@ -23,7 +25,7 @@ RESULTS_FOLDER = "Results_JP"
 SKIPROWS_FILES = 1
 
 # CELLBEDFORM NUMERICAL SIMULATION PARAMETERS
-STEPS_CELLBEDFORM = 200
+STEPS_CELLBEDFORM = 75
 D_Y = 40
 D_X = 4450
 Y_CUT = 20
