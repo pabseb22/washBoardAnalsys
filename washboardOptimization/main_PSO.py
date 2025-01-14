@@ -3,30 +3,35 @@ from cellbedform_PSO import CellBedform
 from scipy.interpolate import interp1d
 import numpy as np
 import os, datetime
+import logging
 
 ### CONSTANTS  ###
 # EXPERIMENTAL DATA
-CONDITIONS_FOLDER = "1200g_VelocidadVariable_1740kg-m3"
-TEST_FOLDERS = ["2.08ms"]
+EXPERIMENTAL_DATA_FOLDER = "ExperimentalData"
+CONDITIONS_FOLDER = "1200g_VelocidadVariable_1520kg-m3"
+TEST_FOLDERS = ["1.55ms"]
 BASE_SURFACE_FILE = "Vuelta5.txt"
 EXPERIMENTAL_COMPARISON_FILE = "Vuelta80.txt"
 SKIPROWS_FILES = 1
+logging.basicConfig(filename='report.log', level=logging.INFO,
+                    format='%(asctime)s - %(message)s')
 
 # CELLBEDFORM NUMERICAL SIMULATION PARAMETERS
 STEPS_CELLBEDFORM = 75
 D_Y = 40
 D_X = 4450 # Length Experimental Track in mm
 Y_CUT = 20
+
 # Parameters Used
 D = 1.2 
 Q = 0.2
 
 # PSO OPTIMIZATION PARAMETERS
-OPTIMIZATION_STEPS = 100
+OPTIMIZATION_STEPS = 110
 N_PARTICLES = 10
 TOTAL_COMPARISONS = OPTIMIZATION_STEPS * N_PARTICLES
 PSO_BOUNDS = (np.array([10, 0]),np.array([1000, 1000])) 
-PSO_OPTIONS = {'c1': 1.0, 'c2': 1.0, 'w': 0.9}
+PSO_OPTIONS = {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
 # Estrategias disponibles
 strategies = ['nearest', 'random', 'shrink', 'reflect', 'unmodified']
 
@@ -85,12 +90,6 @@ def objective_function(params):
         print(f"{control}/{TOTAL_COMPARISONS} -> [ {L0}, {b} ]")
     return np.array(differences)
 
-def direct_diff(fft_exp,fft_numerical):
-    diff = fft_exp - fft_numerical
-    difference = np.sum(diff ** 2)
-    return difference
-
-
 def weighted_diff(fft_exp,fft_numerical):
     peak_index = np.argmax(fft_exp)
     margin = int(0.1 * len(fft_exp))  # Identify 10% of the total amount of data next to the highest peak to ponderate
@@ -108,10 +107,11 @@ def main():
 
     for TEST_FOLDER in TEST_FOLDERS:
         print(f"Running optimization for {TEST_FOLDER}")
+        logging.info(f"Starting optimization {TEST_FOLDER}")
         
         # Load experimental data
-        experimental_file_path = os.path.join("ExperimentalData", CONDITIONS_FOLDER, TEST_FOLDER, EXPERIMENTAL_COMPARISON_FILE)
-        base_surface_file_path = os.path.join("ExperimentalData", CONDITIONS_FOLDER, TEST_FOLDER, BASE_SURFACE_FILE)
+        experimental_file_path = os.path.join(EXPERIMENTAL_DATA_FOLDER, CONDITIONS_FOLDER, TEST_FOLDER, EXPERIMENTAL_COMPARISON_FILE)
+        base_surface_file_path = os.path.join(EXPERIMENTAL_DATA_FOLDER, CONDITIONS_FOLDER, TEST_FOLDER, BASE_SURFACE_FILE)
         data_exp = load_experimental_data(experimental_file_path)
 
         perform_fft(data_exp)
@@ -138,6 +138,7 @@ def main():
     program_end_time = datetime.datetime.now()
     total_duration = (program_end_time - program_start_time).total_seconds() / 60
     print(f"\nProgram Ended in: {total_duration:.2f} minutes")
-
+    print(f"Finished optimization for {TEST_FOLDERS[0]}")
+    logging.info(f"Finished optimization for {TEST_FOLDERS[0]}")
 if __name__ == "__main__":
     main()

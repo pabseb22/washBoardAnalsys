@@ -205,11 +205,15 @@ class CellBedform():
                 plt.cla()  # Clear axes
                 self.ax.add_collection3d(self.ims[i][0])  # Load surface plot
                 self.ax.autoscale_view()
-                self.ax.set_zlim3d(-20, 150)
-                self.ax.set_xlabel('Distance (X)')
-                self.ax.set_ylabel('Distance (Y)')
-                self.ax.set_zlabel('Elevation')
-                plt.savefig(os.path.join(steps_images_folder, f'{filename}_{i:04d}.png'))
+                self.ax.grid(False)  # Disable the grid
+                self.ax.set_zlim3d(-20, 80)
+                self.ax.set_xlabel('(X)')
+                self.ax.set_ylabel('(Y)')
+                self.ax.set_zlabel('(Z)')
+                plt.savefig(
+                    os.path.join(steps_images_folder, f'{filename}_{i:04d}.png'),
+                    dpi=600
+                )
                 steps_filename = os.path.join(steps_folder, f'step_{i:04d}.txt')
                 elevation_data = self.ims[i][0].get_array()
                 np.savetxt(steps_filename, elevation_data)

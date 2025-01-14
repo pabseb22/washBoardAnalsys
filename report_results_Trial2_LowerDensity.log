@@ -1,0 +1,22 @@
+2024-10-05 13:05:41,366 - root - INFO - Starting optimization 1.03ms in 1200g_VelocidadVariable_1520kg-m3
+2024-10-05 13:05:41,519 - pyswarms.single.global_best - INFO - Optimize for 120 iters with {'c1': 1, 'c2': 1, 'w': 0.9}
+2024-10-05 15:04:53,274 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 359.75814542067894, best pos: [436.79075554 142.96392881]
+2024-10-05 15:04:53,284 - root - INFO - Finished optimization for 1.03ms in 1200g_VelocidadVariable_1520kg-m3
+Trial #2
+2024-10-05 15:53:49,938 - root - INFO - Starting optimization 1.03ms in 1200g_VelocidadVariable_1520kg-m3
+2024-10-05 15:53:50,087 - pyswarms.single.global_best - INFO - Optimize for 120 iters with {'c1': 1, 'c2': 1, 'w': 0.9}
+2024-10-05 15:55:07,015 - root - INFO - Starting optimization 1.55ms in 1200g_VelocidadVariable_1520kg-m3
+2024-10-05 15:55:07,151 - pyswarms.single.global_best - INFO - Optimize for 120 iters with {'c1': 1, 'c2': 1, 'w': 0.9}
+2024-10-05 15:58:30,625 - root - INFO - Starting optimization 2.08ms in 1200g_VelocidadVariable_1520kg-m3
+2024-10-05 15:58:30,764 - pyswarms.single.global_best - INFO - Optimize for 120 iters with {'c1': 1, 'c2': 1, 'w': 0.9}
+2024-10-05 15:59:15,325 - root - INFO - Starting optimization 2.61ms in 1200g_VelocidadVariable_1520kg-m3
+2024-10-05 15:59:15,455 - pyswarms.single.global_best - INFO - Optimize for 120 iters with {'c1': 1, 'c2': 1, 'w': 0.9}
+Results Trial2
+2024-10-05 19:40:47,003 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 308.39957268305477, best pos: [4937.26266698  138.92653644]
+2024-10-05 19:40:47,009 - root - INFO - Finished optimization for 1.03ms in 1200g_VelocidadVariable_1520kg-m3
+2024-10-05 19:41:42,978 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 24758.749299158444, best pos: [2590.62378283   36.03099703]
+2024-10-05 19:41:42,978 - root - INFO - Finished optimization for 1.55ms in 1200g_VelocidadVariable_1520kg-m3
+2024-10-05 19:44:52,327 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 7130.388748019682, best pos: [5777.26492192   35.10439317]
+2024-10-05 19:44:52,337 - root - INFO - Finished optimization for 2.08ms in 1200g_VelocidadVariable_1520kg-m3
+2024-10-05 19:26:27,490 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 6642.029079158608, best pos: [5731.0070099    37.40357929]
+2024-10-05 19:26:27,494 - root - INFO - Finished optimization for 2.61ms in 1200g_VelocidadVariable_1520kg-m3
