@@ -8,10 +8,12 @@ CUTOFF_FREQ = 20       # Cutoff frequency for the low-pass filter (Hz)
 FILTER_ORDER = 4       # Filter order
 
 # File paths and x-ranges for analysis
-TEST_FOLDERS_D1D2 = ["datos_d1md2_1.txt", "datos_d1md2_2.txt", "datos_d1md2_3.txt", "datos_d1md2_4.txt"]
-TEST_FOLDERS_PROFILE = ["datos_perfil_1.txt", "datos_perfil_2.txt", "datos_perfil_3.txt", "datos_perfil_4.txt"]
-x_ranges = [ (2.5, 40), (2.5, 40), (15, 40), (15, 50)]
-x_ranges_d1d2 = [ (2.5, 40), (2.5, 40), (15, 40), (15, 50)]
+# TEST_FOLDERS_D1D2 = ["datos_d1md2_1.txt", "datos_d1md2_2.txt", "datos_d1md2_3.txt", "datos_d1md2_4.txt"]
+# TEST_FOLDERS_PROFILE = ["datos_perfil_1.txt", "datos_perfil_2.txt", "datos_perfil_3.txt", "datos_perfil_4.txt"]
+TEST_FOLDERS_D1D2 = ["datos_d1md2_2.txt"]
+TEST_FOLDERS_PROFILE = ["datos_perfil_2.txt"]
+x_ranges = [ (0, 40), (2.5, 40), (15, 40), (15, 50)]
+x_ranges_d1d2 = [ (0, 40), (2.5, 40), (15, 40), (15, 50)]
 
 # Output directories
 OUTPUT_FOLDER = "fft_results"
@@ -64,14 +66,14 @@ def save_fft_results(fft_freq, fft_result, filename, path):
     # Plot FFT results and save as PNG
     plt.figure(figsize=(6, 6))
     plt.plot(fft_freq[0:len(fft_freq)//2], np.abs(fft_result[0:len(fft_freq)//2]), color='blue')
-    plt.xlim(0, 10)
+    plt.xlim(0, 2)
     plt.title('FFT_'+filename)
     plt.xlabel('Frequency (Hz)')
     plt.ylabel('Amplitude')
     plt.grid(True)
     output_png_path = os.path.join(path, f"{filename}_fft.png")
-    plt.savefig(output_png_path)
-    plt.close()
+    # plt.savefig(output_png_path)
+    # plt.close()
     print(f"FFT plot saved to {output_png_path}")
 
 def plot_signals(time_values, original_signal, smoothed_signal, filename, path):
@@ -85,8 +87,8 @@ def plot_signals(time_values, original_signal, smoothed_signal, filename, path):
     plt.legend()
     plt.grid(True)
     output_png_path = os.path.join(path, f"{filename}_profile.png")
-    plt.savefig(output_png_path)
-    plt.close()
+    # plt.savefig(output_png_path)
+    # plt.close()
     print(f"Profile plot saved to {output_png_path}")
 
 def calculate_transfer_function(fft_profile, fft_d1d2, fft_freq):
@@ -109,8 +111,8 @@ def save_transfer_function(transfer_function, fft_freq, filename):
     plt.ylabel('Amplitude')
     plt.grid(True)
     output_png_path = os.path.join(TRANSFER_PATH, f"{filename}_transfer_function.png")
-    plt.savefig(output_png_path)
-    plt.close()
+    # plt.savefig(output_png_path)
+    # plt.close()
     print(f"Transfer function plot saved to {output_png_path}")
 
 def plot_all_transfer_functions(transfer_functions, fft_freq, filenames):
@@ -130,8 +132,8 @@ def plot_all_transfer_functions(transfer_functions, fft_freq, filenames):
     
     plt.tight_layout()
     output_path = os.path.join(TRANSFER_PATH, "all_transfer_functions.png")
-    plt.savefig(output_path)
-    plt.close()
+    # plt.savefig(output_path)
+    # plt.close()
     print(f"All transfer functions saved to {output_path}")
 
 def main():
@@ -153,7 +155,7 @@ def main():
         data_d1d2 = load_data(d1d2_file, x_range=x_range_d1d2)
 
         # Plot original and smoothed signals for comparison
-        plot_signals(time_values_profile, data_profile[:, 1], smoothed_profile, filename=os.path.splitext(profile_file)[0], path=PROFILE_PATH)
+        # plot_signals(time_values_profile, data_profile[:, 1], smoothed_profile, filename=os.path.splitext(profile_file)[0], path=PROFILE_PATH)
         plot_signals(data_d1d2[:, 0], data_d1d2[:, 1], data_d1d2[:, 1], filename=os.path.splitext(d1d2_file)[0], path=ACCELEROMETER_PATH)
 
         # Perform FFT for profile and d1d2 data
@@ -161,17 +163,18 @@ def main():
         _, fft_d1d2 = perform_fft((data_d1d2[:, 0], data_d1d2[:, 1]))
 
         # Save FFT results for each signal
-        save_fft_results(fft_freq, fft_profile, filename=os.path.splitext(profile_file)[0], path=PROFILE_PATH)
+        # save_fft_results(fft_freq, fft_profile, filename=os.path.splitext(profile_file)[0], path=PROFILE_PATH)
         save_fft_results(fft_freq, fft_d1d2, filename=os.path.splitext(d1d2_file)[0], path=ACCELEROMETER_PATH)
 
         # Calculate and save transfer function
         transfer_function = calculate_transfer_function(fft_profile, fft_d1d2, fft_freq)
-        save_transfer_function(transfer_function, fft_freq, filename=f"transfer_{idx + 1}")
+        # save_transfer_function(transfer_function, fft_freq, filename=f"transfer_{idx + 1}")
         transfer_functions.append(transfer_function)
         filenames.append(f"transfer_{idx + 1}")
 
+    plt.show()
     # Plot and save all transfer functions in one image
-    plot_all_transfer_functions(transfer_functions, fft_freq, filenames)
+    # plot_all_transfer_functions(transfer_functions, fft_freq, filenames)
 
 if __name__ == "__main__":
     main()

@@ -265,6 +265,11 @@ class CellBedform():
                 plt.ylim([-20,20])
                 plt.legend()
                 plt.grid(True)
+                # if(save_images):
+                #     output_file = os.path.join(filename,'profile_'+str(i)+'th.txt')
+                #     np.savetxt(output_file, amplitudes, fmt='%.8f', delimiter='\n')
+                #     print('Saved File in: ',output_file)
+
 
         # Plot amplitude development over steps
         plt.figure(figsize=(6,6))
@@ -275,7 +280,6 @@ class CellBedform():
         plt.grid(True)
 
         # Save the plot
-        output_file = os.path.join(filename,'amplitud_development.png')
         output_file_data = os.path.join(filename,'amplitud_development.txt')
 
         # Adjust layout and save the figure

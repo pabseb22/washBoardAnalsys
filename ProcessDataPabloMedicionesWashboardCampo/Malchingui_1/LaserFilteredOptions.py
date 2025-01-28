@@ -4,9 +4,9 @@ import matplotlib.pyplot as plt
 from scipy.signal import butter, filtfilt
 
 
-CUTOFF_FREQ = 2     # Cutoff frequency for the low-pass filter (Hz)
+CUTOFF_FREQ = 0.2     # Cutoff frequency for the low-pass filter (Hz) high: 0.8  low: 5
 FILTER_ORDER = 4        # Filter order
-FILTER_TYPE = 'low'
+FILTER_TYPE = 'high'
 
 # File paths and x-ranges for analysis
 TEST_FOLDERS_LASER = ["datos_perfil_4.txt"]
@@ -70,8 +70,9 @@ def plot_signals(time_values, original_signal, smoothed_signal,filename):
     np.savetxt(output_txt_path, np.column_stack((time_values, smoothed_signal)), 
             header="X \tZ", delimiter="\t")
     plt.figure(figsize=(10, 5))
-    plt.plot(time_values, original_signal, label="Original Signal", color='blue', alpha=0.5)
+    plt.plot(time_values, original_signal, label="Original Signal", color='blue')
     plt.plot(time_values, smoothed_signal, label="Smoothed Signal", color='red')
+    # plt.ylim(-40, 40)
     plt.xlabel("X")
     plt.ylabel("Y")
     plt.title("Signal Comparison")
