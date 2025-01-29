@@ -8,8 +8,9 @@ CUTOFF_FREQ = 20       # Cutoff frequency for the low-pass filter (Hz)
 FILTER_ORDER = 4       # Filter order
 
 # File paths and x-ranges for analysis
-TEST_FOLDERS_D1D2 = ["datos_d1md2_1.txt", "datos_d1md2_2.txt", "datos_d1md2_3.txt", "datos_d1md2_4.txt"]
-TEST_FOLDERS_PROFILE = ["datos_perfil_1.txt", "datos_perfil_2.txt", "datos_perfil_3.txt", "datos_perfil_4.txt"]
+# TEST_FOLDERS_D1D2 = ["datos_d1md2_1.txt", "datos_d1md2_2.txt", "datos_d1md2_3.txt", "datos_d1md2_4.txt"]
+TEST_FOLDERS_D1D2 = ["datos_d1md2_2.txt"]
+TEST_FOLDERS_PROFILE = ["datos_perfil_2.txt"]
 x_ranges = [ (0.5, 20), (0.5, 30), (0.5, 25), (50, 80)]
 x_ranges_d1d2 = [ (0.5, 20), (0.5, 30), (0.5, 25), (20, 50)]
 
@@ -70,8 +71,8 @@ def save_fft_results(fft_freq, fft_result, filename, path):
     plt.ylabel('Amplitude')
     plt.grid(True)
     output_png_path = os.path.join(path, f"{filename}_fft.png")
-    plt.savefig(output_png_path)
-    plt.close()
+    # plt.savefig(output_png_path)
+    # plt.close()
     print(f"FFT plot saved to {output_png_path}")
 
 def plot_signals(time_values, original_signal, smoothed_signal):
@@ -105,8 +106,8 @@ def save_transfer_function(transfer_function, fft_freq, filename):
     plt.ylabel('Amplitude')
     plt.grid(True)
     output_png_path = os.path.join(TRANSFER_PATH, f"{filename}_transfer_function.png")
-    plt.savefig(output_png_path)
-    plt.close()
+    # plt.savefig(output_png_path)
+    # plt.close()
     print(f"Transfer function plot saved to {output_png_path}")
 
 def plot_all_transfer_functions(transfer_functions, fft_freq, filenames):
@@ -127,8 +128,8 @@ def plot_all_transfer_functions(transfer_functions, fft_freq, filenames):
     plt.tight_layout()
     plt.title('Malchingui 1')
     output_path = os.path.join(TRANSFER_PATH, "all_transfer_functions.png")
-    plt.savefig(output_path)
-    plt.close()
+    # plt.savefig(output_path)
+    # plt.close()
     print(f"All transfer functions saved to {output_path}")
 
 def calculate_psd(data, fs, nperseg=256):
@@ -152,8 +153,8 @@ def save_psd_results(psd_freq, psd_result, filename, path):
     plt.ylabel('PSD (Amplitude^2/Hz)')
     plt.grid(True)
     output_png_path = os.path.join(path, f"{filename}_psd.png")
-    plt.savefig(output_png_path)
-    plt.close()
+    # plt.savefig(output_png_path)
+    # plt.close()
     print(f"PSD plot saved to {output_png_path}")
 
 def main():
@@ -176,35 +177,36 @@ def main():
 
         # Plot original and smoothed signals for comparison
         plot_signals(time_values_profile, data_profile[:, 1], smoothed_profile)
+        plot_signals(data_d1d2[:, 0], data_d1d2[:, 1], data_d1d2[:, 1])
 
         # Perform FFT for profile and d1d2 data
         fft_freq, fft_profile = perform_fft((time_values_profile, smoothed_profile))
-        _, fft_d1d2 = perform_fft((data_d1d2[:, 0], data_d1d2[:, 1]))
+        # _, fft_d1d2 = perform_fft((data_d1d2[:, 0], data_d1d2[:, 1]))
 
         # Save FFT results for each signal
-        save_fft_results(fft_freq, fft_profile, filename=os.path.splitext(profile_file)[0], path=PROFILE_PATH)
-        save_fft_results(fft_freq, fft_d1d2, filename=os.path.splitext(d1d2_file)[0], path=ACCELEROMETER_PATH)
+        # save_fft_results(fft_freq, fft_profile, filename=os.path.splitext(profile_file)[0], path=PROFILE_PATH)
+        # save_fft_results(fft_freq, fft_d1d2, filename=os.path.splitext(d1d2_file)[0], path=ACCELEROMETER_PATH)
 
 
         # Calculate PSD for profile and d1d2 data
         dt_profile = np.mean(np.diff(time_values_profile))
         fs_profile = 1 / dt_profile
-        psd_freq_profile, psd_profile = calculate_psd((time_values_profile, smoothed_profile), fs=fs_profile)
+        psd_freq_profile, psd_profile = calculate_psd(fft_freq, len(data_profile[:, 0]), fs=fs_profile)
 
-        dt_d1d2 = np.mean(np.diff(data_d1d2[:, 0]))
-        fs_d1d2 = 1 / dt_d1d2
-        psd_freq_d1d2, psd_d1d2 = calculate_psd((data_d1d2[:, 0], data_d1d2[:, 1]), fs=fs_d1d2)
+        # dt_d1d2 = np.mean(np.diff(data_d1d2[:, 0]))
+        # fs_d1d2 = 1 / dt_d1d2
+        # psd_freq_d1d2, psd_d1d2 = calculate_psd((data_d1d2[:, 0], data_d1d2[:, 1]), fs=fs_d1d2)
 
         # Save PSD results
         save_psd_results(psd_freq_profile, psd_profile, filename=os.path.splitext(profile_file)[0], path=PROFILE_PATH)
-        save_psd_results(psd_freq_d1d2, psd_d1d2, filename=os.path.splitext(d1d2_file)[0], path=ACCELEROMETER_PATH)
+        # save_psd_results(psd_freq_d1d2, psd_d1d2, filename=os.path.splitext(d1d2_file)[0], path=ACCELEROMETER_PATH)
 
         # Calculate and save transfer function
-        transfer_function = calculate_transfer_function(fft_profile, fft_d1d2, fft_freq)
-        save_transfer_function(transfer_function, fft_freq, filename=f"transfer_{idx + 1}")
-        transfer_functions.append(transfer_function)
-        filenames.append(f"transfer_{idx + 1}")
-
+        # transfer_function = calculate_transfer_function(fft_profile, fft_d1d2, fft_freq)
+        # save_transfer_function(transfer_function, fft_freq, filename=f"transfer_{idx + 1}")
+        # transfer_functions.append(transfer_function)
+        # filenames.append(f"transfer_{idx + 1}")
+    plt.show()
     # Plot and save all transfer functions in one image
     plot_all_transfer_functions(transfer_functions, fft_freq, filenames)
 

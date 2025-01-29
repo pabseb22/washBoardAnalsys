@@ -62,11 +62,47 @@ class CellBedform():
 
             profiles.append(self.h[:, self.y_cut])
 
-        self.scalogram_y_data = np.hstack(profiles)
+        # self.scalogram_y_data = np.hstack(profiles)
 
         # show progress
         print('', end='\r')
         print('100.0 % finished')
+        
+    def run_average_amplitude(self, steps, min_distance, low_pass, control_steps, filename):
+        with open(os.path.join(filename, 'complete_amplitud_development.txt'), 'w') as f:
+            for i in range(steps):
+                self.run_one_step()
+                # show progress
+                print('', end='\r')
+                print('{:.1f} % finished'.format(i / steps * 100), end='\r')
+                if i in control_steps:
+                    self.single_average_amplitude(i, [np.arange(self._xgrid), self.h[:, self.y_cut]], min_distance, low_pass, f)
+
+        # show progress
+        print('', end='\r')
+        print('100.0 % finished')
+
+    def single_average_amplitude(self, step, y_cut, min_distance, low_pass, file_handle):
+        x_values = y_cut[0]
+        y_values = y_cut[1]
+
+        # Apply low-pass filter to smooth the signal
+        cutoff_frequency = low_pass  # Adjust this value based on your data
+        sampling_rate = 1 / np.mean(np.diff(x_values))  # Assuming uniform spacing
+        filtered_y_values = butter_lowpass_filter(y_values, cutoff_frequency, sampling_rate)
+
+        # Find crests and troughs on the filtered signal
+        peaks, _ = find_peaks(filtered_y_values, distance=min_distance)
+        crests = filtered_y_values[peaks]
+
+        troughs, _ = find_peaks(-filtered_y_values, distance=min_distance)
+        trough_values = filtered_y_values[troughs]
+
+        # Calculate average amplitude for this profile
+        if len(crests) > 0 and len(trough_values) > 0:
+            average_amplitude = (abs(np.mean(crests)) + abs(np.mean(trough_values)))
+            file_handle.write(f'{step},{average_amplitude:.8f}\n')
+
 
     def run_one_step(self):
         x = self.x
@@ -265,6 +301,11 @@ class CellBedform():
                 plt.ylim([-20,20])
                 plt.legend()
                 plt.grid(True)
+                # if(save_images):
+                #     output_file = os.path.join(filename,'profile_'+str(i)+'th.txt')
+                #     np.savetxt(output_file, amplitudes, fmt='%.8f', delimiter='\n')
+                #     print('Saved File in: ',output_file)
+
 
         # Plot amplitude development over steps
         plt.figure(figsize=(6,6))
@@ -275,7 +316,6 @@ class CellBedform():
         plt.grid(True)
 
         # Save the plot
-        output_file = os.path.join(filename,'amplitud_development.png')
         output_file_data = os.path.join(filename,'amplitud_development.txt')
 
         # Adjust layout and save the figure
@@ -286,6 +326,7 @@ class CellBedform():
         plt.show()
 
         print('Done. All data processed.')
+
 
 
     def plot_scalogram(self,filename,velocity, save_images):
