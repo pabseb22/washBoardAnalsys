@@ -43,12 +43,9 @@ class CellBedform():
         self.y_cuts = []
         self.y_cut = y_cut
         self.amplitudes = []
-        self.wavelengths = []
-        self.scalogram_y_data = []
 
 
     def run(self, steps=100, save_steps=None):
-        profiles = []
         for i in range(steps):
             self.run_one_step()
             # show progress
@@ -60,14 +57,69 @@ class CellBedform():
                 self.ims.append([self.surf])
             self.y_cuts.append([np.arange(self._xgrid), self.h[:, self.y_cut]])
 
-            profiles.append(self.h[:, self.y_cut])
-
-        # self.scalogram_y_data = np.hstack(profiles)
+        # self.getMeshGrid(steps)
+        # self.getMeshGrid2(steps)
 
         # show progress
         print('', end='\r')
         print('100.0 % finished')
+
+    def getMeshGrid(self, steps):
         
+        # Extract x values (assumed constant for all steps)
+        x_values = np.array(self.y_cuts[0][0])  # First profile's x values
+        
+        # Extract all Z profiles for each step
+        z_profiles = np.array([cut[1] for cut in self.y_cuts])  # Stack all Z values
+
+        # Create mesh grid for x positions and step numbers
+        x_grid, step_grid = np.meshgrid(x_values, np.arange(steps))
+
+        # Compute dz/dx (gradient in the x-direction)
+        dzdx = z_profiles/ x_values
+
+        # Plot contour map of dz/dx
+        plt.figure(figsize=(8, 6))
+        contour = plt.contourf(x_grid, step_grid, dzdx, cmap='jet')
+        cbar = plt.colorbar(contour)
+        cbar.set_label('dz/dx')
+
+        plt.xlabel('x (m)')
+        plt.ylabel('No. of passage')
+        plt.title('Evolution of dz/dx over time')
+
+        plt.show()
+    
+    def getMeshGrid2(self, steps):
+        # Extract H values (heights) from y_cuts
+        H_values = np.array([cut[1] for cut in self.y_cuts]).squeeze().T  # Shape (num_x, steps)
+
+        # Extract X values and convert to meters
+        X_values = np.array(self.y_cuts[0][0])/1000
+        # Generate step values
+        Step_values = np.arange(steps)  # Shape (steps,)
+
+        # Compute the gradient of H with respect to X
+        # dH_dX = np.gradient(H_values, X_values, axis=0)  # Gradient along X direction
+
+        # Create a mesh grid
+        X, T = np.meshgrid(X_values, Step_values)  # Shape (steps, num_x)
+
+        # Plot the contour map
+        fig, ax = plt.subplots(figsize=(10, 6))
+
+        contour = ax.contourf(X, T, H_values.T, cmap="jet")
+        
+        ax.set_xlabel("X (m)")
+        ax.set_ylabel("No. of passage")
+        ax.set_title("Evolution of H Over Time")
+
+        # Add colorbar with range set from -0.03 to 0.03
+        cbar = plt.colorbar(contour, ax=ax)
+        cbar.set_label("H")
+
+        plt.show()
+
     def run_average_amplitude(self, steps, min_distance, low_pass, control_steps, filename):
         with open(os.path.join(filename, 'complete_amplitud_development.txt'), 'w') as f:
             for i in range(steps):
@@ -282,25 +334,33 @@ class CellBedform():
 
             troughs, _ = find_peaks(-filtered_y_values, distance=min_distance)
             trough_values = filtered_y_values[troughs]
-
+           
             # Calculate average amplitude for this profile
             if len(crests) > 0 and len(trough_values) > 0:
-                average_amplitude = (abs(np.mean(crests)) + abs(np.mean(trough_values)))
-                amplitudes.append(average_amplitude)
+                average_amplitude = abs(np.mean(crests)) + abs(np.mean(trough_values))
+
+                # Compute standard deviation of crests and troughs
+                std_crests = np.std(crests) if len(crests) > 1 else 0  # Avoid std on single value
+                std_troughs = np.std(trough_values) if len(trough_values) > 1 else 0
+
+                # Compute standard deviation of amplitude
+                std_amplitude = np.sqrt(std_crests**2 + std_troughs**2)
+
+                amplitudes.append([average_amplitude, std_amplitude])
 
             # Plot Y-cut profile and identified peaks/troughs
-            if((i+1) in control_steps):
-                plt.figure(figsize=(6,6))
-                plt.plot(x_values, y_values, label='Original Profile')
-                plt.plot(x_values, filtered_y_values, label='Filtered Profile')
-                plt.plot(x_values[peaks], crests, "x", label='Peaks')
-                plt.plot(x_values[troughs], trough_values, "o", label='Troughs')
-                plt.title(f'Y-cut Profile at Y={self.y_cut} (Step {i+1})')
-                plt.xlabel('Distance (X)')
-                plt.ylabel('Elevation')
-                plt.ylim([-20,20])
-                plt.legend()
-                plt.grid(True)
+            # if((i+1) in control_steps):
+                # plt.figure(figsize=(6,6))
+                # plt.plot(x_values, y_values, label='Original Profile')
+                # plt.plot(x_values, filtered_y_values, label='Filtered Profile')
+                # plt.plot(x_values[peaks], crests, "x", label='Peaks')
+                # plt.plot(x_values[troughs], trough_values, "o", label='Troughs')
+                # plt.title(f'Y-cut Profile at Y={self.y_cut} (Step {i+1})')
+                # plt.xlabel('Distance (X)')
+                # plt.ylabel('Elevation')
+                # plt.ylim([-20,20])
+                # plt.legend()
+                # plt.grid(True)
                 # if(save_images):
                 #     output_file = os.path.join(filename,'profile_'+str(i)+'th.txt')
                 #     np.savetxt(output_file, amplitudes, fmt='%.8f', delimiter='\n')
@@ -308,50 +368,47 @@ class CellBedform():
 
 
         # Plot amplitude development over steps
-        plt.figure(figsize=(6,6))
-        plt.scatter(range(len(amplitudes)), amplitudes, marker='o', color='b')
+        # plt.figure(figsize=(6,6))
+        # plt.scatter(range(len(amplitudes)), amplitudes, marker='o', color='b')
+        # plt.title('Amplitude Development Over Steps')
+        # plt.xlabel('Step')
+        # plt.ylabel('Amplitude (mm)')
+        # plt.grid(True)
+
+        # # Save the plot
+        # output_file_data = os.path.join(filename,'amplitud_development.txt')
+
+        # # Adjust layout and save the figure
+        # if(save_images):
+        #     np.savetxt(output_file_data, amplitudes, fmt='%.8f', delimiter='\n')
+
+
+        # plt.show()
+
+        # Save amplitude development data
+        output_file_data = os.path.join(filename, 'std_amplitude_development.txt')
+        if save_images:
+            np.savetxt(output_file_data, amplitudes, fmt='%.8f', delimiter=' ', header="Amplitude Std_Amplitude")
+            print(f"Saved amplitude data: {output_file_data}")
+
+        # Plot amplitude development over steps
+
+        steps = range(len(amplitudes))
+        avg_amps = [amp[0] for amp in amplitudes]
+        std_amps = [amp[1] for amp in amplitudes]
+
+        plt.figure(figsize=(6, 6))
+        plt.errorbar(steps, avg_amps, yerr=std_amps, fmt='o', color='b', ecolor='r', capsize=3, label="Amplitude ± Std Dev")
         plt.title('Amplitude Development Over Steps')
         plt.xlabel('Step')
         plt.ylabel('Amplitude (mm)')
         plt.grid(True)
-
-        # Save the plot
-        output_file_data = os.path.join(filename,'amplitud_development.txt')
-
-        # Adjust layout and save the figure
-        if(save_images):
-            np.savetxt(output_file_data, amplitudes, fmt='%.8f', delimiter='\n')
-
+        plt.legend()
 
         plt.show()
 
         print('Done. All data processed.')
 
-
-
-    def plot_scalogram(self,filename,velocity, save_images):
-        Y = self.scalogram_y_data
-
-        X = np.arange(1, len(Y)+1)
-
-        # Define the parameters for the cmor wavelet
-        wavelet = 'cmor1.0-0.5'  # Example parameters; adjust as needed
-        scales = np.arange(1, 20)
-
-        # Perform CWT
-        coef, freqs = pywt.cwt(Y, scales, wavelet)
-        plt.cla()
-        # Create the scalogram
-        plt.figure(figsize=(12, 6))
-        plt.imshow(np.abs(coef), aspect='auto', extent=[1, len(Y), 1, 10], cmap='jet', interpolation='bilinear', vmin=0, vmax=20)
-        plt.colorbar(label='Magnitude')
-        plt.title('Scalogram '+velocity)
-        plt.xlabel('Position(mm)')
-        plt.ylabel('Frequenzy(Hz)')
-        if(save_images):
-            output_file = os.path.join(filename,'scalogram.png')
-            plt.savefig(output_file, dpi=300, bbox_inches='tight')
-            print(f'Scalogram saved to {output_file}')
 
 def butter_lowpass_filter(data, cutoff, fs, order=5):
     nyquist = 0.5 * fs
