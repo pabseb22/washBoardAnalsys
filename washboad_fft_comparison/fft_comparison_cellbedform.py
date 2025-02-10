@@ -55,52 +55,75 @@ class CellBedform():
             if i == steps-1:
                 self._plot()
                 self.ims.append([self.surf])
+                
             self.y_cuts.append([np.arange(self._xgrid), self.h[:, self.y_cut]])
+            # cutoff_frequency = 0.08  # Adjust this value based on your data
+            # filtered_y_values = butter_lowpass_filter(self.h[:, self.y_cut], cutoff_frequency, 1)
+            # self.y_cuts.append([np.arange(self._xgrid), filtered_y_values])
+
 
         # self.getMeshGrid(steps)
         # self.getMeshGrid2(steps)
 
+        plt.show()
+
         # show progress
         print('', end='\r')
         print('100.0 % finished')
+    
+    
 
-    def getMeshGrid(self, steps):
-        
+    def getMeshGrid(self, steps, save_path="1.29_derivative_evolution.tiff"):
+        tfont = {'fontname':'Times New Roman'}
         # Extract x values (assumed constant for all steps)
         x_values = np.array(self.y_cuts[0][0])  # First profile's x values
-        
+
         # Extract all Z profiles for each step
         z_profiles = np.array([cut[1] for cut in self.y_cuts])  # Stack all Z values
 
-        # Create mesh grid for x positions and step numbers
-        x_grid, step_grid = np.meshgrid(x_values, np.arange(steps))
+        # Compute dz/dx
+        # dzdx = np.array([np.diff(Z) / np.min(np.diff(x_values)) for Z in z_profiles])
+        dzdx = np.diff(z_profiles, axis=1) / np.diff(x_values)
 
-        # Compute dz/dx (gradient in the x-direction)
-        dzdx = z_profiles/ x_values
+        # Adjust x values for dzdx grid
+        x_grid_dzdx = x_values[:-1]
+        
+        # Create meshgrid
+        x_grid, step_grid = np.meshgrid(x_grid_dzdx, np.arange(steps))
 
+        x_grid = x_grid/1000
         # Plot contour map of dz/dx
         plt.figure(figsize=(8, 6))
-        contour = plt.contourf(x_grid, step_grid, dzdx, cmap='jet')
+
+        # Increase levels for better visualization
+        print(dzdx[-1])
+        dzdx_clipped = np.clip(dzdx, -0.6, 0.6)
+        print(dzdx_clipped)
+        contour = plt.contourf(x_grid, step_grid, dzdx, cmap='jet', levels=50, vmin=-0.6, vmax=0.6)  
         cbar = plt.colorbar(contour)
         cbar.set_label('dz/dx')
 
-        plt.xlabel('x (m)')
-        plt.ylabel('No. of passage')
-        plt.title('Evolution of dz/dx over time')
+        plt.xlabel('x (m)',**tfont)
+        plt.ylabel('No. of passage',**tfont)
+        plt.title('Profile Derivative Evolution 1.29 m/s',**tfont)
 
-        plt.show()
-    
-    def getMeshGrid2(self, steps):
+        # Save high-quality TIFF file
+        plt.savefig(save_path, format='tiff', dpi=600, bbox_inches='tight')
+
+        # plt.show()
+        print(f"Plot saved as {save_path}")
+
+
+    def getMeshGrid2(self, steps, save_path="1.29_height_evolution.tiff"):
+        tfont = {'fontname':'Times New Roman'}
+
         # Extract H values (heights) from y_cuts
-        H_values = np.array([cut[1] for cut in self.y_cuts]).squeeze().T  # Shape (num_x, steps)
+        H_values = np.array([cut[1] for cut in self.y_cuts]).squeeze()  # Shape (num_x, steps)
 
         # Extract X values and convert to meters
         X_values = np.array(self.y_cuts[0][0])/1000
         # Generate step values
         Step_values = np.arange(steps)  # Shape (steps,)
-
-        # Compute the gradient of H with respect to X
-        # dH_dX = np.gradient(H_values, X_values, axis=0)  # Gradient along X direction
 
         # Create a mesh grid
         X, T = np.meshgrid(X_values, Step_values)  # Shape (steps, num_x)
@@ -108,17 +131,19 @@ class CellBedform():
         # Plot the contour map
         fig, ax = plt.subplots(figsize=(10, 6))
 
-        contour = ax.contourf(X, T, H_values.T, cmap="jet")
+        contour = ax.contourf(X, T, H_values, cmap="jet", levels=50)
         
-        ax.set_xlabel("X (m)")
-        ax.set_ylabel("No. of passage")
-        ax.set_title("Evolution of H Over Time")
+        ax.set_xlabel("X (m)",**tfont)
+        ax.set_ylabel("No. of passage",**tfont)
+        ax.set_title("1.29 m/s Z Evolution",**tfont)
 
         # Add colorbar with range set from -0.03 to 0.03
         cbar = plt.colorbar(contour, ax=ax)
-        cbar.set_label("H")
+        cbar.set_label("Z")
 
-        plt.show()
+        plt.savefig(save_path, format='tiff', dpi=600, bbox_inches='tight')
+
+        # plt.show()
 
     def run_average_amplitude(self, steps, min_distance, low_pass, control_steps, filename):
         with open(os.path.join(filename, 'complete_amplitud_development.txt'), 'w') as f:
@@ -309,6 +334,16 @@ class CellBedform():
         # Perform FFT
         time_values = profile[0]/1000 # Needs to be divided to obtain same as test file
         dt = np.mean(np.diff(time_values))  # Compute the average time step
+        # cutoff_frequency = 0.008  # Adjust this value based on your data
+        # filtered_y_values = butter_lowpass_filter(profile[1], cutoff_frequency, 1)
+        # plt.figure()
+        # plt.plot(time_values, filtered_y_values, label="Filtered Y")
+        # plt.plot(time_values, profile[1], label="Profile 1")
+        # plt.legend()
+        # plt.xlabel("Time")
+        # plt.ylabel("Values")
+        # plt.title("Comparison Plot")
+        # plt.show()
         # Perform FFT on experimental data
         fft_result_exp = np.fft.fft(profile[1])*dt
         fft_freq_exp = np.fft.fftfreq(len(profile[1]), d=dt)*dt
@@ -340,8 +375,8 @@ class CellBedform():
                 average_amplitude = abs(np.mean(crests)) + abs(np.mean(trough_values))
 
                 # Compute standard deviation of crests and troughs
-                std_crests = np.std(crests) if len(crests) > 1 else 0  # Avoid std on single value
-                std_troughs = np.std(trough_values) if len(trough_values) > 1 else 0
+                std_crests = np.std(crests) 
+                std_troughs = np.std(trough_values)
 
                 # Compute standard deviation of amplitude
                 std_amplitude = np.sqrt(std_crests**2 + std_troughs**2)
