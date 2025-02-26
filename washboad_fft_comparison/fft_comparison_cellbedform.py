@@ -57,7 +57,7 @@ class CellBedform():
                 self.ims.append([self.surf])
                 
             self.y_cuts.append([np.arange(self._xgrid), self.h[:, self.y_cut]])
-            # cutoff_frequency = 0.08  # Adjust this value based on your data
+            # cutoff_frequency = 0.01  # Adjust this value based on your data
             # filtered_y_values = butter_lowpass_filter(self.h[:, self.y_cut], cutoff_frequency, 1)
             # self.y_cuts.append([np.arange(self._xgrid), filtered_y_values])
 
@@ -65,7 +65,7 @@ class CellBedform():
         # self.getMeshGrid(steps)
         # self.getMeshGrid2(steps)
 
-        plt.show()
+        # plt.show()
 
         # show progress
         print('', end='\r')
