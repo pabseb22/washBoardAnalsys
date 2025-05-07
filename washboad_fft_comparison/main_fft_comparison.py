@@ -11,8 +11,8 @@ TEST_CASES = [
     # {'velocity': '0.78ms', 'D': 1.2, 'Q': 0.2, 'L0': -70.89, 'b': 68.99, 'boundaries': [6, 25], 'min_distance': 200, 'low_pass':0.02,'control_steps':[5,15,35,75], 'save_images':False, 'compare_fft': True,'obtain_amplitude':True },
     # {'velocity': '1.03ms', 'D': 1.2, 'Q': 0.2, 'L0': -50.67, 'b': 51.23, 'boundaries': [7, 37], 'min_distance': 200, 'low_pass':0.02,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':True  },
     # {'velocity': '1.29ms', 'D': 1.2, 'Q': 0.2, 'L0': 169.1, 'b': 49.73, 'boundaries': [14, 36], 'min_distance': 200, 'low_pass':0.008,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': False,'obtain_amplitude':False },
-    # {'velocity': '1.55ms', 'D': 1.2, 'Q': 0.2, 'L0': 1026.41, 'b': 32.85, 'boundaries': [11, 33], 'min_distance': 200, 'low_pass':0.008,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': False,'obtain_amplitude':False },
-    {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4808.85, 'b': 50.94, 'boundaries': [4, 32], 'min_distance': 250, 'low_pass':0.008,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False },
+    {'velocity': '1.55ms', 'D': 1.2, 'Q': 0.2, 'L0': 1026.41, 'b': 32.85, 'boundaries': [11, 33], 'min_distance': 200, 'low_pass':0.008,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': False,'obtain_amplitude':False },
+    # {'velocity': '2.08ms', 'D': 1.2, 'Q': 0.2, 'L0': 4808.85, 'b': 50.94, 'boundaries': [4, 32], 'min_distance': 250, 'low_pass':0.008,'control_steps':[5,15,35,75], 'save_images':False,'compare_fft': True,'obtain_amplitude':False },
     # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 4978.56, 'b': 38.16, 'boundaries': [4, 29], 'min_distance': 250, 'low_pass':0.008,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': True,'obtain_amplitude':True },
     # {'velocity': '3.15ms', 'D': 1.2, 'Q': 0.2, 'L0': 1466.33, 'b': 67.90, 'boundaries': [3, 27], 'min_distance': 200, 'low_pass':0.2,'control_steps':[5,15,35,75], 'save_images':True,'compare_fft': True,'obtain_amplitude':True },
 
@@ -73,7 +73,7 @@ RESULTS_FOLDER = "Results"
 SKIPROWS_FILES = 1
 
 # CELLBEDFORM NUMERICAL SIMULATION PARAMETERS
-STEPS_CELLBEDFORM = 800
+STEPS_CELLBEDFORM = 75
 D_Y = 40
 D_X = 4450
 Y_CUT = 20

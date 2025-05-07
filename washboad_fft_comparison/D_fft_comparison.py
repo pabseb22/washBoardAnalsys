@@ -5,15 +5,32 @@ from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
 import pandas as pd
 
+
 # CONSTANTS
 
 # TEST CASES 
 TEST_CASES = [
-    {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 5000, 'b': 38.16},
-    {'velocity': 'flat', 'D': 1.2, 'Q': 0.2, 'L0': 5000, 'b': 38.16},
-    {'velocity': 'random', 'D': 1.2, 'Q': 0.2, 'L0': 5000, 'b': 38.16},
+    # 40 equivalente a 38.16
+    # Base Reference
+    {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 5000, 'b': 40},
+
+    # D variation
+    # {'velocity': '2.61ms', 'D': 0.4, 'Q': 0.2, 'L0': 5000, 'b': 40},
+    # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 5000, 'b': 40},
+    # {'velocity': '2.61ms', 'D': 1.5, 'Q': 0.2, 'L0': 5000, 'b': 40},
+
+    # L0 variation
+    # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 10, 'b': 40},
+    {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 100, 'b': 40},
+    # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 1000, 'b': 40},
+    # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 5000, 'b': 40},
+    # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 10000, 'b': 40},
 
 
+    # b variation
+    # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 5000, 'b': 10},
+    # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 5000, 'b': 40},
+    # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 5000, 'b': 160},
 ]
 
 # EXPERIMENTAL DATA FILES MANAGEMENT
@@ -61,6 +78,33 @@ def run_test_cases(initial_surface,test_case):
     cb.run(STEPS_CELLBEDFORM)
     ALL_FFTS.append(cb.extract_experimental_fft())
 
+
+def weighted_diff(fft_exp, fft_numerical, freq_step=0.001, peak_margin_hz=0.035, amplification=4):
+    # Work only with the positive frequencies (first half of FFT)
+    half_len = len(fft_exp) // 2
+    fft_exp_pos = fft_exp[:half_len]
+    fft_numerical_pos = fft_numerical[:half_len]
+
+    # Find the peak index in the positive side
+    peak_index = np.argmax(fft_exp_pos)
+
+    # Convert frequency margin to index margin
+    margin_indices = int(peak_margin_hz / freq_step)
+
+    # Get bounds to the right of the peak only
+    start = peak_index
+    end = min(half_len, peak_index + margin_indices + 1)
+
+    # Compute squared difference
+    diff = (fft_exp_pos - fft_numerical_pos) ** 2
+
+    # Amplify the difference to the right of the peak
+    diff[start:end] *= amplification
+
+    # Return the total weighted error
+    return np.sum(diff)
+
+
 def main():
     for _,test_case in enumerate(TEST_CASES, start=1):
         print("Starting test for: ",test_case['velocity'])
@@ -76,11 +120,21 @@ def main():
     # Plotting all FFT results on the same plot
     plt.figure(figsize=(10, 6))
 
+    base_fft_freq, base_fft_result, base_x_profile, base_y_profile = ALL_FFTS[0]
+    base_fft = np.abs(base_fft_result)
     # Save Data
     # Prepare data for Excel
     data = {}
     for i, fft_data in enumerate(ALL_FFTS):
+
         fft_freq, fft_result, x_profile, y_profile = fft_data
+
+        if i == 0:
+            continue  # La primera FFT se usa como referencia
+
+        print(f"Comparando caso de prueba {i+1} con la referencia base...")
+        difference = weighted_diff(base_fft, np.abs(fft_result))
+        print(difference)
         
         # Create column names with test case numbers
         data[f'Test Case {i+1} FFT Frequency'] = fft_freq
