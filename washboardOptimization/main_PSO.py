@@ -4,12 +4,14 @@ from scipy.interpolate import interp1d
 import numpy as np
 import os, datetime
 import logging
+import matplotlib.pyplot as plt
+
 
 ### CONSTANTS  ###
 # EXPERIMENTAL DATA
 EXPERIMENTAL_DATA_FOLDER = "ExperimentalData"
-CONDITIONS_FOLDER = "1200g_VelocidadVariable_1520kg-m3"
-TEST_FOLDERS = ["1.55ms"]
+CONDITIONS_FOLDER = "1200g_VelocidadVariable_1740kg-m3"
+TEST_FOLDERS = ["2.61ms"]
 BASE_SURFACE_FILE = "Vuelta5.txt"
 EXPERIMENTAL_COMPARISON_FILE = "Vuelta80.txt"
 SKIPROWS_FILES = 1
@@ -27,11 +29,11 @@ D = 1.2
 Q = 0.2
 
 # PSO OPTIMIZATION PARAMETERS
-OPTIMIZATION_STEPS = 110
-N_PARTICLES = 10
+OPTIMIZATION_STEPS = 150
+N_PARTICLES = 20
 TOTAL_COMPARISONS = OPTIMIZATION_STEPS * N_PARTICLES
-PSO_BOUNDS = (np.array([10, 0]),np.array([1000, 1000])) 
-PSO_OPTIONS = {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+PSO_BOUNDS = (np.array([0, 0]),np.array([10000, 100])) 
+PSO_OPTIONS = {'c1': 0.3, 'c2': 0.5, 'w': 0.9}
 # Estrategias disponibles
 strategies = ['nearest', 'random', 'shrink', 'reflect', 'unmodified']
 
@@ -128,6 +130,18 @@ def main():
 
         # Optimize
         _, pos = optimizer.optimize(objective_function, OPTIMIZATION_STEPS)
+        # PLot de convergency
+        # Plot convergence
+        plt.figure(figsize=(10, 5))
+        plt.plot(optimizer.cost_history, marker='o')
+        plt.title(f'Convergence Curve - {TEST_FOLDER}')
+        plt.xlabel('Iteration')
+        plt.ylabel('Best Cost')
+        plt.grid(True)
+        plt.tight_layout()
+        plt.savefig(f'convergence_{TEST_FOLDER}.png')  # Guarda la figura
+        np.savetxt(f"cost_history_{TEST_FOLDER}.txt", optimizer.cost_history)
+        plt.show()
 
         # Store the result
         results.append((TEST_FOLDER, pos))

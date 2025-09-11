@@ -14,23 +14,23 @@ TEST_CASES = [
     # Base Reference
     {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 5000, 'b': 40},
 
-    # D variation
+    # # D variation
     # {'velocity': '2.61ms', 'D': 0.4, 'Q': 0.2, 'L0': 5000, 'b': 40},
     # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 5000, 'b': 40},
     # {'velocity': '2.61ms', 'D': 1.5, 'Q': 0.2, 'L0': 5000, 'b': 40},
 
     # L0 variation
     # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 10, 'b': 40},
-    {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 100, 'b': 40},
+    # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 100, 'b': 40},
     # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 1000, 'b': 40},
     # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 5000, 'b': 40},
     # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 10000, 'b': 40},
 
 
     # b variation
-    # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 5000, 'b': 10},
-    # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 5000, 'b': 40},
-    # {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 5000, 'b': 160},
+    {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 5000, 'b': 10},
+    {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 5000, 'b': 40},
+    {'velocity': '2.61ms', 'D': 1.2, 'Q': 0.2, 'L0': 5000, 'b': 160},
 ]
 
 # EXPERIMENTAL DATA FILES MANAGEMENT
@@ -146,7 +146,7 @@ def main():
     df = pd.DataFrame(data)
 
     # Save the DataFrame to an Excel file
-    df.to_excel(FOLDER, index=False)
+    # df.to_excel(FOLDER, index=False)
 
     colors = ['green', 'blue', 'orange', 'purple', 'cyan']  # Add more colors if needed
     for i, fft_data in enumerate(ALL_FFTS):
